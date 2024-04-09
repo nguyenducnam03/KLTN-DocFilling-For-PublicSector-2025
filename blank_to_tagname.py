@@ -507,6 +507,7 @@ def blank_to_tagname(chain, form, tag_names):
   for match in matches:
     temp = match.replace("]","").strip()
     list_tag_names.append(temp)
+    # print(temp)
   return list_tag_names
 
 form = '''
@@ -539,3 +540,5 @@ def get_list_keys(list_tag_names, translations):
 
 # list_keys = get_list_keys(list_tag_names, translations)
 # print(list_keys)
+
+
