@@ -7,9 +7,10 @@ myenv/
 __pycache__/
 
 chainlit.md
+#Temporary running
 tempCodeRunnerFile.py
+#testing file purpose
+test.py
 
 data.db
 
-#testing file purpose
-test.py
