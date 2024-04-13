@@ -91,6 +91,7 @@ async def on_chat_start():
     cl.user_session.set('list_tag_names', list_tag_names)
     await cl.Message(content=list_tag_names).send()
     list_keys = get_list_keys(list_tag_names, translations)
+    print("LIST_KEYS: ", list_keys)
     cl.user_session.set('list_keys', list_keys)
     # --------------------------- Database --------------------------
     count_id = count_rows()
@@ -155,17 +156,30 @@ async def main(message: cl.Message):
             | StrOutputParser()
         )
         print("LIST_KEYS: ", list_keys)
-        for i, Question in enumerate(list_keys):
-            count_miss_items1 = len(list_miss_items)
-            res = await extract_info_chain.ainvoke({
+        Question_temp = """"""
+        for item in list_keys:
+            Question_temp += item + "\n"
+        res = await extract_info_chain.ainvoke({
                 "Abstract": message.content, 
-                "Question": Question
+                "Question": Question_temp
             })
-            list_info, list_miss_items = get_listInfo_and_missItem(res, list_info, list_miss_items)
-            count_miss_items2 = len(list_miss_items)
-            if count_miss_items1 != count_miss_items2:
-                list_index.append(i)
-                list_miss_keys.append(list_tag_names[i])
+        list_info,list_miss_items,list_index = get_listInfo_and_missItem(res, list_info, list_miss_items, list_index)
+        count_miss_items = len(list_miss_items)
+        if count_miss_items:
+            for value_temp in list_miss_items:
+                list_miss_keys.append(find_key_by_value(translations, value_temp))
+        
+        # for i, Question in enumerate(list_keys):
+        #     count_miss_items1 = len(list_miss_items)
+        #     res = await extract_info_chain.ainvoke({
+        #         "Abstract": message.content, 
+        #         "Question": Question
+        #     })
+        #     list_info, list_miss_items = get_listInfo_and_missItem(res, list_info, list_miss_items)
+        #     count_miss_items2 = len(list_miss_items)
+        #     if count_miss_items1 != count_miss_items2:
+        #         list_index.append(i)
+        #         list_miss_keys.append(list_tag_names[i])
         await cl.Message(content = f"Thông tin phù hợp với từng Blank: {list_info}").send()
         await cl.Message(content = f"Thông tin còn thiếu: {list_miss_items}").send()
         print("LIST_INFO:", list_info)
@@ -178,15 +192,17 @@ async def main(message: cl.Message):
 
     # Query user 
     count =  len(list_miss_items)
-    data_to_insert = {}
+    data_to_update = {"ID": value}
     while(count):
         query = f"Thông tin về '{list_miss_items[len(list_miss_items)-count]}' hiện đang thiếu, bạn hãy cung cấp thêm thông tin này."
         res = await cl.AskUserMessage(content = query, timeout=30).send()
         if res:
             await cl.Message(content=f"{list_miss_items[len(list_miss_items)-count]}: {res['output']}").send()
         list_info[list_index[len(list_miss_items)-count]] = res['output']
-        data_to_insert[list_miss_keys[len(list_miss_keys)-count]] = res['output']
+        miss_item_temp = list_miss_keys[len(list_miss_keys)-count].replace("#","")
+        data_to_update[miss_item_temp] = res['output']
         count -= 1
+    update_value_in_database(value,data_to_update)
     # Fill Form
     text = cl.user_session.get("text")
     count_blank = cl.user_session.get("count_blank")

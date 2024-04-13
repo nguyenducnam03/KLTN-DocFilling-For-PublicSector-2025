@@ -116,8 +116,8 @@ Số khung (Chassis N0):(Blank26)
 
 tag_names = """
 #Full_Name
-"#Surname"
-"#Last_Name"
+#Surname
+#Last_Name
 #Day_of_birth
 #Month_of_birth
 #Year_of_birth
@@ -133,6 +133,7 @@ tag_names = """
 #Nationality
 #Marital_status
 #Blood_type
+#Place_of_birth
 #Place_of_birth_registration
 #Hometown
 #Permanent_residence
@@ -158,17 +159,47 @@ tag_names = """
 #Reason
 #Dear
 #Place_of_issue
-#Relationship_to _registrant
+#Relationship_to_registrant
 #Mother_name
 #Mother_day_of_birth
 #Mother_month_of_birth
 #Mother_year_of_birth
 #Mother_date_of_birth
+#Mother_Citizen_identification_card
+#Mother_Ethnicity
+#Mother_Religion
+#Mother_Nationality
+#Mother_Marital_status
+#Mother_Blood_type
+#Mother_Place_of_birth
+#Mother_Place_of_birth_registration
+#Mother_Hometown
+#Mother_Permanent_residence
+#Mother_Current_address
+#Mother_Occupation
+#Mother_Educational_level
+#Mother_Phone_number
+#Mother_Email
 #Father_name
 #Father_day_of_birth
 #Father_month_of_birth
 #Father_year_of_birth
 #Father_date_of_birth
+#Father_Citizen_identification_card
+#Father_Ethnicity
+#Father_Religion
+#Father_Nationality
+#Father_Marital_status
+#Father_Blood_type
+#Father_Place_of_birth
+#Father_Place_of_birth_registration
+#Father_Hometown
+#Father_Permanent_residence
+#Father_Current_address
+#Father_Occupation
+#Father_Educational_level
+#Father_Phone_number
+#Father_Email
 #Electronic_invoice_number_tax_code
 #Registration_tax_file_code
 #E_customs_declaration_number
@@ -185,6 +216,7 @@ tag_names = """
 #Behavior
 #Explanation_for_the_application
 #People_Court
+#Relationship
 #Empty
 """
 
@@ -208,6 +240,7 @@ translations = {
     "#Nationality": "Quốc tịch",
     "#Marital_status": "Tình trạng hôn nhân",
     "#Blood_type": "Nhóm máu",
+    "#Place_of_birth": "Nơi sinh",
     "#Place_of_birth_registration": "Nơi đăng ký sinh",
     "#Hometown": "Quê quán",
     "#Permanent_residence": "Nơi thường trú",
@@ -238,18 +271,47 @@ translations = {
     "#Mother_month_of_birth": "Tháng sinh của mẹ",
     "#Mother_year_of_birth": "Năm sinh của mẹ",
     "#Mother_date_of_birth": "Ngày tháng năm sinh của mẹ",
+    "#Mother_Citizen_identification_card": "Chứng minh nhân dân của mẹ",
+    "#Mother_Ethnicity": "Dân tộc của mẹ", 
+    "#Mother_Religion": "Tôn giáo của mẹ",
+    "#Mother_Nationality": "Quốc tịch của mẹ",
+    "#Mother_Marital_status": "Tình trạng hôn nhân của mẹ",
+    "#Mother_Blood_type": "Nhóm máu của mẹ",
+    "#Mother_Place_of_birth": "Nơi sinh của mẹ",
+    "#Mother_Place_of_birth_registration": "Nơi đăng ký sinh của mẹ",
+    "#Mother_Hometown": "Quê quán của mẹ",
+    "#Mother_Permanent_residence": "Nơi thường trú của mẹ",
+    "#Mother_Current_address": "Chỗ ở hiện nay của mẹ",
+    "#Mother_Occupation": "Nghề nghiệp của mẹ",
+    "#Mother_Educational_level": "Trình độ học vấn của mẹ",
+    "#Mother_Phone_number": "Số điện thoại của mẹ",
+    "#Mother_Email": "Email của mẹ",
     "#Father_name": "Tên cha",
     "#Father_day_of_birth": "Ngày sinh của cha",
     "#Father_month_of_birth": "Tháng sinh của cha",
     "#Father_year_of_birth": "Năm sinh của cha",
     "#Father_date_of_birth": "Ngày tháng năm sinh của cha",
+    "#Father_Citizen_identification_card": "Chứng minh nhân dân của cha",
+    "#Father_Ethnicity": "Dân tộc của cha",
+    "#Father_Nationality": "Quốc tịch của cha",
+    "#Father_Marital_status": "Tình trạng hôn nhân của cha",
+    "#Father_Blood_type": "Nhóm máu của cha",
+    "#Father_Place_of_birth_registration": "Nơi đăng ký sinh của cha",
+    "#Father_Place_of_birth": "Nơi sinh của cha",
+    "#Father_Hometown": "Quê quán của cha",
+    "#Father_Permanent_residence": "Nơi thường trú của cha",
+    "#Father_Current_address": "Chỗ ở hiện nay của cha",
+    "#Father_Occupation": "Nghề nghiệp của cha",
+    "#Father_Educational_level": "Trình độ học vấn của cha",
+    "#Father_Phone_number": "Số điện thoại của cha",
+    "#Father_Email": "Email của cha",
     "#Electronic_invoice_number_tax_code": "Mã số hóa đơn điện tử",
     "#Registration_tax_file_code": "Mã số hồ sơ đăng ký thuế",
     "#E_customs_declaration_number": "Số tờ khai hải quan điện tử",
     "#Engine_N1": "Động cơ N1",
     "#Engine_N2": "Động cơ N2",
     "#Chassis_N0": "Khung xe N0",
-    "#Content/Specific_incident": "Nội dung",
+    "#Content": "Nội dung",
     "#Quantity": "Số lượng",
     "#Current_employment_status": "Tình trạng công việc hiện tại",
     "#Commune": "Xã/Phường",
@@ -261,6 +323,7 @@ translations = {
     "#People's_Court": "Tòa án nhân dân",
     "#Relationship_to_registrant": "Mối quan hệ với người đăng kí",
     "#Place_of_issue": 'Nơi cấp',
+    "#Relationship": "Mối quan hệ",
     "#Empty": "Trống"
 }
 
@@ -282,7 +345,7 @@ def blank_to_tagname_prompt():
   Ngoài ra, tôi còn sử dụng thành thạo tin học văn phòng, tiếng Anh giao tiếp tốt và biết sử dụng các phần mềm kế toán.
 
   Tôi thực sự mong muốn được làm việc trong môi trường chuyên nghiệp của Quý công ty. Tôi rất mong nhận được lịch hẹn phỏng vấn trong một ngày gần nhất.'''
-  List all Blankx in the Abstract section: Blank1, Blank2, Blank3, Blank4, Blank5, Blank6, Blank7, Blank8, Blank9
+  
   Answer: 
   [Blank1: #Empty]
   [Blank2: #Full_Name]
@@ -306,7 +369,7 @@ def blank_to_tagname_prompt():
   13. Nơi thường trú: (Blank15)
   14. Nơi ở hiện tại: (Blank16)
   15. Nghề nghiệp: (Blank17) 16. Trình độ học vấn: (Blank18)'''
-  List all Blankx in the Abstract section: Blank1, Blank2, Blank3, Blank4, Blank5, Blank6, Blank7, Blank8, Blank9, Blank10, Blank11, Blank12, Blank13, Blank14, Blank15, Blank16, Blank17, Blank18
+  
   Answer: 
   [Blank1: #Full_Name]
   [Blank2: #Empty]
@@ -337,7 +400,7 @@ def blank_to_tagname_prompt():
   Nay tôi làm đơn này kính xin Ban Giám Hiệu trường cho tôi được thôi học từ học kỳ: (Blank9) năm học: 20(Blank10) – 20(Blank11)
   Lý do: (Blank12)
   Trong khi chờ đợi sự chấp thuận của nhà trường, tôi xin chân thành cảm ơn.'''
-  List all Blankx in the Abstract section: Blank1, Blank2, Blank3, Blank4, Blank5, Blank6, Blank7, Blank8, Blank9, Blank10, Blank11, Blank12
+  
   Answer: 
   [Blank1: #Full_Name]
   [Blank2: #Empty]
@@ -375,7 +438,7 @@ def blank_to_tagname_prompt():
   ((Blank28)) Tên đơn vị thứ ((Blank29)): (Tên đơn vị, địa chỉ, người trực tiếp liên hệ, vị trí công việc dự tuyển, kết quả).
   (Blank30)
   Tình trạng việc làm hiện nay: (Blank31)'''
-  List all Blankx in the Abstract section: Blank1, Blank2, Blank3, Blank4, Blank5, Blank6, Blank7, Blank8, Blank9, Blank10, Blank11, Blank12, Blank13, Blank14, Blank15, Blank16, Blank17, Blank18, Blank19, Blank20, Blank21, Blank22, Blank23, Blank24, Blank25, Blank26, Blank27, Blank28, Blank29, Blank30, Blank31 
+  
   Answer:
   [Blank1: #Empty]
   [Blank2: #Empty]
@@ -457,7 +520,7 @@ def blank_to_tagname_prompt():
   Tôi cam kết toàn bộ nội dung đã trình bày trên là hoàn toàn đúng sự thật và chịu trách nhiệm trước pháp luật về những điều trình bày trên. Kính mong Quý cơ quan xem xét và giải quyết theo đúng quy định pháp luật.
 
   Tôi xin chân thành cảm ơn!'''
-  List all Blankx in the Abstract section: Blank1, Blank2, Blank3, Blank4, Blank5, Blank6, Blank7, Blank8, Blank9, Blank10, Blank11, Blank12, Blank13, Blank14, Blank15, Blank16, Blank17, Blank18, Blank19, Blank20, Blank21, Blank22, Blank23, Blank24
+  
   Answer:
   [Blank1: #Empty]
   [Blank2: #Full_Name]
@@ -500,6 +563,7 @@ def blank_to_tagname(chain, form, tag_names):
             "tag_names": tag_names,
             "Abstract": form, 
           })
+  # print("response: \n",response)
   response = re.search(r'Answer:(.*)', response, re.DOTALL).group(1).strip()
   list_tag_names = []
   pattern = r':\s*(.*)'

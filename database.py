@@ -33,9 +33,30 @@ def insert_value_into_database(data_to_insert):
     conn = sqlite3.connect('data.db')
     cursor = conn.cursor()
     columns = ', '.join(data_to_insert.keys())
+    print(columns)
     placeholders = ', '.join(['?' for _ in range(len(data_to_insert))])
+    print(placeholders)
     sql_query = f"INSERT INTO data ({columns}) VALUES ({placeholders})"
     values = [data_to_insert[key] for key in data_to_insert]
+    cursor.execute(sql_query, values)
+    conn.commit()
+    conn.close()
+
+def update_value_in_database(id, data_to_update):
+    conn = sqlite3.connect('data.db')
+    cursor = conn.cursor()
+
+    # Construct the SET part of the SQL query
+    set_clause = ', '.join([f"{key} = ?" for key in data_to_update.keys()])
+    
+    # Construct the values to be updated
+    values = list(data_to_update.values())
+    values.append(id)  # Append the ID for the WHERE clause
+
+    # Construct the SQL query
+    sql_query = f"UPDATE data SET {set_clause} WHERE id = ?"
+
+    # Execute the query
     cursor.execute(sql_query, values)
     conn.commit()
     conn.close()
