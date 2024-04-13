@@ -2,25 +2,7 @@ from langchain_google_genai import GoogleGenerativeAI, HarmBlockThreshold, HarmC
 from langchain_core.prompts import PromptTemplate
 import re
 from uniform_text import *
-
- 
-# Set up the model
-generation_config = {
-  "temperature": 0,
-  "top_p": 1,
-  "top_k": 1,
-  "max_output_tokens": 4096,
-}
- 
-llm = GoogleGenerativeAI(model="gemini-pro",
-                         safety_settings={
-                            HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-                            HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-                            HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-                            HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE
-                         },
-                         generation_config=generation_config,
-                         google_api_key="AIzaSyBRWVbQgcq1F5-1jXqIGC30MQ1ASMSaM50")
+  
 
 ##========================= Abstract Exemplar =========================##
 
@@ -553,12 +535,9 @@ def blank_to_tagname_prompt():
   prompt = PromptTemplate.from_template(template)
   return prompt, tag_names, translations
 
-prompt, tag_names, translations = blank_to_tagname_prompt()
-
-chain = prompt | llm
 
 
-def blank_to_tagname(chain, form, tag_names):
+def blank_to_tagname(llm, form, tag_names):
   response = chain.invoke({
             "tag_names": tag_names,
             "Abstract": form, 

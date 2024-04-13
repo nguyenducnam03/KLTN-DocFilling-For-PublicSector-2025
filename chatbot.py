@@ -20,6 +20,8 @@ from blank_to_tagname import *
 from extract_context import *
 from database import *
 import os.path
+#Genai
+import google.generativeai as genai
 
 # Prompt
 blank_to_tagname_prompt, tag_names, translations = blank_to_tagname_prompt()
@@ -45,37 +47,44 @@ async def on_chat_start():
         Switch(id="New", label="New", initial=True),
         ]
     ).send()
-    #
+    # Set up the model
+    genai.configure(api_key="AIzaSyBRWVbQgcq1F5-1jXqIGC30MQ1ASMSaM50")
     generation_config = {
-        "temperature": settings['Temperature'],
-        "top_p": settings['Top-p'],
-        "top_k": settings['Top-k'],
-        "max_output_tokens": settings['mnt'],
+    "temperature": 0,
+    "top_p": 1,
+    "top_k": 1,
+    "max_output_tokens": 6144,
     }
+    safety_settings = [
+    {
+        "category": "HARM_CATEGORY_HARASSMENT",
+        "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+    },
+    {
+        "category": "HARM_CATEGORY_HATE_SPEECH",
+        "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+    },
+    {
+        "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+        "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+    },
+    {
+        "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+        "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+    }
+    ]
     # ................................ LLM ......................................
-    llm = GoogleGenerativeAI(
-        model="gemini-pro",
-        safety_settings={
-        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-        HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-        HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE
-        },
-        generation_config=generation_config,
-        google_api_key="AIzaSyBRWVbQgcq1F5-1jXqIGC30MQ1ASMSaM50")
-    cl.user_session.set('llm',llm)
-    blank_to_tagname_chain = (
-        blank_to_tagname_prompt
-        | llm
-        | StrOutputParser()
-    )
+    llm = genai.GenerativeModel(model_name="gemini-pro",
+                              generation_config=generation_config,
+                              safety_settings=safety_settings)
     # -............................ Ảnh bìa ............................
     image = cl.Image(path="./fill_form.jpg", name="image1", display="inline")
     await cl.Message(
         content="Tôi là chatbot có nhiệm vụ chính là điền thông tin vào document.",
         elements=[image],
     ).send()  
-    # ................................ Đưa form vào chatbot bất cứ khi nào cũng được................................
+
+    # ------------------Đưa form vào chatbot bất cứ khi nào cũng được------------------
     files = None
     while files == None:
         files = await cl.AskFileMessage(
@@ -84,47 +93,52 @@ async def on_chat_start():
     text_file = files[0]
     with open(text_file.path, "r", encoding="utf-8") as f:
         text = f.read()  
+
+    #Notify upload text successfully
     await cl.Message(content=f"`{text_file.name}` uploaded, it contains {len(text)} characters!").send() # Thông báo cho người dùng biết đã up file thành công
+    # await cl.Message(content=f"Content \n {text}").send()
+
+    #------------------Text processing------------------
     text, count_blank = generate_uniform(text)
-    await cl.Message(content=text).send()
-    list_tag_names = blank_to_tagname(blank_to_tagname_chain, text, tag_names)
-    cl.user_session.set('list_tag_names', list_tag_names)
-    await cl.Message(content=list_tag_names).send()
-    list_keys = get_list_keys(list_tag_names, translations)
-    print("LIST_KEYS: ", list_keys)
-    cl.user_session.set('list_keys', list_keys)
-    # --------------------------- Database --------------------------
-    count_id = count_rows()
-    if count_id == 0:
-        await cl.Message(content = "Chưa có thông tin trong database. Vui lòng đưa context vào.").send()
-        value = "1"
-    else:
-        list_name_actions = [cl.Action(name = "New", value = str(count_id + 1), label = "0: New")]
-        for i in range(count_id):
-            name = get_value(i+1,"Full_Name")
-            info = f"{i+1}: {name}"
-            list_name_actions.append(cl.Action(name = f"Row {i+1}", value = str(i + 1), label = info ))
-        res = await cl.AskActionMessage(
-            content=f"Chọn lựa chọn phù hợp.",
-            actions= list_name_actions
-        ).send()
-        value = res.get("value")
-    print(count_id, value)
-    if value != str(count_id + 1): # Điền form bằng cách lấy thông tin từ database
-        list_info, list_miss_keys, list_miss_items = get_values(value, list_tag_names, translations)
-        output_form = fill_form(text, list_info, count_blank)
-        await cl.Message(content = output_form).send()
-        with open('./Output/result.txt','w',encoding='utf-8') as file:
-            file.write(output_form)
-        print("11111111111111111111111111111111111")
-        print("LIST_INFO:", list_info)
-        print("LIST_MISS_KEYS:", list_miss_keys)
-        print("LIST_MISS_ITEMS:", list_miss_items)   
-    # ---------------------- Lưu user session ---------------------
-    cl.user_session.set("value", value)
-    cl.user_session.set("text",text)
-    cl.user_session.set("count_blank", count_blank)
-    cl.user_session.set("count_id", count_id)
+    await cl.Message(content=f"Processed Text : \n {text}").send()
+    list_tag_names = blank_to_tagname(llm, text, tag_names)
+    # cl.user_session.set('list_tag_names', list_tag_names)
+    # await cl.Message(content=list_tag_names).send()
+    # list_keys = get_list_keys(list_tag_names, translations)
+    # print("LIST_KEYS: ", list_keys)
+    # cl.user_session.set('list_keys', list_keys)
+    # # --------------------------- Database --------------------------
+    # count_id = count_rows()
+    # if count_id == 0:
+    #     await cl.Message(content = "Chưa có thông tin trong database. Vui lòng đưa context vào.").send()
+    #     value = "1"
+    # else:
+    #     list_name_actions = [cl.Action(name = "New", value = str(count_id + 1), label = "0: New")]
+    #     for i in range(count_id):
+    #         name = get_value(i+1,"Full_Name")
+    #         info = f"{i+1}: {name}"
+    #         list_name_actions.append(cl.Action(name = f"Row {i+1}", value = str(i + 1), label = info ))
+    #     res = await cl.AskActionMessage(
+    #         content=f"Chọn lựa chọn phù hợp.",
+    #         actions= list_name_actions
+    #     ).send()
+    #     value = res.get("value")
+    # print(count_id, value)
+    # if value != str(count_id + 1): # Điền form bằng cách lấy thông tin từ database
+    #     list_info, list_miss_keys, list_miss_items = get_values(value, list_tag_names, translations)
+    #     output_form = fill_form(text, list_info, count_blank)
+    #     await cl.Message(content = output_form).send()
+    #     with open('./Output/result.txt','w',encoding='utf-8') as file:
+    #         file.write(output_form)
+    #     print("11111111111111111111111111111111111")
+    #     print("LIST_INFO:", list_info)
+    #     print("LIST_MISS_KEYS:", list_miss_keys)
+    #     print("LIST_MISS_ITEMS:", list_miss_items)   
+    # # ---------------------- Lưu user session ---------------------
+    # cl.user_session.set("value", value)
+    # cl.user_session.set("text",text)
+    # cl.user_session.set("count_blank", count_blank)
+    # cl.user_session.set("count_id", count_id)
 
 
 # ---------------------------------------- On message --------------------------------------
