@@ -29,9 +29,10 @@ def count_rows():
 
 
 # ---------------- Thêm thông tin vào datase -----------------------------
-def insert_value_into_database(data_to_insert):
+def insert_value_into_database(value, data_to_insert):
     conn = sqlite3.connect('data.db')
     cursor = conn.cursor()
+    data_to_insert['ID'] = value
     columns = ', '.join(data_to_insert.keys())
     print(columns)
     placeholders = ', '.join(['?' for _ in range(len(data_to_insert))])
@@ -42,25 +43,17 @@ def insert_value_into_database(data_to_insert):
     conn.commit()
     conn.close()
 
-def update_value_in_database(id, data_to_update):
+# --------------- Cập nhật thông tin vào database -------------------------
+def update_value_in_database(value, data_to_update):
     conn = sqlite3.connect('data.db')
     cursor = conn.cursor()
-
-    # Construct the SET part of the SQL query
     set_clause = ', '.join([f"{key} = ?" for key in data_to_update.keys()])
-    
-    # Construct the values to be updated
+    sql_query = f"UPDATE data SET {set_clause} WHERE ID = ?"
     values = list(data_to_update.values())
-    values.append(id)  # Append the ID for the WHERE clause
-
-    # Construct the SQL query
-    sql_query = f"UPDATE data SET {set_clause} WHERE id = ?"
-
-    # Execute the query
+    values.append(value)
     cursor.execute(sql_query, values)
     conn.commit()
     conn.close()
-
 
 # ------------------- Lấy thông tin tại 1 ô từ database ----------------------------
 def get_value(id, key):
@@ -72,7 +65,7 @@ def get_value(id, key):
     conn.close()
     return value
     
-# ----------------- Lấy thông tin từ nhiều key tại 1 dòng --------------------------
+# ----------------- Lấy thông tin từ nhiều key tại 1 row --------------------------
 def get_values(id, list_cols, translations):
     list_info = []
     list_miss_keys = []
