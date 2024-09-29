@@ -225,14 +225,27 @@ remaining_tag_names = """
 """
 
 residence_identification_template_prompt = """
-Instruction: Residence and Identification Form
+# Instruction: Residence and Identification Form
 
-Goal:
+# Goal:
 The purpose of this form is to accurately capture and store essential personal identification and residence-related details of users. The data collected includes vital information required for legal and government documentation, ensuring that each individual is correctly identified and located. The form covers personal identification (name, birth details, ID numbers), residence information (permanent, current addresses), and additional details such as nationality and marital status. Your task is to ensure each placeholder is replaced with the correct tag name to reflect the user's information. If a placeholder does not match any defined tag, generate a new tag name.
 
-Your Task:
+# Your Task:
 
 You are responsible for determining the correct tag name for each placeholder in a residence and identification form. Your task is to ensure that every placeholder in the form is accurately replaced with the corresponding tag name, based on the user's personal information and the tag names provided. If a placeholder does not match any defined tag, generate a new tag name accordingly.
+
+- Input Format:
+
+The input is a sample form containing placeholders (..........) for collecting information.
+Each placeholder represents a piece of information that needs to be mapped to a specific tag, depending on the type of information it corresponds to.
+
+- Output Format:
+
+The output should be a standardized version of the form, where placeholders have been replaced by tags in the format [userX_tagname] or [tagname].
+The placeholder tags should be replaced based on a set of predefined tag names for various types of personal and academic information.
+Example output should include accurately mapped tags for each type of information required in the form, ensuring clarity and consistency.
+
+Input and output are placed in ''' '''
 
 1. Identify Unique Users
 
@@ -268,6 +281,7 @@ Output only.
 
 ## Example:
 Input:
+'''
 TỜ KHAI CĂN CƯỚC CÔNG DÂN
 1. Họ, chữ đệm và tên(1): ..........
 2. Họ, chữ đệm và tên gọi khác (nếu có)(1): ..........
@@ -281,7 +295,9 @@ TỜ KHAI CĂN CƯỚC CÔNG DÂN
 14. Nơi ở hiện tại: ..........
 15. Nghề nghiệp: .......... 16. Trình độ học vấn: ..........
 .........., ngày ..........tháng..........năm..........
+'''
 Output:
+'''
 TỜ KHAI CĂN CƯỚC CÔNG DÂN
 1. Họ, chữ đệm và tên(1): [user1_full_name]
 2. Họ, chữ đệm và tên gọi khác (nếu có)(1): [user1_alias_name]
@@ -295,9 +311,11 @@ TỜ KHAI CĂN CƯỚC CÔNG DÂN
 14. Nơi ở hiện tại: [user1_current_address]
 15. Nghề nghiệp: [user1_occupation] 16. Trình độ học vấn: [user1_education_level]
 [place], ngày [day] tháng [month] năm [year]
+'''
 
 ## Example:
 Input:
+'''
 CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 TỜ KHAI ĐĂNG KÝ VIỆC THAY ĐỔI, CẢI CHÍNH,
@@ -322,7 +340,9 @@ Làm tại: .......... , ngày ..........  tháng ..........  năm ..........
 Người yêu cầu
 (Ký, ghi rõ họ, chữ đệm, tên)
 
+'''
 Output:
+'''
 CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 TỜ KHAI ĐĂNG KÝ VIỆC THAY ĐỔI, CẢI CHÍNH,
@@ -347,8 +367,11 @@ Làm tại: [place] , ngày [day]  tháng [month]  năm [year]
 Người yêu cầu
 (Ký, ghi rõ họ, chữ đệm, tên) 
 
+'''
+
 ## Example: 
 Input:
+'''
 Form:
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -373,7 +396,9 @@ Nơi cư trú: ..........
 Tôi cam đoan nội dung đề nghị đăng ký khai sinh trên đây là đúng sự thật, được sự thỏa thuận nhất trí của các bên liên quan theo quy định pháp luật.
 Tôi chịu hoàn toàn trách nhiệm trước pháp luật về nội dung cam đoan của mình.
 Làm tại: .........., ngày .......... tháng .......... năm ..........
+'''
 Output:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 TỜ KHAI ĐĂNG KÝ KHAI SINH
@@ -397,9 +422,11 @@ Nơi cư trú: [user4_current_address]
 Tôi cam đoan nội dung đề nghị đăng ký khai sinh trên đây là đúng sự thật, được sự thỏa thuận nhất trí của các bên liên quan theo quy định pháp luật.
 Tôi chịu hoàn toàn trách nhiệm trước pháp luật về nội dung cam đoan của mình.
 Làm tại: [place], ngày [day] tháng [month] năm [year]
+'''
 
 ## Example:
 Input:
+'''
 TỜ KHAI THAY ĐỔI THÔNG TIN CƯ TRÚ
 (Dùng cho công dân Việt Nam định cư ở nước ngoài 
 không có hộ chiếu Việt Nam còn giá trị sử dụng) 
@@ -421,8 +448,10 @@ Cơ quan cấp:..........	 Có giá trị đến ngày:........../........../...
 15. Nơi ở hiện tại ở Việt Nam:..........
 16. Nội dung đề nghị (2):..........
 17. Họ và tên chủ hộ:..........18. Quan hệ với chủ hộ:..........
-19. Số định danh cá nhân/ CMND của chủ hộ:..........										
+19. Số định danh cá nhân/ CMND của chủ hộ:..........
+'''									
 Output:
+'''
 TỜ KHAI THAY ĐỔI THÔNG TIN CƯ TRÚ
 (Dùng cho công dân Việt Nam định cư ở nước ngoài 
 không có hộ chiếu Việt Nam còn giá trị sử dụng) 
@@ -445,9 +474,11 @@ Cơ quan cấp: [user1_passport_issuer]	 Có giá trị đến ngày: [user1_pas
 16. Nội dung đề nghị (2): [user1_request_content]
 17. Họ và tên chủ hộ: [user2_full_name] 18. Quan hệ với chủ hộ: [user1_relationship_user2]
 19. Số định danh cá nhân/ CMND của chủ hộ: [user2_id_number]	
+'''
 
 ## Example:
 Input:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -471,7 +502,9 @@ Tôi xin cam đoan những thông tin trên là đúng sự thật./.
                                                   
 
            Làm tại.........., ngày..........tháng..........năm..........
+'''
 Output:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -495,21 +528,37 @@ Tôi xin cam đoan những thông tin trên là đúng sự thật./.
                                                   
 
            Làm tại [place], ngày [day] tháng [month] năm [year]
+'''
 ## Example:
 Input:
+'''
 {form}
+'''
 Ouput: 
 """
 
 study_template_prompt = """
-Instruction: Study Form
+# Instruction: Study Form
 
-Goal:
+# Goal:
 The purpose of this form is to accurately capture and store essential academic and personal details of users in an educational context. The data collected includes information such as name, date of birth, student ID, academic details (class, course, faculty, and school), and contact information. This form is essential for student records, academic tracking, and official documentation. Your task is to ensure each placeholder is replaced with the correct tag name to reflect the user's information. If a placeholder does not match any defined tag, generate a new tag name.
 
-Your Task:
+# Your Task:
 
 You are responsible for determining the correct tag name for each placeholder in a study-related form. Your task is to ensure that every placeholder in the form is accurately replaced with the corresponding tag name, based on the user's academic and personal information and the tag names provided. If a placeholder does not match any defined tag, generate a new tag name accordingly.
+
+- Input Format:
+
+The input is a sample form containing placeholders (..........) for collecting information.
+Each placeholder represents a piece of information that needs to be mapped to a specific tag, depending on the type of information it corresponds to.
+
+- Output Format:
+
+The output should be a standardized version of the form, where placeholders have been replaced by tags in the format [userX_tagname] or [tagname].
+The placeholder tags should be replaced based on a set of predefined tag names for various types of personal and academic information.
+Example output should include accurately mapped tags for each type of information required in the form, ensuring clarity and consistency.
+
+Input and output are placed in ''' '''
 
 1. Identify Unique Users
 
@@ -545,6 +594,7 @@ Output only.
 
 ## Example
 Input:
+'''
 ĐƠN ĐỀ NGHỊ XÁC NHẬN VÀ CẤP HỖ TRỢ
 (Dùng cho học sinh, sinh viên đang học tại các cơ sở giáo dục nghề nghiệp công lập)
 Kính gửi:	
@@ -560,8 +610,9 @@ Mã số học sinh, sinh viên: ..........
 Người làm đơn
 (Ký và ghi rõ họ tên)
 
-
+'''
 Ouptut:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -580,9 +631,11 @@ Mã số học sinh, sinh viên: [user1_student_id]
 Người làm đơn
 (Ký và ghi rõ họ tên)
 
+'''
 
 ## Example:
 Input:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -623,7 +676,9 @@ Tôi cam đoan nội dung báo cáo là hoàn toàn trung thực, chính xác v�
     .........., ngày.......... tháng.......... năm.......... 
 Người báo cáo
 (Ký và ghi rõ họ tên)
+'''
 Output:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -642,7 +697,7 @@ Kính gửi: [receiver]
 - Văn bằng, chứng chỉ được cấp:	[user1_degree]
 - Kết quả xếp loại học tập:	[user1_study_result_rating]
 9. Tên cơ sở giáo dục nước ngoài (ghi bằng tiếng Việt và tiếng Anh):	
-[user1_university_name]		
+[user1_foreign_education_institution_name]		
 10. Tên đề tài luận văn thạc sĩ (nếu học thạc sĩ coursework không có luận văn thì ghi: không có luận văn), đề tài luận án tiến sĩ, chuyên đề thực tập:	
 [user1_thesis_topic]	
 11. Tên và học hàm, học vị của người hướng dẫn:	[user1_supervisor_name]
@@ -664,9 +719,11 @@ Tôi cam đoan nội dung báo cáo là hoàn toàn trung thực, chính xác v�
     [place], ngày [day] tháng [month] năm [year] 
 Người báo cáo
 (Ký và ghi rõ họ tên)
+'''
 
 ## Example:
 Input:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -687,7 +744,9 @@ Nơi trẻ mẫu giáo có hộ khẩu thường trú
 (Ký tên, đóng dấu)	................,ngày....tháng................năm................
 Người làm đơn
 (Ký, ghi rõ họ tên)
+'''
 Output:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -708,9 +767,10 @@ Nơi trẻ mẫu giáo có hộ khẩu thường trú
 (Ký tên, đóng dấu)	[place], ngày [day] tháng [month] năm [year]
 Người làm đơn
 (Ký, ghi rõ họ tên)
-
+'''
 ## Example:
 Input:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -741,7 +801,10 @@ E-mail:	..........
 		.........., ngày.......... tháng.......... năm.......... 
 Người làm đơn
 (Ký và ghi rõ họ tên)
+
+'''
 Output:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -771,8 +834,11 @@ E-mail:	[user1_email]
 Người làm đơn
 (Ký và ghi rõ họ tên)
 
+'''
+
 ## Example:
 Input:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -802,7 +868,9 @@ Tôi làm đơn này đề nghị các cấp quản lý xem xét, để em  ....
 Người làm đơn
 (Ký, ghi rõ họ, tên hoặc điểm chỉ )
 
+'''
 Output:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -832,8 +900,11 @@ Tôi làm đơn này đề nghị các cấp quản lý xem xét, để em  [use
 Người làm đơn
 (Ký, ghi rõ họ, tên hoặc điểm chỉ )
 
+
+'''
 ## Example:
 Input:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -868,7 +939,9 @@ Công tác tại: ..........
 Bố (mẹ) hoặc người đại diện hợp pháp
 (ký và ghi rõ họ tên)
 
+'''
 Output:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -903,8 +976,10 @@ Công tác tại: [user2_occupation]
 Bố (mẹ) hoặc người đại diện hợp pháp
 (ký và ghi rõ họ tên)
 
+'''
 ## Example:
 Input:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
  
@@ -924,7 +999,9 @@ Xác nhận của Khoa
 Người làm đơn
 (Ký và ghi rõ họ tên)
 
+'''
 Output:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
  
@@ -944,8 +1021,11 @@ Xác nhận của Khoa
 Người làm đơn
 (Ký và ghi rõ họ tên)
 
+'''
+
 ## Example:
 Input:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -977,7 +1057,9 @@ E-mail:	..........
 Người làm đơn
 (Ký và ghi rõ họ tên)
 
+'''
 Output:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -1009,21 +1091,37 @@ E-mail:	[user1_email]
 Người làm đơn
 (Ký và ghi rõ họ tên)
 
+'''
 ## Example:
 Input:
+'''
 {form}
+'''
 Output:
 """
 
 health_medical_template_prompt = """
-Instruction: Health and Medical Form
+# Instruction: Health and Medical Form
 
-Goal:
+# Goal:
 The goal of this form is to gather critical health and medical-related information about users, including personal identification, social and health insurance data, and contact details. This information is vital for medical records, insurance claims, and health-related administrative tasks. Your task is to ensure that all placeholders in the form are correctly replaced with the corresponding tag names for accuracy in health and medical documentation.
 
-Your Task:
+# Your Task:
 
 You are responsible for determining the correct tag name for each placeholder in a health and medical-related form. Your task is to ensure that every placeholder in the form is accurately replaced with the corresponding tag name, based on the user's medical and personal information. If a placeholder does not match any defined tag, generate a new tag name accordingly.
+
+- Input Format:
+
+The input is a sample form containing placeholders (..........) for collecting information.
+Each placeholder represents a piece of information that needs to be mapped to a specific tag, depending on the type of information it corresponds to.
+
+- Output Format:
+
+The output should be a standardized version of the form, where placeholders have been replaced by tags in the format [userX_tagname] or [tagname].
+The placeholder tags should be replaced based on a set of predefined tag names for various types of personal and academic information.
+Example output should include accurately mapped tags for each type of information required in the form, ensuring clarity and consistency.
+
+Input and output are placed in ''' '''
 
 1. Identify Unique Users
 
@@ -1061,6 +1159,7 @@ Output only.
 
 ## Example:
 Input:
+'''
                         TỜ KHAI THAM GIA, ĐIỀU CHỈNH THÔNG TIN BẢO HIỂM XÃ HỘI, BẢO HIỂM Y TẾ
 
 I.	Áp dụng đối với người tham gia tra cứu không thấy mã số BHXH do cơ quan BHXH cấp
@@ -1074,7 +1173,9 @@ I.	Áp dụng đối với người tham gia tra cứu không thấy mã số BH
 [12]. Số nhà, đường/phố, thôn/xóm: ............................................	
 [13]. Xã: ..........................	[14]	Huyện: .............................	[15]. Tỉnh: ....................................... 	
 [16]. Kê khai Phụ lục Thành viên hộ gia đình (phụ lục kèm theo) đối với người tham gia tra cứu không thấy mã số BHXH và người tham gia BHYT theo hộ gia đình để giảm trừ mức đóng.
+'''
 Output:
+'''
                         TỜ KHAI THAM GIA, ĐIỀU CHỈNH THÔNG TIN BẢO HIỂM XÃ HỘI, BẢO HIỂM Y TẾ
 
 I.	Áp dụng đối với người tham gia tra cứu không thấy mã số BHXH do cơ quan BHXH cấp
@@ -1088,9 +1189,11 @@ I.	Áp dụng đối với người tham gia tra cứu không thấy mã số BH
 [12]. Số nhà, đường/phố, thôn/xóm: [user1_current_address]	
 [13]. Xã: [user1_current_address_ward]	[14]	Huyện: [user1_current_address_district]	[15]. Tỉnh: [user1_current_address_province] 	
 [16]. Kê khai Phụ lục Thành viên hộ gia đình (phụ lục kèm theo) đối với người tham gia tra cứu không thấy mã số BHXH và người tham gia BHYT theo hộ gia đình để giảm trừ mức đóng.
+'''
 
 ## Example:
 Input:
+'''
 BẢO HIỂM XÃ HỘI TỈNH
 PHÒNG........../BHXH HUYỆN..........
 -------	CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1117,7 +1220,9 @@ Tên chủ tài khoản: ..........
 Đã nhận kết quả giải quyết vào ngày .......... tháng .......... năm ..........
 NGƯỜI NHẬN
 (Ký và ghi rõ họ tên)
+'''
 Output:
+'''
 BẢO HIỂM XÃ HỘI TỈNH
 
 PHÒNG [local_insurance_office]/BHXH HUYỆN [local_insurance_office]
@@ -1148,9 +1253,11 @@ Tên chủ tài khoản: [user2_full_name]
 
 NGƯỜI NHẬN
 (Ký và ghi rõ họ tên)
+'''
 
 ## Example:
 Input:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 
 Độc lập - Tự do - Hạnh phúc
@@ -1179,7 +1286,10 @@ Xác nhận của UBND hoặc Công an cấp xã (7)
 Người đề nghị
 
 (Ký, ghi rõ họ tên)
+
+'''
 Output:
+'''
 GIẤY ĐỀ NGHỊ KHÁM GIÁM ĐỊNH
 
 Kính gửi: [receiver]
@@ -1203,21 +1313,37 @@ Người đề nghị
 
 (Ký, ghi rõ họ tên)
 
+'''
 ## Example:
 Input:
+'''
 {form}
+'''
 Output:
 """
 
 vehicle_driver_template_prompt = """
-Instruction: Vehicle Driver Form
+# Instruction: Vehicle Driver Form
 
-Goal:
+# Goal:
 The goal of this form is to collect essential information related to vehicle drivers, including personal identification details, driving licenses, tax information, and transport licenses. Accurate data is crucial for vehicle registration, driving license issuance, and compliance with transport regulations. Your task is to ensure that all placeholders in the form are correctly replaced with the appropriate tag names for accurate documentation related to vehicle driving and transportation.
 
-Your Task:
+# Your Task:
 
 You are responsible for determining the correct tag name for each placeholder in a vehicle driver-related form. Your task is to ensure that every placeholder in the form is accurately replaced with the corresponding tag name, based on the user's vehicle-related and personal information. If a placeholder does not match any defined tag, generate a new tag name accordingly.
+
+- Input Format:
+
+The input is a sample form containing placeholders (..........) for collecting information.
+Each placeholder represents a piece of information that needs to be mapped to a specific tag, depending on the type of information it corresponds to.
+
+- Output Format:
+
+The output should be a standardized version of the form, where placeholders have been replaced by tags in the format [userX_tagname] or [tagname].
+The placeholder tags should be replaced based on a set of predefined tag names for various types of personal and academic information.
+Example output should include accurately mapped tags for each type of information required in the form, ensuring clarity and consistency.
+
+Input and output are placed in ''' '''
 
 1. Identify Unique Users
 
@@ -1255,6 +1381,7 @@ Output only.
 
 ## Example:
 Input:
+'''
 GIẤY KHAI ĐĂNG KÝ XE (Vehicle registation declaration)
 A. PHẦN CHỦ XE TỰ KÊ KHAI (self declaration vehicle owner’s)
 Tên chủ xe :..........
@@ -1274,7 +1401,9 @@ Số giấy phép kinh doanh vận tải cấp ngày ........../.......... / ...
 Số máy 1 (Engine N0):..........
 Số máy 2 (Engine N0):..........
 Số khung (Chassis N0):..........
+'''
 Output:
+'''
 GIẤY KHAI ĐĂNG KÝ XE (Vehicle registation declaration)
 A. PHẦN CHỦ XE TỰ KÊ KHAI (self declaration vehicle owner's)
 Tên chủ xe : [user1_full_name]
@@ -1294,9 +1423,11 @@ Số giấy phép kinh doanh vận tải cấp ngày [user1_transport_license_is
 Số máy 1 (Engine N0):[user1_vehicle_engine_number1]
 Số máy 2 (Engine N0):[user1_vehicle_engine_number2]
 Số khung (Chassis N0):[user1_vehicle_chassis_number] 
+'''
 
 ## Example:
 Input:
+'''
 MẪU ĐƠN ĐỀ NGHỊ ĐỔI, CẤP LẠI GIẤY PHÉP LÁI XE (1)
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -1317,7 +1448,9 @@ Vi phạm hành chính trong lĩnh vực giao thông đường bộ với hình 
 NGƯỜI LÀM ĐƠN
 (Ký và ghi rõ họ, tên)
 
+'''
 Output:
+'''
 MẪU ĐƠN ĐỀ NGHỊ ĐỔI, CẤP LẠI GIẤY PHÉP LÁI XE (1)
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -1338,8 +1471,10 @@ Vi phạm hành chính trong lĩnh vực giao thông đường bộ với hình 
 NGƯỜI LÀM ĐƠN
 (Ký và ghi rõ họ, tên)
 
+'''
 ## Example:
 Input:
+'''
 SOCIALIST REPUBLIC OF VIETNAM
 Independent - Freedom - Happiness
 ---------------
@@ -1360,8 +1495,9 @@ NGƯỜI LÀM ĐƠN (APPLICANT)
 (Ký và ghi rõ họ tên)
 (Signature and Full name)
 
+'''
 Output:
-
+'''
 SOCIALIST REPUBLIC OF VIETNAM
 Independent - Freedom - Happiness
 ---------------
@@ -1382,23 +1518,26 @@ NGƯỜI LÀM ĐƠN (APPLICANT)
 (Ký và ghi rõ họ tên)
 (Signature and Full name)
 
+'''
 ## Example:
 Input:
+'''
 {form}
+'''
 Output:
 """
 
 job_template_prompt = """
 
-Instruction: Job-Related Form
+# Instruction: Job-Related Form
 
-Goal: The goal of this form is to gather comprehensive information related to employment, and unemployment benefits. Accurate completion of this form is crucial for verifying employment history, managing social insurance records, and processing unemployment benefits. Your task is to ensure that all placeholders in the form are correctly replaced with the appropriate tag names for job-related and personal information. If a placeholder does not match any defined tag, generate a new tag name accordingly.
+# Goal: The goal of this form is to gather comprehensive information related to employment, and unemployment benefits. Accurate completion of this form is crucial for verifying employment history, managing social insurance records, and processing unemployment benefits. Your task is to ensure that all placeholders in the form are correctly replaced with the appropriate tag names for job-related and personal information. If a placeholder does not match any defined tag, generate a new tag name accordingly.
 
-Your Task:
+# Your Task:
 
 You are responsible for determining the correct tag name for each placeholder in a job-related form. Your task is to ensure that every placeholder in the form is accurately replaced with the corresponding tag name, based on the user's vehicle-related and personal information. If a placeholder does not match any defined tag, generate a new tag name accordingly.
 
-Identify Unique Users
+1. Identify Unique Users
 Task: Determine the number of unique users mentioned in the form.
 
 Action: Assign a unique identifier to each user (e.g., user1, user2, etc.).
@@ -1413,7 +1552,7 @@ Action 2: If a single placeholder should represent multiple related tags (e.g., 
 
 Action 3: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
-Handle Non-Personal Information Placeholders
+2. Handle Non-Personal Information Placeholders
 Task: If the placeholder does not correspond to any known study-related tag name:
 
 Action 1: Check against the {remaining_tag_names}.
@@ -1422,7 +1561,7 @@ Action 2: If a match is found, replace the placeholder with the corresponding ta
 
 Action 3: If no match is found, generate a new tag name in the format [new_tagname] and replace the placeholder with this generated tag name.
 
-Ensure Consistency and Accuracy
+3. Ensure Consistency and Accuracy
 Task: Ensure that each placeholder is accurately replaced according to the user's unique identifier and the nature of the information provided.
 
 Action: Review the form to confirm that all placeholders are correctly replaced, maintaining the integrity of the user information and the form structure.
@@ -1431,6 +1570,7 @@ Output only.
 
 ## Example:
 Input:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -1447,7 +1587,9 @@ Nhưng vì lý do (1)...........nên tôi gửi thông báo này (kèm theo bả
 Trường hợp người lao động chưa có bản sao hợp đồng lao động hoặc hợp đồng làm việc (2).
  Đề nghị quý Trung tâm xem xét, thực hiện các thủ tục về chấm dứt hưởng trợ cấp thất nghiệp để bảo lưu thời gian đóng bảo hiểm thất nghiệp tương ứng với số tháng hưởng trợ cấp thất nghiệp mà tôi chưa nhận tiền tại cơ quan bảo hiểm xã hội./.
                                                                           .........., ngày .......... tháng .......... năm ..........
+'''
 Output:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -1464,10 +1606,10 @@ Nhưng vì lý do (1) [reason] nên tôi gửi thông báo này (kèm theo bản
 Trường hợp người lao động chưa có bản sao hợp đồng lao động hoặc hợp đồng làm việc (2).
  Đề nghị quý Trung tâm xem xét, thực hiện các thủ tục về chấm dứt hưởng trợ cấp thất nghiệp để bảo lưu thời gian đóng bảo hiểm thất nghiệp tương ứng với số tháng hưởng trợ cấp thất nghiệp mà tôi chưa nhận tiền tại cơ quan bảo hiểm xã hội./.
                                                                           [place], ngày [day] tháng [month] năm [year]
-
-                                                                          
+'''                                                           
 ## Example:
 Input:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -1490,7 +1632,9 @@ Tôi có nguyện vọng tham gia khóa đào tạo nghề .......... với th�
 Người đề nghị
 (Ký, ghi rõ họ tên)
 
+'''
 Output:
+'''
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -1513,8 +1657,11 @@ Tôi có nguyện vọng tham gia khóa đào tạo nghề [user1_training_progr
 Người đề nghị
 (Ký, ghi rõ họ tên)
 
+'''
+
 ## Example
 Input:
+'''
 CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -1536,8 +1683,9 @@ tiền công khai thuế trực tiếp với cơ quan thuế)
 .......... Tên đại lý thuế (nếu có): ..........
 .......... Mã số thuế: ..........				
 .......... Hợp đồng đại lý thuế: Số: .......... ngày: .......... 
-
+'''
 Ouput:
+'''
 CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -1559,10 +1707,12 @@ tiền công khai thuế trực tiếp với cơ quan thuế)
 [17] Tên đại lý thuế (nếu có): [tax_agent_name]
 [18] Mã số thuế: [tax_agent_tax_id]				
 [19] Hợp đồng đại lý thuế: Số: [tax_agent_contract_number] ngày: [tax_agent_contract_date] 
-
+'''
 
 ## Example:
 Input: 
+'''
 {form}
+'''
 Output:
 """
