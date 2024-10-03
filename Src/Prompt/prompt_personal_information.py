@@ -1,3 +1,26 @@
+# Additional Examples:
+
+# Input: Ngày tháng năm sinh (dd/mm/yyyy): ..........
+# Output: Ngày tháng năm sinh (dd/mm/yyyy): [user1_birth_day, user1_birth_month, user1_birth_year]
+
+# Input: Thông tin liên lạc (số điện thoại, email): ..........
+# Output: Thông tin liên lạc (số điện thoại, email): [user1_phone_number, user1_email_address]
+
+# Input: Địa chỉ thường trú (số nhà, đường phố, quận/huyện, tỉnh/thành phố): ..........
+# Output: Địa chỉ thường trú (số nhà, đường phố, quận/huyện, tỉnh/thành phố): [user1_house_number, user1_street_name, user1_district, user1_city_province]
+
+# Input: Tên cha mẹ (tên cha, tên mẹ): ..........
+# Output: Tên cha mẹ (tên cha, tên mẹ): [user1_father_name, user1_mother_name]
+
+# Input: Thông tin tài khoản ngân hàng (số tài khoản, tên ngân hàng, chi nhánh): ..........
+# Output: Thông tin tài khoản ngân hàng (số tài khoản, tên ngân hàng, chi nhánh): [user1_bank_account_number, user1_bank_name, user1_bank_branch]
+
+# Input: Ngôn ngữ sử dụng (ngôn ngữ mẹ đẻ, ngôn ngữ phụ): ..........
+# Output: Ngôn ngữ sử dụng (ngôn ngữ mẹ đẻ, ngôn ngữ phụ): [user1_native_language, user1_secondary_language]
+
+# Input: Thông tin công việc hiện tại (tên công ty, chức vụ, địa chỉ): ..........
+# Output: Thông tin công việc hiện tại (tên công ty, chức vụ, địa chỉ): [user1_company_name, user1_job_title, user1_company_address]
+
 residence_identification_tagnames = """ 
 [full_name]: Họ và tên của người dùng.
 [alias_name]: Tên gọi khác của người dùng.
@@ -259,7 +282,9 @@ Action 1: If a match is found, replace the placeholder with the corresponding ta
 
 Action 2: If a single placeholder should represent multiple related tags (e.g., day, month, year or name, address), combine these related tags into a single tag name (e.g., [userX_dob] for date of birth or [userX_name_address] for name and address). Avoid splitting into multiple placeholders.
 
-Action 3: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
+Action 3: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
+
+Action 4: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
 2. Handle Non-Personal Information Placeholders
 
@@ -572,7 +597,9 @@ Action 1: If a match is found, replace the placeholder with the corresponding ta
 
 Action 2: If a single placeholder should represent multiple related tags (e.g., day, month, year), combine these related tags into a single tag name (e.g., [userX_full_dob] for date of birth). Avoid splitting into multiple placeholders.
 
-Action 3: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
+Action 3: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
+
+Action 4: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
 2. Handle Non-Personal Information Placeholders
 
@@ -697,7 +724,7 @@ Kính gửi: [receiver]
 - Văn bằng, chứng chỉ được cấp:	[user1_degree]
 - Kết quả xếp loại học tập:	[user1_study_result_rating]
 9. Tên cơ sở giáo dục nước ngoài (ghi bằng tiếng Việt và tiếng Anh):	
-[user1_foreign_education_institution_name]		
+[user1_foreign_education_institution_name_vn, user1_foreign_education_institution_name_en]		
 10. Tên đề tài luận văn thạc sĩ (nếu học thạc sĩ coursework không có luận văn thì ghi: không có luận văn), đề tài luận án tiến sĩ, chuyên đề thực tập:	
 [user1_thesis_topic]	
 11. Tên và học hàm, học vị của người hướng dẫn:	[user1_supervisor_name]
@@ -1137,7 +1164,9 @@ Action 1: If a match is found, replace the placeholder with the corresponding ta
 
 Action 2: If a single placeholder should represent multiple related tags (e.g., day, month, year), combine these related tags into a single tag name (e.g., [userX_full_dob] for date of birth). Avoid splitting into multiple placeholders.
 
-Action 3: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
+Action 3: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
+
+Action 4: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
 2. Handle Non-Personal Information Placeholders
 
@@ -1359,7 +1388,9 @@ Action 1: If a match is found, replace the placeholder with the corresponding ta
 
 Action 2: If a single placeholder should represent multiple related tags (e.g., day, month, year), combine these related tags into a single tag name (e.g., [userX_full_dob] for date of birth). Avoid splitting into multiple placeholders.
 
-Action 3: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
+Action 3: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
+
+Action 4: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
 2. Handle Non-Personal Information Placeholders
 
@@ -1537,6 +1568,19 @@ job_template_prompt = """
 
 You are responsible for determining the correct tag name for each placeholder in a job-related form. Your task is to ensure that every placeholder in the form is accurately replaced with the corresponding tag name, based on the user's vehicle-related and personal information. If a placeholder does not match any defined tag, generate a new tag name accordingly.
 
+- Input Format:
+
+The input is a sample form containing placeholders (..........) for collecting information.
+Each placeholder represents a piece of information that needs to be mapped to a specific tag, depending on the type of information it corresponds to.
+
+- Output Format:
+
+The output should be a standardized version of the form, where placeholders have been replaced by tags in the format [userX_tagname] or [tagname].
+The placeholder tags should be replaced based on a set of predefined tag names for various types of personal and academic information.
+Example output should include accurately mapped tags for each type of information required in the form, ensuring clarity and consistency.
+
+Input and output are placed in ''' '''
+
 1. Identify Unique Users
 Task: Determine the number of unique users mentioned in the form.
 
@@ -1550,7 +1594,9 @@ Action 1: If a match is found, replace the placeholder with the corresponding ta
 
 Action 2: If a single placeholder should represent multiple related tags (e.g., day, month, year), combine these related tags into a single tag name (e.g., [userX_full_dob] for date of birth). Avoid splitting into multiple placeholders.
 
-Action 3: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
+Action 3: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
+
+Action 4: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
 2. Handle Non-Personal Information Placeholders
 Task: If the placeholder does not correspond to any known study-related tag name:
