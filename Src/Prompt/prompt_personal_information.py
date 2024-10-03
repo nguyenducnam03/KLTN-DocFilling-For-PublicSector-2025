@@ -282,9 +282,14 @@ Action 1: If a match is found, replace the placeholder with the corresponding ta
 
 Action 2: If a single placeholder should represent multiple related tags (e.g., day, month, year or name, address), combine these related tags into a single tag name (e.g., [userX_dob] for date of birth or [userX_name_address] for name and address). Avoid splitting into multiple placeholders.
 
-Action 3: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
+Action 3: If a placeholder requires multiple pieces of information but only one tag is generated, ensure to create separate tags for each specific detail within the same square brackets separated by commas. For instance:
 
-Action 4: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
+Incorrect: "Ngày và nơi cấp: [user1_id_issue_date]"
+Correct: "Ngày và nơi cấp: [user1_id_issue_date, user1_id_issue_place]".
+
+Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
+
+Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
 2. Handle Non-Personal Information Placeholders
 
@@ -597,9 +602,14 @@ Action 1: If a match is found, replace the placeholder with the corresponding ta
 
 Action 2: If a single placeholder should represent multiple related tags (e.g., day, month, year), combine these related tags into a single tag name (e.g., [userX_full_dob] for date of birth). Avoid splitting into multiple placeholders.
 
-Action 3: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
+Action 3: If a placeholder requires multiple pieces of information but only one tag is generated, ensure to create separate tags for each specific detail within the same square brackets separated by commas. For instance:
 
-Action 4: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
+Incorrect: "Ngày và nơi cấp: [user1_id_issue_date]"
+Correct: "Ngày và nơi cấp: [user1_id_issue_date, user1_id_issue_place]".
+
+Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
+
+Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
 2. Handle Non-Personal Information Placeholders
 
@@ -1164,9 +1174,14 @@ Action 1: If a match is found, replace the placeholder with the corresponding ta
 
 Action 2: If a single placeholder should represent multiple related tags (e.g., day, month, year), combine these related tags into a single tag name (e.g., [userX_full_dob] for date of birth). Avoid splitting into multiple placeholders.
 
-Action 3: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
+Action 3: If a placeholder requires multiple pieces of information but only one tag is generated, ensure to create separate tags for each specific detail within the same square brackets separated by commas. For instance:
 
-Action 4: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
+Incorrect: "Ngày và nơi cấp: [user1_id_issue_date]"
+Correct: "Ngày và nơi cấp: [user1_id_issue_date, user1_id_issue_place]".
+
+Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
+
+Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
 2. Handle Non-Personal Information Placeholders
 
@@ -1388,9 +1403,14 @@ Action 1: If a match is found, replace the placeholder with the corresponding ta
 
 Action 2: If a single placeholder should represent multiple related tags (e.g., day, month, year), combine these related tags into a single tag name (e.g., [userX_full_dob] for date of birth). Avoid splitting into multiple placeholders.
 
-Action 3: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
+Action 3: If a placeholder requires multiple pieces of information but only one tag is generated, ensure to create separate tags for each specific detail within the same square brackets separated by commas. For instance:
 
-Action 4: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
+Incorrect: "Ngày và nơi cấp: [user1_id_issue_date]"
+Correct: "Ngày và nơi cấp: [user1_id_issue_date, user1_id_issue_place]".
+
+Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
+
+Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
 2. Handle Non-Personal Information Placeholders
 
@@ -1594,9 +1614,14 @@ Action 1: If a match is found, replace the placeholder with the corresponding ta
 
 Action 2: If a single placeholder should represent multiple related tags (e.g., day, month, year), combine these related tags into a single tag name (e.g., [userX_full_dob] for date of birth). Avoid splitting into multiple placeholders.
 
-Action 3: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
+Action 3: If a placeholder requires multiple pieces of information but only one tag is generated, ensure to create separate tags for each specific detail within the same square brackets separated by commas. For instance:
 
-Action 4: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
+Incorrect: "Ngày và nơi cấp: [user1_id_issue_date]"
+Correct: "Ngày và nơi cấp: [user1_id_issue_date, user1_id_issue_place]".
+
+Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
+
+Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
 2. Handle Non-Personal Information Placeholders
 Task: If the placeholder does not correspond to any known study-related tag name:
