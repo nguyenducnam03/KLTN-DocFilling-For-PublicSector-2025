@@ -242,9 +242,6 @@ remaining_tag_names = """
 [month]: Tháng khi biểu mẫu được người dùng điền.
 [year]: Năm khi biểu mẫu được người dùng điền.
 [place]: Nơi mà biểu mẫu được người dùng điền.
-[ward_authority_confirmation]: Xác nhận của UBND hoặc Công an cấp xã
-[district_authority_confirmation]: Xác nhận của UBND hoặc Công an cấp huyện
-[province_authority_confirmation]: Xác nhận của UBND hoặc Công an cấp tỉnh
 """
 
 residence_identification_template_prompt = """
@@ -260,7 +257,7 @@ You are responsible for determining the correct tag name for each placeholder in
 - Input Format:
 
 The input is a sample form containing placeholders (..........) for collecting information.
-Each placeholder represents a piece of information that needs to be mapped to a specific tag, depending on the type of information it corresponds to.
+Each placeholder represents a piece of information that needs to be mapped to a specific tag name, depending on the type of information it corresponds to.
 
 - Output Format:
 
@@ -268,7 +265,7 @@ The output should be a standardized version of the form, where placeholders have
 The placeholder tags should be replaced based on a set of predefined tag names for various types of personal and academic information.
 Example output should include accurately mapped tags for each type of information required in the form, ensuring clarity and consistency.
 
-Input and output are placed in ''' '''
+Input and output are placed in ``` ```
 
 1. Identify Unique Users
 
@@ -280,12 +277,9 @@ Task: For each placeholder (..........), check if it corresponds to a residence 
 
 Action 1: If a match is found, replace the placeholder with the corresponding tag name in the format [userX_tagname], where X is the user identifier.
 
-Action 2: If a single placeholder should represent multiple related tags (e.g., day, month, year or name, address), combine these related tags into a single tag name (e.g., [userX_dob] for date of birth or [userX_name_address] for name and address). Avoid splitting into multiple placeholders.
+Action 2: If a single placeholder should represent multiple related tags (e.g., Ngày, tháng, năm sinh: ......... or Ngày sinh: .........), combine these related tags into a single tag name (e.g., [userX_dob] for date of birth). Avoid splitting into multiple placeholders.
 
-Action 3: If a placeholder requires multiple pieces of information but only one tag is generated, ensure to create separate tags for each specific detail within the same square brackets separated by commas. For instance:
-
-Incorrect: "Ngày và nơi cấp: [user1_id_issue_date]"
-Correct: "Ngày và nơi cấp: [user1_id_issue_date, user1_id_issue_place]".
+Action 3: If a placeholder requires multiple pieces of information (e.g., Ngày và nơi cấp: ..........), ensure to create separate tags for each specific detail within the same square brackets separated by commas (e.g., [user1_id_issue_date, user1_id_issue_place] for id issue date and id issue place)
 
 Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
 
@@ -311,7 +305,7 @@ Output only.
 
 ## Example:
 Input:
-'''
+```
 TỜ KHAI CĂN CƯỚC CÔNG DÂN
 1. Họ, chữ đệm và tên(1): ..........
 2. Họ, chữ đệm và tên gọi khác (nếu có)(1): ..........
@@ -325,9 +319,9 @@ TỜ KHAI CĂN CƯỚC CÔNG DÂN
 14. Nơi ở hiện tại: ..........
 15. Nghề nghiệp: .......... 16. Trình độ học vấn: ..........
 .........., ngày ..........tháng..........năm..........
-'''
+```
 Output:
-'''
+```
 TỜ KHAI CĂN CƯỚC CÔNG DÂN
 1. Họ, chữ đệm và tên(1): [user1_full_name]
 2. Họ, chữ đệm và tên gọi khác (nếu có)(1): [user1_alias_name]
@@ -341,11 +335,45 @@ TỜ KHAI CĂN CƯỚC CÔNG DÂN
 14. Nơi ở hiện tại: [user1_current_address]
 15. Nghề nghiệp: [user1_occupation] 16. Trình độ học vấn: [user1_education_level]
 [place], ngày [day] tháng [month] năm [year]
-'''
+```
 
 ## Example:
 Input:
-'''
+```
+TỜ KHAI CĂN CƯỚC CÔNG DÂN
+1. Họ, chữ đệm và tên(1): ..........
+2. Họ, chữ đệm và tên gọi khác (nếu có)(1): ..........
+3. Ngày, tháng, năm sinh: ..........; 4. Giới tính (Nam/nữ): ..........
+5. Số CMND/CCCD: ..........
+6. Dân tộc: ..........; 7. Tôn giáo: .......... 8. Quốc tịch: ..........
+9. Tình trạng hôn nhân: .......... 10. Nhóm máu (nếu có): ..........
+11. Nơi đăng ký khai sinh: ..........
+12. Quê quán: ..........
+13. Nơi thường trú: ..........
+14. Nơi ở hiện tại: ..........
+15. Nghề nghiệp: .......... 16. Trình độ học vấn: ..........
+.........., ngày ..........tháng..........năm..........
+```
+Output:
+```
+TỜ KHAI CĂN CƯỚC CÔNG DÂN
+1. Họ, chữ đệm và tên(1): [user1_full_name]
+2. Họ, chữ đệm và tên gọi khác (nếu có)(1): [user1_alias_name]
+3. Ngày, tháng, năm sinh: [user1_dob]; 4. Giới tính (Nam/nữ): [user1_gender]
+5. Số CMND/CCCD: [user1_id_number]
+6. Dân tộc và tôn giáo: [user1_ethnicity, user1_religion] 8. Quốc tịch: [user1_nationality]
+9. Tình trạng hôn nhân: [user1_marital_status] 10. Nhóm máu (nếu có): [user1_blood_type]
+11. Nơi đăng ký khai sinh: [user1_birth_registration_place]
+12. Quê quán: [user1_hometown]
+13. Nơi thường trú: [user1_permanent_address]
+14. Nơi ở hiện tại: [user1_current_address]
+15. Nghề nghiệp: [user1_occupation] 16. Trình độ học vấn: [user1_education_level]
+[place], ngày [day] tháng [month] năm [year]
+```
+
+## Example:
+Input:
+```
 CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 TỜ KHAI ĐĂNG KÝ VIỆC THAY ĐỔI, CẢI CHÍNH,
@@ -370,9 +398,9 @@ Làm tại: .......... , ngày ..........  tháng ..........  năm ..........
 Người yêu cầu
 (Ký, ghi rõ họ, chữ đệm, tên)
 
-'''
+```
 Output:
-'''
+```
 CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 TỜ KHAI ĐĂNG KÝ VIỆC THAY ĐỔI, CẢI CHÍNH,
@@ -397,11 +425,175 @@ Làm tại: [place] , ngày [day]  tháng [month]  năm [year]
 Người yêu cầu
 (Ký, ghi rõ họ, chữ đệm, tên) 
 
-'''
+```
+
+## Example:
+Input:
+```
+CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+TỜ KHAI ĐĂNG KÝ VIỆC THAY ĐỔI, CẢI CHÍNH,
+BỔ SUNG THÔNG TIN HỘ TỊCH, XÁC ĐỊNH LẠI DÂN TỘC
+Kính gửi: ..........
+Họ, chữ đệm, tên người yêu cầu: ..........
+Nơi cư trú: ..........
+Giấy tờ tùy thân: ..........
+Quan hệ với người được thay đổi, cải chính, xác định lại dân tộc, bổ sung thông tin hộ tịch:..........
+Đề nghị cơ quan đăng ký việc ..........cho người có tên dưới đây:
+Họ, chữ đệm, tên: ..........
+Ngày, tháng, năm sinh: ........../........../..........
+Giới tính:..........Dân tộc:..........Quốc tịch: ..........
+Nơi cư trú:  ..........
+Giấy tờ tùy thân: ..........
+Đã đăng ký  ..........tại.......... ngày.......... tháng .......... năm .......... số: .......... Quyển số:..........
+Nội dung: ..........
+Lý do:..........
+Tôi cam đoan những nội dung khai trên đây là đúng sự thật và chịu trách nhiệm trước pháp luật về cam đoan của mình.
+Đề nghị cấp bản sao: Có , Không ; số lượng:..........bản
+Làm tại: .......... , ngày ..........  tháng ..........  năm ..........
+Người yêu cầu
+(Ký, ghi rõ họ, chữ đệm, tên)
+
+```
+Output:
+```
+CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+TỜ KHAI ĐĂNG KÝ VIỆC THAY ĐỔI, CẢI CHÍNH,
+BỔ SUNG THÔNG TIN HỘ TỊCH, XÁC ĐỊNH LẠI DÂN TỘC
+Kính gửi: [receiver]
+Họ, chữ đệm, tên người yêu cầu: [user1_full_name]
+Nơi cư trú: [user1_current_address]
+Giấy tờ tùy thân: [user1_id_number]
+Quan hệ với người được thay đổi, cải chính, xác định lại dân tộc, bổ sung thông tin hộ tịch: [user1_relationship_user2]
+Đề nghị cơ quan đăng ký việc [user1_request_content] cho người có tên dưới đây:
+Họ, chữ đệm, tên: [user2_full_name]
+Ngày, tháng, năm sinh: [user2_dob_day]/[user2_dob_month]/[user2_dob_year]
+Giới tính: [user2_gender] Dân tộc: [user2_ethnicity] Quốc tịch: [user2_nationality]
+Nơi cư trú:  [user2_current_address]
+Giấy tờ tùy thân: [user2_id_number]
+Đã đăng ký  [user2_registration_type] tại [user2_registration_place] ngày [user2_registration_day] tháng [user2_registration_month] năm [user2_registration_year] số: [user2_registration_number] Quyển số: [user2_registration_volume]
+Nội dung: [user2_request_content]
+Lý do: [user2_reason]
+Tôi cam đoan những nội dung khai trên đây là đúng sự thật và chịu trách nhiệm trước pháp luật về cam đoan của mình.
+Đề nghị cấp bản sao: Có , Không ; số lượng: [user1_copy_request] bản
+Làm tại: [place] , ngày [day]  tháng [month]  năm [year]
+Người yêu cầu
+(Ký, ghi rõ họ, chữ đệm, tên) 
+
+```
+
+## Example:
+Input:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+
+TỜ KHAI 
+Đề nghị khôi phục giá trị sử dụng hộ chiếu phổ thông
+
+
+1. Họ..........Chữ đệm và tên..........(1) 2. Giới tính(Nam/Nữ):..........
+3. Sinh ngày.......... tháng.......... năm..........Nơi sinh (tỉnh, thành phố) (2)..........
+4. Số định danh cá nhân hoặc CCCD:..........                                                   Ngày cấp:........../........../..........
+5. Nơi cư trú hiện tại ..........
+6. Số điện thoại: ..........
+7. Thông tin về hộ chiếu đề nghị khôi phục:
+    Số hộ chiếu:.......... ngày cấp........../........../..........
+    Thời hạn:........../........../..........Cơ quan cấp:..........
+    8. Thông tin thị thực do nước ngoài cấp: 
+	Số thị thực:..........Quốc gia cấp..........Thời hạn..........
+    9. Lý do đề nghị khôi phục hộ chiếu(3) ..........
+Tôi xin cam đoan những thông tin trên là đúng sự thật./.
+                                                  
+
+           Làm tại.........., ngày..........tháng..........năm..........
+```
+Output:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+
+TỜ KHAI 
+Đề nghị khôi phục giá trị sử dụng hộ chiếu phổ thông
+
+
+1. Họ [user1_last_name] Chữ đệm và tên [user1_first_name] (1) 2. Giới tính(Nam/Nữ): [user1_gender]
+3. Sinh ngày [user1_dob_day] tháng [user1_dob_month] năm [user1_dob_year] Nơi sinh (tỉnh, thành phố) (2) [user1_birthplace]
+4. Số định danh cá nhân hoặc CCCD: [user1_id_number]                                         Ngày cấp: [user1_id_issue_day]/[user1_id_issue_month]/[user1_id_issue_year]
+5. Nơi cư trú hiện tại [user1_current_address]
+6. Số điện thoại: [user1_phone_number]
+7. Thông tin về hộ chiếu đề nghị khôi phục:
+    Số hộ chiếu: [user1_passport_number] ngày cấp [user1_passport_issue_day]/[user1_passport_issue_month]/[user1_passport_issue_year]
+    Thời hạn: [user1_passport_expiry_day]/[user1_passport_expiry_month]/[user1_passport_expiry_year] Cơ quan cấp: [user1_passport_issuer]
+    8. Thông tin thị thực do nước ngoài cấp: 
+	Số thị thực: [user1_visa_number] Quốc gia cấp [user1_visa_country] Thời hạn [user1_visa_expiry_date]
+    9. Lý do đề nghị khôi phục hộ chiếu(3) [user1_reason]
+Tôi xin cam đoan những thông tin trên là đúng sự thật./.
+                                                  
+
+           Làm tại [place], ngày [day] tháng [month] năm [year]
+```
+
+## Example:
+Input:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+
+TỜ KHAI 
+Đề nghị khôi phục giá trị sử dụng hộ chiếu phổ thông
+
+
+1. Họ..........Chữ đệm và tên..........(1) 2. Giới tính(Nam/Nữ):..........
+3. Sinh ngày.......... tháng.......... năm..........Nơi sinh (tỉnh, thành phố) (2)..........
+4. Số định danh cá nhân hoặc CCCD:..........                                                   Ngày cấp:..........
+5. Nơi cư trú hiện tại ..........
+6. Số điện thoại: ..........
+7. Thông tin về hộ chiếu đề nghị khôi phục:
+    Số hộ chiếu:.......... ngày cấp........../........../..........
+    Thời hạn: .......... Cơ quan cấp:..........
+    8. Thông tin thị thực do nước ngoài cấp: 
+	Số thị thực:..........Quốc gia cấp..........Thời hạn..........
+    9. Lý do đề nghị khôi phục hộ chiếu(3) ..........
+Tôi xin cam đoan những thông tin trên là đúng sự thật./.
+                                                  
+
+           Làm tại.........., ngày..........tháng..........năm..........
+```
+Output:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+
+TỜ KHAI 
+Đề nghị khôi phục giá trị sử dụng hộ chiếu phổ thông
+
+
+1. Họ [user1_last_name] Chữ đệm và tên [user1_first_name] (1) 2. Giới tính(Nam/Nữ): [user1_gender]
+3. Sinh ngày [user1_dob_day] tháng [user1_dob_month] năm [user1_dob_year] Nơi sinh (tỉnh, thành phố) (2) [user1_birthplace]
+4. Số định danh cá nhân hoặc CCCD: [user1_id_number]                                         Ngày cấp: [user1_id_issue_date]
+5. Nơi cư trú hiện tại [user1_current_address]
+6. Số điện thoại: [user1_phone_number]
+7. Thông tin về hộ chiếu đề nghị khôi phục:
+    Số hộ chiếu: [user1_passport_number] ngày cấp [user1_passport_issue_day]/[user1_passport_issue_month]/[user1_passport_issue_year]
+    Thời hạn: [user1_passport_expiry_date] Cơ quan cấp: [user1_passport_issuer]
+    8. Thông tin thị thực do nước ngoài cấp: 
+	Số thị thực: [user1_visa_number] Quốc gia cấp [user1_visa_country] Thời hạn [user1_visa_expiry_date]
+    9. Lý do đề nghị khôi phục hộ chiếu(3) [user1_reason]
+Tôi xin cam đoan những thông tin trên là đúng sự thật./.
+                                                  
+
+           Làm tại [place], ngày [day] tháng [month] năm [year]
+```
 
 ## Example: 
 Input:
-'''
+```
 Form:
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -426,9 +618,9 @@ Nơi cư trú: ..........
 Tôi cam đoan nội dung đề nghị đăng ký khai sinh trên đây là đúng sự thật, được sự thỏa thuận nhất trí của các bên liên quan theo quy định pháp luật.
 Tôi chịu hoàn toàn trách nhiệm trước pháp luật về nội dung cam đoan của mình.
 Làm tại: .........., ngày .......... tháng .......... năm ..........
-'''
+```
 Output:
-'''
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 TỜ KHAI ĐĂNG KÝ KHAI SINH
@@ -452,11 +644,11 @@ Nơi cư trú: [user4_current_address]
 Tôi cam đoan nội dung đề nghị đăng ký khai sinh trên đây là đúng sự thật, được sự thỏa thuận nhất trí của các bên liên quan theo quy định pháp luật.
 Tôi chịu hoàn toàn trách nhiệm trước pháp luật về nội dung cam đoan của mình.
 Làm tại: [place], ngày [day] tháng [month] năm [year]
-'''
+```
 
 ## Example:
 Input:
-'''
+```
 TỜ KHAI THAY ĐỔI THÔNG TIN CƯ TRÚ
 (Dùng cho công dân Việt Nam định cư ở nước ngoài 
 không có hộ chiếu Việt Nam còn giá trị sử dụng) 
@@ -479,9 +671,9 @@ Cơ quan cấp:..........	 Có giá trị đến ngày:........../........../...
 16. Nội dung đề nghị (2):..........
 17. Họ và tên chủ hộ:..........18. Quan hệ với chủ hộ:..........
 19. Số định danh cá nhân/ CMND của chủ hộ:..........
-'''									
+```									
 Output:
-'''
+```
 TỜ KHAI THAY ĐỔI THÔNG TIN CƯ TRÚ
 (Dùng cho công dân Việt Nam định cư ở nước ngoài 
 không có hộ chiếu Việt Nam còn giá trị sử dụng) 
@@ -504,66 +696,14 @@ Cơ quan cấp: [user1_passport_issuer]	 Có giá trị đến ngày: [user1_pas
 16. Nội dung đề nghị (2): [user1_request_content]
 17. Họ và tên chủ hộ: [user2_full_name] 18. Quan hệ với chủ hộ: [user1_relationship_user2]
 19. Số định danh cá nhân/ CMND của chủ hộ: [user2_id_number]	
-'''
+```
+
 
 ## Example:
 Input:
-'''
-CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-Độc lập - Tự do - Hạnh phúc
-
-
-TỜ KHAI 
-Đề nghị khôi phục giá trị sử dụng hộ chiếu phổ thông
-
-
-1. Họ..........Chữ đệm và tên..........(1) 2. Giới tính(Nam/Nữ):..........
-3. Sinh ngày.......... tháng.......... năm..........Nơi sinh (tỉnh, thành phố) (2)..........
-4. Số định danh cá nhân hoặc CCCD:..........                                                   Ngày cấp:........../........../..........
-5. Nơi cư trú hiện tại ..........
-6. Số điện thoại: ..........
-7. Thông tin về hộ chiếu đề nghị khôi phục:
-    Số hộ chiếu:.......... ngày cấp........../........../..........
-    Thời hạn:........../........../..........Cơ quan cấp:..........
-    8. Thông tin thị thực do nước ngoài cấp: 
-	Số thị thực:..........Quốc gia cấp..........Thời hạn..........
-    9. Lý do đề nghị khôi phục hộ chiếu(3) ..........
-Tôi xin cam đoan những thông tin trên là đúng sự thật./.
-                                                  
-
-           Làm tại.........., ngày..........tháng..........năm..........
-'''
-Output:
-'''
-CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-Độc lập - Tự do - Hạnh phúc
-
-
-TỜ KHAI 
-Đề nghị khôi phục giá trị sử dụng hộ chiếu phổ thông
-
-
-1. Họ [user1_last_name] Chữ đệm và tên [user1_first_name] (1) 2. Giới tính(Nam/Nữ): [user1_gender]
-3. Sinh ngày [user1_dob_day] tháng [user1_dob_month] năm [user1_dob_year] Nơi sinh (tỉnh, thành phố) (2) [user1_birthplace]
-4. Số định danh cá nhân hoặc CCCD: [user1_id_number]                                         Ngày cấp: [user1_id_issue_day]/[user1_id_issue_month]/[user1_id_issue_year]
-5. Nơi cư trú hiện tại [user1_current_address]
-6. Số điện thoại: [user1_phone_number]
-7. Thông tin về hộ chiếu đề nghị khôi phục:
-    Số hộ chiếu: [user1_passport_number] ngày cấp [user1_passport_issue_day]/[user1_passport_issue_month]/[user1_passport_issue_year]
-    Thời hạn: [user1_passport_expiry_day]/[user1_passport_expiry_month]/[user1_passport_expiry_year] Cơ quan cấp: [user1_passport_issuer]
-    8. Thông tin thị thực do nước ngoài cấp: 
-	Số thị thực: [user1_visa_number] Quốc gia cấp [user1_visa_country] Thời hạn [user1_visa_expiry_day]/[user1_visa_expiry_month]/[user1_visa_expiry_year]
-    9. Lý do đề nghị khôi phục hộ chiếu(3) [user1_reason]
-Tôi xin cam đoan những thông tin trên là đúng sự thật./.
-                                                  
-
-           Làm tại [place], ngày [day] tháng [month] năm [year]
-'''
-## Example:
-Input:
-'''
+```
 {form}
-'''
+```
 Ouput: 
 """
 
@@ -588,7 +728,7 @@ The output should be a standardized version of the form, where placeholders have
 The placeholder tags should be replaced based on a set of predefined tag names for various types of personal and academic information.
 Example output should include accurately mapped tags for each type of information required in the form, ensuring clarity and consistency.
 
-Input and output are placed in ''' '''
+Input and output are placed in ``` ```
 
 1. Identify Unique Users
 
@@ -600,12 +740,9 @@ Task: For each placeholder (..........), check if it corresponds to a study-rela
 
 Action 1: If a match is found, replace the placeholder with the corresponding tag name in the format [userX_tagname], where X is the user identifier.
 
-Action 2: If a single placeholder should represent multiple related tags (e.g., day, month, year), combine these related tags into a single tag name (e.g., [userX_full_dob] for date of birth). Avoid splitting into multiple placeholders.
+Action 2: If a single placeholder should represent multiple related tags (e.g., Ngày, tháng, năm sinh: ......... or Ngày sinh: .........), combine these related tags into a single tag name (e.g., [userX_dob] for date of birth). Avoid splitting into multiple placeholders.
 
-Action 3: If a placeholder requires multiple pieces of information but only one tag is generated, ensure to create separate tags for each specific detail within the same square brackets separated by commas. For instance:
-
-Incorrect: "Ngày và nơi cấp: [user1_id_issue_date]"
-Correct: "Ngày và nơi cấp: [user1_id_issue_date, user1_id_issue_place]".
+Action 3: If a placeholder requires multiple pieces of information (e.g., Ngày và nơi cấp: ..........), ensure to create separate tags for each specific detail within the same square brackets separated by commas (e.g., [user1_id_issue_date, user1_id_issue_place] for id issue date and id issue place)
 
 Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
 
@@ -631,7 +768,7 @@ Output only.
 
 ## Example
 Input:
-'''
+```
 ĐƠN ĐỀ NGHỊ XÁC NHẬN VÀ CẤP HỖ TRỢ
 (Dùng cho học sinh, sinh viên đang học tại các cơ sở giáo dục nghề nghiệp công lập)
 Kính gửi:	
@@ -647,9 +784,9 @@ Mã số học sinh, sinh viên: ..........
 Người làm đơn
 (Ký và ghi rõ họ tên)
 
-'''
+```
 Ouptut:
-'''
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -668,11 +805,104 @@ Mã số học sinh, sinh viên: [user1_student_id]
 Người làm đơn
 (Ký và ghi rõ họ tên)
 
-'''
+```
+
+## Example
+Input:
+```
+ĐƠN ĐỀ NGHỊ XÁC NHẬN VÀ CẤP HỖ TRỢ
+(Dùng cho học sinh, sinh viên đang học tại các cơ sở giáo dục nghề nghiệp công lập)
+Kính gửi:	
+- ..........(Tên cơ sở giáo dục nghề nghiệp);
+- ..........(Tên phòng Công tác học sinh, sinh viên/Phòng Đào tạo).
+Họ và tên: ..........
+Ngày, tháng, năm sinh:........../........../..........
+Số định danh cá nhân/Chứng minh nhân dân:..........cấp ngày..........tháng..........năm..........nơi cấp..........
+Lớp: .......... Khóa: .......... Khoa: ..........
+Mã số học sinh, sinh viên: ..........
+Để Nhà trường cấp tiền hỗ trợ ở lại trường trong dịp Tết Nguyên đán năm .......... theo quy định tại Quyết định số 53/2015/QĐ-TTg ngày 20 tháng 10 năm 2015 của Thủ tướng Chính phủ về chính sách nội trú đối với học sinh, sinh viên học cao đẳng, trung cấp, tôi làm đơn này đề nghị Phòng Công tác học sinh, sinh viên (hoặc Phòng Đào tạo) xác nhận là tôi “ở lại trường trong dịp Tết Nguyên đán năm..........” với lý do1: ..........
+    .........., ngày .......... tháng .......... năm ..........
+Người làm đơn
+(Ký và ghi rõ họ tên)
+
+```
+Ouptut:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+ĐƠN ĐỀ NGHỊ XÁC NHẬN VÀ CẤP HỖ TRỢ
+(Dùng cho học sinh, sinh viên đang học tại các cơ sở giáo dục nghề nghiệp công lập)
+Kính gửi:	
+- [receiver] (Tên cơ sở giáo dục nghề nghiệp);
+- [receiver] (Tên phòng Công tác học sinh, sinh viên/Phòng Đào tạo).
+Họ và tên: [user1_full_name]
+Ngày, tháng, năm sinh: [user1_dob_day]/[user1_dob_month]/[user1_dob_year]
+Số định danh cá nhân/Chứng minh nhân dân: [user1_id_number] cấp ngày [user1_id_issue_day] tháng [user1_id_issue_month] năm [user1_id_issue_year] nơi cấp [user1_id_issue_place]
+Lớp: [user1_class] Khóa: [user1_course] Khoa: [user1_faculty]
+Mã số học sinh, sinh viên: [user1_student_id]
+Để Nhà trường cấp tiền hỗ trợ ở lại trường trong dịp Tết Nguyên đán năm [user1_tet_year] theo quy định tại Quyết định số 53/2015/QĐ-TTg ngày 20 tháng 10 năm 2015 của Thủ tướng Chính phủ về chính sách nội trú đối với học sinh, sinh viên học cao đẳng, trung cấp, tôi làm đơn này đề nghị Phòng Công tác học sinh, sinh viên (hoặc Phòng Đào tạo) xác nhận là tôi “ở lại trường trong dịp Tết Nguyên đán năm [user1_tet_year]” với lý do: [user1_reason_for_staying]
+    [place], ngày [day] tháng [month] năm [year]
+Người làm đơn
+(Ký và ghi rõ họ tên)
+
+```
 
 ## Example:
 Input:
-'''
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+ĐƠN XIN CHUYỂN TRƯỜNG
+(dành cho học sinh tiểu học chuyển trường trong nước)
+Kính gửi:
+- Hiệu trưởng trường..........
+- Hiệu trưởng trường..........
+Tôi tên là:..........
+Hiện trú tại:..........
+Số điện thoại:.......... Địa chỉ email (nếu có):..........
+Là phụ huynh/người giám hộ hợp pháp của:
+Học sinh: .......... Ngày tháng năm sinh:..........
+Là học sinh lớp:.......... Trường3..........
+Kết quả cuối năm học: ..........
+Tôi làm đơn này đề nghị cho con tôi được chuyển từ trường4 ...........về học lớp .......... năm học ..........tại trường5..........
+Lý do:..........
+Trân trọng cảm ơn.
+ 	.........., ngày ..........tháng..........năm ..........
+Người làm đơn
+(Ký và ghi rõ họ tên)
+ 
+```
+Output:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+ĐƠN XIN CHUYỂN TRƯỜNG
+(dành cho học sinh tiểu học chuyển trường trong nước)
+Kính gửi:
+- Hiệu trưởng trường [receiver]
+- Hiệu trưởng trường [receiver]
+Tôi tên là: [user1_full_name]
+Hiện trú tại: [user1_current_address]
+Số điện thoại: [user1_phone] Địa chỉ email (nếu có): [user1_email]
+Là phụ huynh/người giám hộ hợp pháp của:
+Học sinh: [user2_full_name] Ngày tháng năm sinh: [user2_dob]
+Là học sinh lớp: [user2_grade] Trường [user2_school_name_from]
+Kết quả cuối năm học: [user2_final_grade]
+Tôi làm đơn này đề nghị cho con tôi được chuyển từ trường [user2_school_name_from] về học lớp [user2_grade] năm học [user2_school_year] tại trường [user2_school_name_to]
+Lý do: [user1_reason_for_transfer]
+Trân trọng cảm ơn.
+ 	[place], ngày [day] tháng [month] năm [year]
+Người làm đơn
+(Ký và ghi rõ họ tên)
+
+```
+
+## Example:
+Input:
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -713,9 +943,9 @@ Tôi cam đoan nội dung báo cáo là hoàn toàn trung thực, chính xác v�
     .........., ngày.......... tháng.......... năm.......... 
 Người báo cáo
 (Ký và ghi rõ họ tên)
-'''
+```
 Output:
-'''
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -756,11 +986,11 @@ Tôi cam đoan nội dung báo cáo là hoàn toàn trung thực, chính xác v�
     [place], ngày [day] tháng [month] năm [year] 
 Người báo cáo
 (Ký và ghi rõ họ tên)
-'''
+```
 
 ## Example:
 Input:
-'''
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -781,9 +1011,9 @@ Nơi trẻ mẫu giáo có hộ khẩu thường trú
 (Ký tên, đóng dấu)	................,ngày....tháng................năm................
 Người làm đơn
 (Ký, ghi rõ họ tên)
-'''
+```
 Output:
-'''
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -804,10 +1034,59 @@ Nơi trẻ mẫu giáo có hộ khẩu thường trú
 (Ký tên, đóng dấu)	[place], ngày [day] tháng [month] năm [year]
 Người làm đơn
 (Ký, ghi rõ họ tên)
-'''
+```
+
 ## Example:
 Input:
-'''
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+ĐƠN ĐỀ NGHỊ HỖ TRỢ HỌC TẬP 
+(Dùng cho cha mẹ trẻ mẫu giáo hoặc người chăm sóc trẻ mẫu giáo học tại các cơ sở giáo dục công lập)
+Kính gửi: .......... (Cơ sở giáo dục)
+Họ và tên cha mẹ (hoặc người chăm sóc): .......... 
+Hộ khẩu thường trú tại:.......... 
+Là cha/mẹ (hoặc người chăm sóc) của em:.......... 
+Sinh ngày: ........../........../.......... 
+Dân tộc:.......... 
+Hiện đang học (tại lớp, trường):.......... 
+Tôi làm đơn này đề nghị các cấp quản lý xem xét, giải quyết cấp tiền hỗ trợ học tập theo quy định và chế độ hiện hành./.
+ 
+XÁC NHẬN CỦA ỦY BAN NHÂN DÂN CẤP XÃ1
+Nơi trẻ mẫu giáo có hộ khẩu thường trú
+(Ký tên, đóng dấu)	.......... ,ngày.......... tháng.......... năm.......... 
+Người làm đơn
+(Ký, ghi rõ họ tên)
+
+```
+Output:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+ĐƠN ĐỀ NGHỊ HỖ TRỢ HỌC TẬP 
+(Dùng cho cha mẹ trẻ mẫu giáo hoặc người chăm sóc trẻ mẫu giáo học tại các cơ sở giáo dục công lập)
+Kính gửi: [receiver] (Cơ sở giáo dục)
+Họ và tên cha mẹ (hoặc người chăm sóc): [user1_full_name]
+Hộ khẩu thường trú tại: [user1_permanent_address]
+Là cha/mẹ (hoặc người chăm sóc) của em: [user2_full_name]
+Sinh ngày: [user2_dob_day]/[user2_dob_month]/[user2_dob_year]
+Dân tộc: [user2_ethnicity]
+Hiện đang học (tại lớp, trường): [user2_class, user2_school]
+Tôi làm đơn này đề nghị các cấp quản lý xem xét, giải quyết cấp tiền hỗ trợ học tập theo quy định và chế độ hiện hành./.
+ 
+XÁC NHẬN CỦA ỦY BAN NHÂN DÂN CẤP XÃ1
+Nơi trẻ mẫu giáo có hộ khẩu thường trú
+(Ký tên, đóng dấu)	[place], ngày [day] tháng [month] năm [year]
+Người làm đơn
+(Ký, ghi rõ họ tên)
+
+```
+
+## Example:
+Input:
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -839,9 +1118,9 @@ E-mail:	..........
 Người làm đơn
 (Ký và ghi rõ họ tên)
 
-'''
+```
 Output:
-'''
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -871,11 +1150,11 @@ E-mail:	[user1_email]
 Người làm đơn
 (Ký và ghi rõ họ tên)
 
-'''
+```
 
 ## Example:
 Input:
-'''
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -905,9 +1184,9 @@ Tôi làm đơn này đề nghị các cấp quản lý xem xét, để em  ....
 Người làm đơn
 (Ký, ghi rõ họ, tên hoặc điểm chỉ )
 
-'''
+```
 Output:
-'''
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -938,10 +1217,10 @@ Người làm đơn
 (Ký, ghi rõ họ, tên hoặc điểm chỉ )
 
 
-'''
+```
 ## Example:
 Input:
-'''
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -976,9 +1255,9 @@ Công tác tại: ..........
 Bố (mẹ) hoặc người đại diện hợp pháp
 (ký và ghi rõ họ tên)
 
-'''
+```
 Output:
-'''
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -1013,10 +1292,87 @@ Công tác tại: [user2_occupation]
 Bố (mẹ) hoặc người đại diện hợp pháp
 (ký và ghi rõ họ tên)
 
-'''
+```
+
 ## Example:
 Input:
-'''
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+BẢN CAM KẾT
+THỰC HIỆN TRÁCH NHIỆM CỦA DU HỌC SINH
+(dành cho người chưa có cơ quan công tác)
+
+Kính gửi: Bộ Giáo dục và Đào tạo
+
+Tên tôi là: .......... Sinh ngày .......... 
+Giấy CMND/Căn cước công dân số: .......... Ngày cấp:........../........../..........
+Nơi cấp:.......... 
+Hộ chiếu số: .......... Ngày cấp: ........../........../.......... 
+Nơi cấp:..........
+Hiện nay là: .......... 
+Khi được Nhà nước cử đi học tại nước ngoài, tôi cam kết thực hiện đúng trách nhiệm của người được cử đi học như sau:
+1. Chấp hành nghiêm túc quy định việc công dân Việt Nam ra nước ngoài học tập (Nghị định số 86/2021/NĐ-CP ngày 25/9/2021 của Chính phủ), quyết định cử đi học cử Bộ Giáo dục và Đào tạo và các quy định tài chính hiện hành của Nhà nước. 
+2. Cam kết tích cực học tập, nghiên cứu để hoàn thành tốt chương trình đào tạo đúng thời hạn được phép. Nếu phải gia hạn thời gian học tập sẽ tự túc kinh phí trong thời gian gia hạn.
+.........., ngày .......... tháng .......... năm ..........
+Người cam kết
+(ký và ghi rõ họ tên)
+
+CAM KẾT CỦA GIA ĐÌNH
+Họ và tên bố (mẹ) hoặc người đại diện hợp pháp: ..........
+Công tác tại: ..........
+Địa chỉ: ..........
+đại diện cho gia đình du học sinh có tên trên, chúng tôi cam kết:
+- Nhắc nhở, động viên du học sinh thực hiện đầy đủ trách nhiệm đã được quy định đối với du học sinh.
+- Chịu trách nhiệm cùng du học sinh bồi hoàn kinh phí đã được Nhà nước cấp nếu du học sinh không thực hiện đúng cam kết.
+ 
+ 	.........., ngày .......... tháng.......... năm ..........
+Bố (mẹ) hoặc người đại diện hợp pháp
+(ký và ghi rõ họ tên)
+
+```
+Output:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+BẢN CAM KẾT
+THỰC HIỆN TRÁCH NHIỆM CỦA DU HỌC SINH
+(dành cho người chưa có cơ quan công tác)
+
+Kính gửi: Bộ Giáo dục và Đào tạo
+
+Tên tôi là: [user1_full_name] Sinh ngày [user1_dob]
+Giấy CMND/Căn cước công dân số: [user1_id_number] Ngày cấp: [user1_id_issue_day]/[user1_id_issue_month]/[user1_id_issue_year]
+Nơi cấp: [user1_id_issue_place] 
+Hộ chiếu số: [user1_passport_number] Ngày cấp: [user1_passport_issue_day]/[user1_passport_issue_month]/[user1_passport_issue_year]
+Nơi cấp: [user1_passport_issue_place]
+Hiện nay là: [user1_occupation] 
+Khi được Nhà nước cử đi học tại nước ngoài, tôi cam kết thực hiện đúng trách nhiệm của người được cử đi học như sau:
+1. Chấp hành nghiêm túc quy định việc công dân Việt Nam ra nước ngoài học tập (Nghị định số 86/2021/NĐ-CP ngày 25/9/2021 của Chính phủ), quyết định cử đi học cử Bộ Giáo dục và Đào tạo và các quy định tài chính hiện hành của Nhà nước. 
+2. Cam kết tích cực học tập, nghiên cứu để hoàn thành tốt chương trình đào tạo đúng thời hạn được phép. Nếu phải gia hạn thời gian học tập sẽ tự túc kinh phí trong thời gian gia hạn.
+[place], ngày [day] tháng [month] năm [year]
+Người cam kết
+(ký và ghi rõ họ tên)
+
+CAM KẾT CỦA GIA ĐÌNH
+Họ và tên bố (mẹ) hoặc người đại diện hợp pháp: [user2_full_name]
+Công tác tại: [user2_occupation]
+Địa chỉ: [user2_current_address]
+đại diện cho gia đình du học sinh có tên trên, chúng tôi cam kết:
+- Nhắc nhở, động viên du học sinh thực hiện đầy đủ trách nhiệm đã được quy định đối với du học sinh.
+- Chịu trách nhiệm cùng du học sinh bồi hoàn kinh phí đã được Nhà nước cấp nếu du học sinh không thực hiện đúng cam kết.
+ 
+ 	[place], ngày [day] tháng [month] năm [year]
+Bố (mẹ) hoặc người đại diện hợp pháp
+(ký và ghi rõ họ tên)
+
+```
+
+## Example:
+Input:
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
  
@@ -1036,9 +1392,9 @@ Xác nhận của Khoa
 Người làm đơn
 (Ký và ghi rõ họ tên)
 
-'''
+```
 Output:
-'''
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
  
@@ -1058,11 +1414,11 @@ Xác nhận của Khoa
 Người làm đơn
 (Ký và ghi rõ họ tên)
 
-'''
+```
 
 ## Example:
 Input:
-'''
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -1094,9 +1450,9 @@ E-mail:	..........
 Người làm đơn
 (Ký và ghi rõ họ tên)
 
-'''
+```
 Output:
-'''
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -1128,12 +1484,12 @@ E-mail:	[user1_email]
 Người làm đơn
 (Ký và ghi rõ họ tên)
 
-'''
+```
 ## Example:
 Input:
-'''
+```
 {form}
-'''
+```
 Output:
 """
 
@@ -1158,7 +1514,7 @@ The output should be a standardized version of the form, where placeholders have
 The placeholder tags should be replaced based on a set of predefined tag names for various types of personal and academic information.
 Example output should include accurately mapped tags for each type of information required in the form, ensuring clarity and consistency.
 
-Input and output are placed in ''' '''
+Input and output are placed in ``` ```
 
 1. Identify Unique Users
 
@@ -1172,12 +1528,9 @@ Task: For each placeholder (..........), check if it corresponds to a health and
 
 Action 1: If a match is found, replace the placeholder with the corresponding tag name in the format [userX_tagname], where X is the user identifier.
 
-Action 2: If a single placeholder should represent multiple related tags (e.g., day, month, year), combine these related tags into a single tag name (e.g., [userX_full_dob] for date of birth). Avoid splitting into multiple placeholders.
+Action 2: If a single placeholder should represent multiple related tags (e.g., Ngày, tháng, năm sinh: ......... or Ngày sinh: .........), combine these related tags into a single tag name (e.g., [userX_dob] for date of birth). Avoid splitting into multiple placeholders.
 
-Action 3: If a placeholder requires multiple pieces of information but only one tag is generated, ensure to create separate tags for each specific detail within the same square brackets separated by commas. For instance:
-
-Incorrect: "Ngày và nơi cấp: [user1_id_issue_date]"
-Correct: "Ngày và nơi cấp: [user1_id_issue_date, user1_id_issue_place]".
+Action 3: If a placeholder requires multiple pieces of information (e.g., Ngày và nơi cấp: ..........), ensure to create separate tags for each specific detail within the same square brackets separated by commas (e.g., [user1_id_issue_date, user1_id_issue_place] for id issue date and id issue place)
 
 Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
 
@@ -1203,23 +1556,23 @@ Output only.
 
 ## Example:
 Input:
-'''
+```
                         TỜ KHAI THAM GIA, ĐIỀU CHỈNH THÔNG TIN BẢO HIỂM XÃ HỘI, BẢO HIỂM Y TẾ
 
 I.	Áp dụng đối với người tham gia tra cứu không thấy mã số BHXH do cơ quan BHXH cấp
-[01]. Họ và tên (viết chữ in hoa): ............................................	[02]. Giới tính: ............................................
-[03]. Ngày, tháng, năm sinh: ...../...../......	  [04]. Quốc tịch: ............................................
-[05]. Dân tộc: ........................	[06]. Số CCCD/ĐDCN/Hộ chiếu: .........................................	
-[07]. Điện thoại: ............................	[08]. Email (nếu có): ............................................	
-[09]. Nơi đăng ký khai sinh: [09.1]. Xã: .........................	[09.2]. Huyện: ................................ [09.3]. Tỉnh: ........................
-[10]. Họ tên cha/mẹ/giám hộ (đối với trẻ em dưới 6 tuổi): ..................................................
-[11]. Đăng ký nhận kết quả giải quyết thủ tục hành chính: ............................
-[12]. Số nhà, đường/phố, thôn/xóm: ............................................	
-[13]. Xã: ..........................	[14]	Huyện: .............................	[15]. Tỉnh: ....................................... 	
+[01]. Họ và tên (viết chữ in hoa): ..........	[02]. Giới tính: ..........
+[03]. Ngày, tháng, năm sinh: ........../........../..........	  [04]. Quốc tịch: ..........
+[05]. Dân tộc: ..........	[06]. Số CCCD/ĐDCN/Hộ chiếu: ..........	
+[07]. Điện thoại: ..........	[08]. Email (nếu có): ..........	
+[09]. Nơi đăng ký khai sinh: [09.1]. Xã: ..........	[09.2]. Huyện: .......... [09.3]. Tỉnh: 
+[10]. Họ tên cha/mẹ/giám hộ (đối với trẻ em dưới 6 tuổi): ................
+[11]. Đăng ký nhận kết quả giải quyết thủ tục hành chính: ..........
+[12]. Số nhà, đường/phố, thôn/xóm: ..........	
+[13]. Xã: ..........	[14]	Huyện: ..........	[15]. Tỉnh: ..........	
 [16]. Kê khai Phụ lục Thành viên hộ gia đình (phụ lục kèm theo) đối với người tham gia tra cứu không thấy mã số BHXH và người tham gia BHYT theo hộ gia đình để giảm trừ mức đóng.
-'''
+```
 Output:
-'''
+```
                         TỜ KHAI THAM GIA, ĐIỀU CHỈNH THÔNG TIN BẢO HIỂM XÃ HỘI, BẢO HIỂM Y TẾ
 
 I.	Áp dụng đối với người tham gia tra cứu không thấy mã số BHXH do cơ quan BHXH cấp
@@ -1233,11 +1586,177 @@ I.	Áp dụng đối với người tham gia tra cứu không thấy mã số BH
 [12]. Số nhà, đường/phố, thôn/xóm: [user1_current_address]	
 [13]. Xã: [user1_current_address_ward]	[14]	Huyện: [user1_current_address_district]	[15]. Tỉnh: [user1_current_address_province] 	
 [16]. Kê khai Phụ lục Thành viên hộ gia đình (phụ lục kèm theo) đối với người tham gia tra cứu không thấy mã số BHXH và người tham gia BHYT theo hộ gia đình để giảm trừ mức đóng.
-'''
+```
 
 ## Example:
 Input:
-'''
+```
+                        TỜ KHAI THAM GIA, ĐIỀU CHỈNH THÔNG TIN BẢO HIỂM XÃ HỘI, BẢO HIỂM Y TẾ
+
+I.	Áp dụng đối với người tham gia tra cứu không thấy mã số BHXH do cơ quan BHXH cấp
+[01]. Họ và tên (viết chữ in hoa): ..........	[02]. Giới tính: ..........
+[03]. Ngày, tháng, năm sinh: ..........	  [04]. Quốc tịch: ..........
+[05]. Dân tộc: ..........	[06]. Số CCCD/ĐDCN/Hộ chiếu: ..........	
+[07]. Điện thoại: ..........	[08]. Email (nếu có): ..........	
+[09]. Nơi đăng ký khai sinh(Xã, Huyện, Tỉnh): 
+[10]. Họ tên cha/mẹ/giám hộ (đối với trẻ em dưới 6 tuổi): ................
+[11]. Đăng ký nhận kết quả giải quyết thủ tục hành chính: ..........
+[12]. Số nhà, đường/phố, thôn/xóm: ..........	
+[13]. Xã: ..........	[14]	Huyện: ..........	[15]. Tỉnh: ..........	
+[16]. Kê khai Phụ lục Thành viên hộ gia đình (phụ lục kèm theo) đối với người tham gia tra cứu không thấy mã số BHXH và người tham gia BHYT theo hộ gia đình để giảm trừ mức đóng.
+```
+Output:
+```
+                        TỜ KHAI THAM GIA, ĐIỀU CHỈNH THÔNG TIN BẢO HIỂM XÃ HỘI, BẢO HIỂM Y TẾ
+
+I.	Áp dụng đối với người tham gia tra cứu không thấy mã số BHXH do cơ quan BHXH cấp
+[01]. Họ và tên (viết chữ in hoa): [user1_full_name]	[02]. Giới tính: [user1_gender]
+[03]. Ngày, tháng, năm sinh: [user1_dob]  [04]. Quốc tịch: [user1_nationality]
+[05]. Dân tộc: [user1_ethnicity]	[06]. Số CCCD/ĐDCN/Hộ chiếu: [user1_id_number]	
+[07]. Điện thoại: [user1_phone_number]	[08]. Email (nếu có): [user1_email]	
+[09]. Nơi đăng ký khai sinh(Xã, Huyện, Tỉnh): [user1_birth_registration_ward, user1_birth_registration_district, user1_birth_registration_province]
+[10]. Họ tên cha/mẹ/giám hộ (đối với trẻ em dưới 6 tuổi): [user1_parent_name]
+[11]. Đăng ký nhận kết quả giải quyết thủ tục hành chính: [user1_result_delivery_method]
+[12]. Số nhà, đường/phố, thôn/xóm: [user1_current_address]	
+[13]. Xã: [user1_current_address_ward]	[14]	Huyện: [user1_current_address_district]	[15]. Tỉnh: [user1_current_address_province] 	
+[16]. Kê khai Phụ lục Thành viên hộ gia đình (phụ lục kèm theo) đối với người tham gia tra cứu không thấy mã số BHXH và người tham gia BHYT theo hộ gia đình để giảm trừ mức đóng.
+```
+
+## Example:
+Input:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+
+Độc lập - Tự do - Hạnh phúc
+
+---------------
+
+GIẤY ĐỀ NGHỊ KHÁM GIÁM ĐỊNH
+
+Kính gửi:..........
+Tên tôi là: ..........
+Ngày, tháng, năm sinh: ..........
+Chỗ ở hiện tại: ..........
+Giấy Chứng minh nhân dân/Thẻ căn cước/Hộ chiếu số: ..........
+Ngày cấp: .......... Nơi cấp:..........
+Số sổ bảo hiểm xã hội/Mã số bảo hiểm xã hội (1): ..........
+Nghề/Công việc (2):..........
+Điện thoại liên hệ: ..........
+Đề nghị được giám định mức độ suy giảm khả năng lao động:
+
+Đề nghị giám định (3): ..........
+Loại hình giám định (4): ..........
+Nội dung giám định (5): ..........
+Đang hưởng chế độ (6): ..........
+Xác nhận của UBND hoặc Công an cấp xã (7)
+
+Người đề nghị
+
+(Ký, ghi rõ họ tên)
+
+```
+Output:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+
+Độc lập - Tự do - Hạnh phúc
+
+---------------
+
+GIẤY ĐỀ NGHỊ KHÁM GIÁM ĐỊNH
+
+Kính gửi: [receiver]
+Tên tôi là: [user1_full_name]
+Ngày, tháng, năm sinh: [user1_dob]
+Chỗ ở hiện tại: [user1_current_address]
+Giấy Chứng minh nhân dân/Thẻ căn cước/Hộ chiếu số: [user1_id_number]
+Ngày cấp: [user1_id_issue_date] Nơi cấp: [user1_id_issue_place]
+Số sổ bảo hiểm xã hội/Mã số bảo hiểm xã hội (1): [user1_social_insurance_number]
+Nghề/Công việc (2): [user1_occupation]
+Điện thoại liên hệ: [user1_phone]
+
+Đề nghị được giám định mức độ suy giảm khả năng lao động:
+
+Đề nghị giám định (3): [user1_request_content]
+Loại hình giám định (4): [user1_assessment_type]
+Nội dung giám định (5): [user1_assessment_content]
+Đang hưởng chế độ (6): [user1_current_benefits]
+Xác nhận của UBND hoặc Công an cấp xã (7)
+Người đề nghị
+
+(Ký, ghi rõ họ tên)
+
+```
+
+## Example:
+Input:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+
+Độc lập - Tự do - Hạnh phúc
+
+---------------
+
+GIẤY ĐỀ NGHỊ KHÁM GIÁM ĐỊNH
+
+Kính gửi:..........
+Tên tôi là: ..........
+Ngày, tháng, năm sinh: ........../........../..........
+Chỗ ở hiện tại: ..........
+Giấy Chứng minh nhân dân/Thẻ căn cước/Hộ chiếu số: ..........
+Ngày cấp: .......... Nơi cấp:..........
+Số sổ bảo hiểm xã hội/Mã số bảo hiểm xã hội (1): ..........
+Nghề/Công việc (2):..........
+Điện thoại liên hệ: ..........
+Đề nghị được giám định mức độ suy giảm khả năng lao động:
+
+Đề nghị giám định (3): ..........
+Loại hình giám định (4): ..........
+Nội dung giám định (5): ..........
+Đang hưởng chế độ (6): ..........
+Xác nhận của UBND hoặc Công an cấp xã (7)
+
+Người đề nghị
+
+(Ký, ghi rõ họ tên)
+
+```
+Output:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+
+Độc lập - Tự do - Hạnh phúc
+
+---------------
+
+GIẤY ĐỀ NGHỊ KHÁM GIÁM ĐỊNH
+
+Kính gửi: [receiver]
+Tên tôi là: [user1_full_name]
+Ngày, tháng, năm sinh: [user1_dob_day]/[user1_dob_month]/[user1_dob_year]
+Chỗ ở hiện tại: [user1_current_address]
+Giấy Chứng minh nhân dân/Thẻ căn cước/Hộ chiếu số: [user1_id_number]
+Ngày cấp: [user1_id_issue_date] Nơi cấp: [user1_id_issue_place]
+Số sổ bảo hiểm xã hội/Mã số bảo hiểm xã hội (1): [user1_social_insurance_number]
+Nghề/Công việc (2): [user1_occupation]
+Điện thoại liên hệ: [user1_phone]
+
+Đề nghị được giám định mức độ suy giảm khả năng lao động:
+
+Đề nghị giám định (3): [user1_request_content]
+Loại hình giám định (4): [user1_assessment_type]
+Nội dung giám định (5): [user1_assessment_content]
+Đang hưởng chế độ (6): [user1_current_benefits]
+Xác nhận của UBND hoặc Công an cấp xã (7)
+Người đề nghị
+
+(Ký, ghi rõ họ tên)
+
+```
+
+## Example:
+Input:
+```
 BẢO HIỂM XÃ HỘI TỈNH
 PHÒNG........../BHXH HUYỆN..........
 -------	CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1264,9 +1783,9 @@ Tên chủ tài khoản: ..........
 Đã nhận kết quả giải quyết vào ngày .......... tháng .......... năm ..........
 NGƯỜI NHẬN
 (Ký và ghi rõ họ tên)
-'''
+```
 Output:
-'''
+```
 BẢO HIỂM XÃ HỘI TỈNH
 
 PHÒNG [local_insurance_office]/BHXH HUYỆN [local_insurance_office]
@@ -1297,72 +1816,13 @@ Tên chủ tài khoản: [user2_full_name]
 
 NGƯỜI NHẬN
 (Ký và ghi rõ họ tên)
-'''
+```
 
 ## Example:
 Input:
-'''
-CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-
-Độc lập - Tự do - Hạnh phúc
-
----------------
-
-GIẤY ĐỀ NGHỊ KHÁM GIÁM ĐỊNH
-
-Kính gửi:..........
-Tên tôi là: ..........
-Ngày, tháng, năm sinh: ..........
-Chỗ ở hiện tại: ..........
-Giấy Chứng minh nhân dân/Thẻ căn cước/Hộ chiếu số: ..........
-Ngày cấp: .......... Nơi cấp:..........
-Số sổ bảo hiểm xã hội/Mã số bảo hiểm xã hội (1): ..........
-Nghề/Công việc (2):..........
-Điện thoại liên hệ: ..........
-Đề nghị được giám định mức độ suy giảm khả năng lao động:
-
-Đề nghị giám định (3): ..........
-Loại hình giám định (4): ..........
-Nội dung giám định (5): ..........
-Đang hưởng chế độ (6): ..........
-Xác nhận của UBND hoặc Công an cấp xã (7)
-
-Người đề nghị
-
-(Ký, ghi rõ họ tên)
-
-'''
-Output:
-'''
-GIẤY ĐỀ NGHỊ KHÁM GIÁM ĐỊNH
-
-Kính gửi: [receiver]
-Tên tôi là: [user1_full_name]
-Ngày, tháng, năm sinh: [user1_dob]
-Chỗ ở hiện tại: [user1_current_address]
-Giấy Chứng minh nhân dân/Thẻ căn cước/Hộ chiếu số: [user1_id_number]
-Ngày cấp: [user1_id_issue_date] Nơi cấp: [user1_id_issue_place]
-Số sổ bảo hiểm xã hội/Mã số bảo hiểm xã hội (1): [user1_social_insurance_number]
-Nghề/Công việc (2): [user1_occupation]
-Điện thoại liên hệ: [user1_phone]
-
-Đề nghị được giám định mức độ suy giảm khả năng lao động:
-
-Đề nghị giám định (3): [user1_request_content]
-Loại hình giám định (4): [user1_assessment_type]
-Nội dung giám định (5): [user1_assessment_content]
-Đang hưởng chế độ (6): [user1_current_benefits]
-Xác nhận của UBND hoặc Công an cấp xã (7): [ward_authority_confirmation]
-Người đề nghị
-
-(Ký, ghi rõ họ tên)
-
-'''
-## Example:
-Input:
-'''
+```
 {form}
-'''
+```
 Output:
 """
 
@@ -1387,7 +1847,7 @@ The output should be a standardized version of the form, where placeholders have
 The placeholder tags should be replaced based on a set of predefined tag names for various types of personal and academic information.
 Example output should include accurately mapped tags for each type of information required in the form, ensuring clarity and consistency.
 
-Input and output are placed in ''' '''
+Input and output are placed in ``` ```
 
 1. Identify Unique Users
 
@@ -1401,12 +1861,9 @@ Task: For each placeholder (..........), check if it corresponds to a vehicle dr
 
 Action 1: If a match is found, replace the placeholder with the corresponding tag name in the format [userX_tagname], where X is the user identifier.
 
-Action 2: If a single placeholder should represent multiple related tags (e.g., day, month, year), combine these related tags into a single tag name (e.g., [userX_full_dob] for date of birth). Avoid splitting into multiple placeholders.
+Action 2: If a single placeholder should represent multiple related tags (e.g., Ngày, tháng, năm sinh: ......... or Ngày sinh: .........), combine these related tags into a single tag name (e.g., [userX_dob] for date of birth). Avoid splitting into multiple placeholders.
 
-Action 3: If a placeholder requires multiple pieces of information but only one tag is generated, ensure to create separate tags for each specific detail within the same square brackets separated by commas. For instance:
-
-Incorrect: "Ngày và nơi cấp: [user1_id_issue_date]"
-Correct: "Ngày và nơi cấp: [user1_id_issue_date, user1_id_issue_place]".
+Action 3: If a placeholder requires multiple pieces of information (e.g., Ngày và nơi cấp: ..........), ensure to create separate tags for each specific detail within the same square brackets separated by commas (e.g., [user1_id_issue_date, user1_id_issue_place] for id issue date and id issue place)
 
 Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
 
@@ -1432,7 +1889,7 @@ Output only.
 
 ## Example:
 Input:
-'''
+```
 GIẤY KHAI ĐĂNG KÝ XE (Vehicle registation declaration)
 A. PHẦN CHỦ XE TỰ KÊ KHAI (self declaration vehicle owner’s)
 Tên chủ xe :..........
@@ -1452,9 +1909,9 @@ Số giấy phép kinh doanh vận tải cấp ngày ........../.......... / ...
 Số máy 1 (Engine N0):..........
 Số máy 2 (Engine N0):..........
 Số khung (Chassis N0):..........
-'''
+```
 Output:
-'''
+```
 GIẤY KHAI ĐĂNG KÝ XE (Vehicle registation declaration)
 A. PHẦN CHỦ XE TỰ KÊ KHAI (self declaration vehicle owner's)
 Tên chủ xe : [user1_full_name]
@@ -1474,11 +1931,151 @@ Số giấy phép kinh doanh vận tải cấp ngày [user1_transport_license_is
 Số máy 1 (Engine N0):[user1_vehicle_engine_number1]
 Số máy 2 (Engine N0):[user1_vehicle_engine_number2]
 Số khung (Chassis N0):[user1_vehicle_chassis_number] 
-'''
+```
 
 ## Example:
 Input:
-'''
+```
+GIẤY KHAI ĐĂNG KÝ XE (Vehicle registation declaration)
+A. PHẦN CHỦ XE TỰ KÊ KHAI (self declaration vehicle owner’s)
+Tên chủ xe :..........
+Ngày sinh:..........
+Địa chỉ : ..........
+Số CCCD/CMND/Hộ chiếu của chủ xe:..........
+cấp ngày ........../........../.......... tại ..........
+Số CCCD/CMND/Hộ chiếu của người làm thủ tục ..........
+cấp ngày ........../.......... /.......... tại..........
+Điện thoại của chủ xe :..........
+Điện thoại của người làm thủ tục :..........
+Số hóa đơn điện tử mã số thuế:..........
+Mã hồ sơ khai lệ phí trước bạ Cơ quan cấp:..........
+Số tờ khai hải quan điện tử cơ quan cấp:..........
+Số sêri Phiếu KTCLXX Cơ quan cấp ..........
+Số giấy phép kinh doanh vận tải cấp ngày ........../.......... / ..........tại..........
+Số máy 1 (Engine N0):..........
+Số máy 2 (Engine N0):..........
+Số khung (Chassis N0):..........
+```
+Output:
+```
+GIẤY KHAI ĐĂNG KÝ XE (Vehicle registation declaration)
+A. PHẦN CHỦ XE TỰ KÊ KHAI (self declaration vehicle owner's)
+Tên chủ xe : [user1_full_name]
+Ngày sinh:[user1_dob]
+Địa chỉ : [user1_current_address]
+Số CCCD/CMND/Hộ chiếu của chủ xe:[user1_id_number]
+cấp ngày [user1_id_issue_day]/[user1_id_issue_month]/[user1_id_issue_year] tại [user1_id_issue_place]
+Số CCCD/CMND/Hộ chiếu của người làm thủ tục [user2_id_number]
+cấp ngày [user2_id_issue_day]/[user2_id_issue_month]/[user2_id_issue_year] tại [user2_id_issue_place]
+Điện thoại của chủ xe :[user1_phone]
+Điện thoại của người làm thủ tục :[user2_phone]
+Số hóa đơn điện tử mã số thuế: [user1_tax_invoice_number]
+Mã hồ sơ khai lệ phí trước bạ Cơ quan cấp: [user1_tax_declaration_code_issuing_agency]
+Số tờ khai hải quan điện tử cơ quan cấp: [user1_electronic_customs_declaration_number_issuing_agency]
+Số sêri Phiếu KTCLXX Cơ quan cấp [user1_ktclxx_serial_number]
+Số giấy phép kinh doanh vận tải cấp ngày [user1_transport_license_issue_day]/[user1_transport_license_issue_month]/[user1_transport_license_issue_year] tại [user1_transport_license_issue_place]
+Số máy 1 (Engine N0):[user1_vehicle_engine_number1]
+Số máy 2 (Engine N0):[user1_vehicle_engine_number2]
+Số khung (Chassis N0):[user1_vehicle_chassis_number] 
+```
+
+## Example:
+Input:
+```
+GIẤY KHAI ĐĂNG KÝ XE (Vehicle registation declaration)
+A. PHẦN CHỦ XE TỰ KÊ KHAI (self declaration vehicle owner’s)
+Tên chủ xe :..........
+Ngày sinh: .........../........../..........
+Địa chỉ : ..........
+Số CCCD/CMND/Hộ chiếu của chủ xe:..........
+cấp ngày ........../........../.......... tại ..........
+Số CCCD/CMND/Hộ chiếu của người làm thủ tục ..........
+cấp ngày ........../.......... /.......... tại..........
+Điện thoại của chủ xe :..........
+Điện thoại của người làm thủ tục :..........
+Số hóa đơn điện tử mã số thuế:..........
+Mã hồ sơ khai lệ phí trước bạ Cơ quan cấp:..........
+Số tờ khai hải quan điện tử cơ quan cấp:..........
+Số sêri Phiếu KTCLXX Cơ quan cấp ..........
+Số giấy phép kinh doanh vận tải cấp ngày ........../.......... / ..........tại..........
+Số máy 1 (Engine N0):..........
+Số máy 2 (Engine N0):..........
+Số khung (Chassis N0):..........
+```
+Output:
+```
+GIẤY KHAI ĐĂNG KÝ XE (Vehicle registation declaration)
+A. PHẦN CHỦ XE TỰ KÊ KHAI (self declaration vehicle owner's)
+Tên chủ xe : [user1_full_name]
+Ngày sinh:[user1_dob_day]/[user1_dob_month]/[user1_dob_year]
+Địa chỉ : [user1_current_address]
+Số CCCD/CMND/Hộ chiếu của chủ xe:[user1_id_number]
+cấp ngày [user1_id_issue_day]/[user1_id_issue_month]/[user1_id_issue_year] tại [user1_id_issue_place]
+Số CCCD/CMND/Hộ chiếu của người làm thủ tục [user2_id_number]
+cấp ngày [user2_id_issue_day]/[user2_id_issue_month]/[user2_id_issue_year] tại [user2_id_issue_place]
+Điện thoại của chủ xe :[user1_phone]
+Điện thoại của người làm thủ tục :[user2_phone]
+Số hóa đơn điện tử mã số thuế: [user1_tax_invoice_number]
+Mã hồ sơ khai lệ phí trước bạ Cơ quan cấp: [user1_tax_declaration_code_issuing_agency]
+Số tờ khai hải quan điện tử cơ quan cấp: [user1_electronic_customs_declaration_number_issuing_agency]
+Số sêri Phiếu KTCLXX Cơ quan cấp [user1_ktclxx_serial_number]
+Số giấy phép kinh doanh vận tải cấp ngày [user1_transport_license_issue_day]/[user1_transport_license_issue_month]/[user1_transport_license_issue_year] tại [user1_transport_license_issue_place]
+Số máy 1 (Engine N0):[user1_vehicle_engine_number1]
+Số máy 2 (Engine N0):[user1_vehicle_engine_number2]
+Số khung (Chassis N0):[user1_vehicle_chassis_number] 
+```
+
+## Example:
+Input:
+```
+MẪU ĐƠN ĐỀ NGHỊ ĐỔI, CẤP LẠI GIẤY PHÉP LÁI XE (1)
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+---------------
+ĐƠN ĐỀ NGHỊ ĐỔI (CẤP LẠI) GIẤY PHÉP LÁI XE (1)
+Kính gửi: Sở Giao thông vận tải..........
+Tôi là:..........
+Ngày tháng năm sinh: .........../........../..........
+Số Căn cước công dân hoặc Số Chứng minh nhân dân: ..........
+hoặc Hộ chiếu số.......... ngày cấp.......... nơi cấp: ..........
+Đã học lái xe tại (trường, năm):
+Hiện đã có giấy phép lái xe hạng:..........số:..........
+do:.......... cấp ngày........../........../..........
+Đề nghị cho tôi được đổi, cấp lại giấy phép lái xe cơ giới đường bộ hạng:..........
+Lý do:..........
+Vi phạm hành chính trong lĩnh vực giao thông đường bộ với hình thức tước quyền sử dụng giấy phép lái xe(có/không):..........
+    .........., ngày .......... tháng .......... năm 20 ..........
+NGƯỜI LÀM ĐƠN
+(Ký và ghi rõ họ, tên)
+
+```
+Output:
+```
+MẪU ĐƠN ĐỀ NGHỊ ĐỔI, CẤP LẠI GIẤY PHÉP LÁI XE (1)
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+---------------
+ĐƠN ĐỀ NGHỊ ĐỔI (CẤP LẠI) GIẤY PHÉP LÁI XE (1)
+Kính gửi: Sở Giao thông vận tải [receiver]
+Tôi là: [user1_full_name]
+Ngày tháng năm sinh: [user1_dob_day]/[user1_dob_month]/[user1_dob_year]
+Số Căn cước công dân hoặc Số Chứng minh nhân dân: [user1_id_number]
+hoặc Hộ chiếu số [user1_passport_number] ngày cấp [user1_passport_issue_date] nơi cấp: [user1_passport_issue_place]
+Đã học lái xe tại (trường, năm): [user1_driving_school, user1_driving_school_year]
+Hiện đã có giấy phép lái xe hạng: [user1_driving_license_category] số: [user1_driving_license_number]
+do: [user1_driving_license_issuer] cấp ngày [user1_driving_license_issue_day]/[user1_driving_license_issue_month]/[user1_driving_license_issue_year]
+Đề nghị cho tôi được đổi, cấp lại giấy phép lái xe cơ giới đường bộ hạng: [user1_new_driving_license_category]
+Lý do: [user1_reason]
+Vi phạm hành chính trong lĩnh vực giao thông đường bộ với hình thức tước quyền sử dụng giấy phép lái xe(có/không): [user1_driving_license_revoked]
+    [user1_driving_license_revoked_details], ngày [user1_driving_license_revoked_day] tháng [user1_driving_license_revoked_month] năm 20 [user1_driving_license_revoked_year]
+NGƯỜI LÀM ĐƠN
+(Ký và ghi rõ họ, tên)
+
+```
+
+## Example:
+Input:
+```
 MẪU ĐƠN ĐỀ NGHỊ ĐỔI, CẤP LẠI GIẤY PHÉP LÁI XE (1)
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -1499,9 +2096,9 @@ Vi phạm hành chính trong lĩnh vực giao thông đường bộ với hình 
 NGƯỜI LÀM ĐƠN
 (Ký và ghi rõ họ, tên)
 
-'''
+```
 Output:
-'''
+```
 MẪU ĐƠN ĐỀ NGHỊ ĐỔI, CẤP LẠI GIẤY PHÉP LÁI XE (1)
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -1522,10 +2119,11 @@ Vi phạm hành chính trong lĩnh vực giao thông đường bộ với hình 
 NGƯỜI LÀM ĐƠN
 (Ký và ghi rõ họ, tên)
 
-'''
+```
+
 ## Example:
 Input:
-'''
+```
 SOCIALIST REPUBLIC OF VIETNAM
 Independent - Freedom - Happiness
 ---------------
@@ -1546,9 +2144,9 @@ NGƯỜI LÀM ĐƠN (APPLICANT)
 (Ký và ghi rõ họ tên)
 (Signature and Full name)
 
-'''
+```
 Output:
-'''
+```
 SOCIALIST REPUBLIC OF VIETNAM
 Independent - Freedom - Happiness
 ---------------
@@ -1569,12 +2167,12 @@ NGƯỜI LÀM ĐƠN (APPLICANT)
 (Ký và ghi rõ họ tên)
 (Signature and Full name)
 
-'''
+```
 ## Example:
 Input:
-'''
+```
 {form}
-'''
+```
 Output:
 """
 
@@ -1599,7 +2197,7 @@ The output should be a standardized version of the form, where placeholders have
 The placeholder tags should be replaced based on a set of predefined tag names for various types of personal and academic information.
 Example output should include accurately mapped tags for each type of information required in the form, ensuring clarity and consistency.
 
-Input and output are placed in ''' '''
+Input and output are placed in ``` ```
 
 1. Identify Unique Users
 Task: Determine the number of unique users mentioned in the form.
@@ -1612,12 +2210,9 @@ Task: For each placeholder (..........), check if it corresponds to a vehicle dr
 
 Action 1: If a match is found, replace the placeholder with the corresponding tag name in the format [userX_tagname], where X is the user identifier.
 
-Action 2: If a single placeholder should represent multiple related tags (e.g., day, month, year), combine these related tags into a single tag name (e.g., [userX_full_dob] for date of birth). Avoid splitting into multiple placeholders.
+Action 2: If a single placeholder should represent multiple related tags (e.g., Ngày, tháng, năm sinh: ......... or Ngày sinh: .........), combine these related tags into a single tag name (e.g., [userX_dob] for date of birth). Avoid splitting into multiple placeholders.
 
-Action 3: If a placeholder requires multiple pieces of information but only one tag is generated, ensure to create separate tags for each specific detail within the same square brackets separated by commas. For instance:
-
-Incorrect: "Ngày và nơi cấp: [user1_id_issue_date]"
-Correct: "Ngày và nơi cấp: [user1_id_issue_date, user1_id_issue_place]".
+Action 3: If a placeholder requires multiple pieces of information (e.g., Ngày và nơi cấp: ..........), ensure to create separate tags for each specific detail within the same square brackets separated by commas (e.g., [user1_id_issue_date, user1_id_issue_place] for id issue date and id issue place)
 
 Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
 
@@ -1641,7 +2236,7 @@ Output only.
 
 ## Example:
 Input:
-'''
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -1658,9 +2253,9 @@ Nhưng vì lý do (1)...........nên tôi gửi thông báo này (kèm theo bả
 Trường hợp người lao động chưa có bản sao hợp đồng lao động hoặc hợp đồng làm việc (2).
  Đề nghị quý Trung tâm xem xét, thực hiện các thủ tục về chấm dứt hưởng trợ cấp thất nghiệp để bảo lưu thời gian đóng bảo hiểm thất nghiệp tương ứng với số tháng hưởng trợ cấp thất nghiệp mà tôi chưa nhận tiền tại cơ quan bảo hiểm xã hội./.
                                                                           .........., ngày .......... tháng .......... năm ..........
-'''
+```
 Output:
-'''
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -1677,10 +2272,51 @@ Nhưng vì lý do (1) [reason] nên tôi gửi thông báo này (kèm theo bản
 Trường hợp người lao động chưa có bản sao hợp đồng lao động hoặc hợp đồng làm việc (2).
  Đề nghị quý Trung tâm xem xét, thực hiện các thủ tục về chấm dứt hưởng trợ cấp thất nghiệp để bảo lưu thời gian đóng bảo hiểm thất nghiệp tương ứng với số tháng hưởng trợ cấp thất nghiệp mà tôi chưa nhận tiền tại cơ quan bảo hiểm xã hội./.
                                                                           [place], ngày [day] tháng [month] năm [year]
-'''                                                           
+``` 
+
 ## Example:
 Input:
-'''
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+THÔNG BÁO 
+Về việc .......... (1)
+Kính gửi:  Trung tâm Dịch vụ việc làm ..........
+Tên tôi là:.......... sinh ngày: .........../........../..........
+Số định danh cá nhân/Chứng minh nhân dân: ..........cấp ngày..........tháng..........năm..........  Nơi cấp..........                 
+Số sổ BHXH :..........
+Chỗ ở hiện nay (trường hợp khác nơi đăng ký thường trú):..........
+Hiện nay, tôi đang hưởng trợ cấp thất nghiệp theo Quyết định số.......... ngày ........../........../.......... của Giám đốc Sở Lao động - Thương binh và Xã hội tỉnh/thành phố..........
+Tổng số tháng tôi đã hưởng trợ cấp thất nghiệp: .......... tháng
+Nhưng vì lý do (1)...........nên tôi gửi thông báo này (kèm theo bản sao giấy tờ có liên quan).
+Trường hợp người lao động chưa có bản sao hợp đồng lao động hoặc hợp đồng làm việc (2).
+ Đề nghị quý Trung tâm xem xét, thực hiện các thủ tục về chấm dứt hưởng trợ cấp thất nghiệp để bảo lưu thời gian đóng bảo hiểm thất nghiệp tương ứng với số tháng hưởng trợ cấp thất nghiệp mà tôi chưa nhận tiền tại cơ quan bảo hiểm xã hội./.
+                                                                          .........., ngày .......... tháng .......... năm ..........
+```
+Output:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+THÔNG BÁO 
+Về việc [request_content] (1)
+Kính gửi:  Trung tâm Dịch vụ việc làm [receiver]
+Tên tôi là: [user1_full_name] sinh ngày: [user1_dob_day]/[user1_dob_month]/[user1_dob_year]
+Số định danh cá nhân/Chứng minh nhân dân: [user1_id_number] cấp ngày [user1_id_issue_day] tháng [user1_id_issue_month] năm [user1_id_issue_year]  Nơi cấp [user1_id_issue_place]                 
+Số sổ BHXH : [user1_social_insurance_number]
+Chỗ ở hiện nay (trường hợp khác nơi đăng ký thường trú): [user1_current_address]
+Hiện nay, tôi đang hưởng trợ cấp thất nghiệp theo Quyết định số [user1_unemployment_decision_number] ngày [user1_unemployment_decision_day]/[user1_unemployment_decision_month]/[user1_unemployment_decision_year] của Giám đốc Sở Lao động - Thương binh và Xã hội tỉnh/thành phố [user1_unemployment_decision_issuer]
+Tổng số tháng tôi đã hưởng trợ cấp thất nghiệp: [user1_unemployment_duration] tháng
+Nhưng vì lý do (1) [reason] nên tôi gửi thông báo này (kèm theo bản sao giấy tờ có liên quan).
+Trường hợp người lao động chưa có bản sao hợp đồng lao động hoặc hợp đồng làm việc (2).
+ Đề nghị quý Trung tâm xem xét, thực hiện các thủ tục về chấm dứt hưởng trợ cấp thất nghiệp để bảo lưu thời gian đóng bảo hiểm thất nghiệp tương ứng với số tháng hưởng trợ cấp thất nghiệp mà tôi chưa nhận tiền tại cơ quan bảo hiểm xã hội./.
+                                                                          [place], ngày [day] tháng [month] năm [year]
+```        
+
+## Example:
+Input:
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -1703,9 +2339,9 @@ Tôi có nguyện vọng tham gia khóa đào tạo nghề .......... với th�
 Người đề nghị
 (Ký, ghi rõ họ tên)
 
-'''
+```
 Output:
-'''
+```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -1728,11 +2364,127 @@ Tôi có nguyện vọng tham gia khóa đào tạo nghề [user1_training_progr
 Người đề nghị
 (Ký, ghi rõ họ tên)
 
-'''
+```
+
+## Example:
+Input:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+ĐỀ NGHỊ HƯỞNG TRỢ CẤP THẤT NGHIỆP
+Kính gửi: Trung tâm Dịch vụ việc làm ..........
+Tên tôi là:..........sinh ngày .......... /........../..........
+Số định danh cá nhân/Chứng minh nhân dân: ..........cấp ngày.......... tháng.......... năm.......... Nơi cấp:..........
+Số sổ BHXH: ..........
+Số điện thoại:..........Địa chỉ email (nếu có)..........
+Số tài khoản (ATM nếu có).......... tại ngân hàng:..........
+Trình độ đào tạo:..........
+Ngành nghề đào tạo:..........
+Chỗ ở hiện nay (trường hợp khác nơi đăng ký thường trú) (1):..........
+Ngày ........../........../.........., tôi đã chấm dứt hợp đồng lao động/hợp đồng làm việc với (tên đơn vị)..........
+tại địa chỉ:..........
+Lý do chấm dứt hợp đồng lao động/hợp đồng làm việc:..........
+Loại hợp đồng lao động/hợp đồng làm việc:..........
+Số tháng đóng bảo hiểm thất nghiệp..........tháng.
+Nơi đề nghị nhận trợ cấp thất nghiệp (BHXH quận/huyện hoặc qua thẻ ATM):..........
+Kèm theo Đề nghị này là (2).......... và Sổ bảo hiểm xã hội của tôi. Đề nghị quý Trung tâm xem xét, giải quyết hưởng trợ cấp thất nghiệp cho tôi theo đúng quy định.
+Tôi cam đoan nội dung ghi trên là hoàn toàn đúng sự thật, nếu sai tôi sẽ chịu trách nhiệm trước pháp luật.
+	 .........., ngày .......... tháng .......... năm ..........
+ Người đề nghị
+  (Ký, ghi rõ họ tên)
+
+```
+Output:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+ĐỀ NGHỊ HƯỞNG TRỢ CẤP THẤT NGHIỆP
+Kính gửi: Trung tâm Dịch vụ việc làm [receiver]
+Tên tôi là: [user1_full_name] sinh ngày [user1_dob_day]/[user1_dob_month]/[user1_dob_year]
+Số định danh cá nhân/Chứng minh nhân dân: [user1_id_number] cấp ngày [user1_id_issue_day] tháng [user1_id_issue_month] năm [user1_id_issue_year] Nơi cấp: [user1_id_issue_place]
+Số sổ BHXH: [user1_social_insurance_number]
+Số điện thoại: [user1_phone_number] Địa chỉ email (nếu có) [user1_email]
+Số tài khoản (ATM nếu có) [user1_bank_account_number] tại ngân hàng: [user1_bank_name]
+Trình độ đào tạo: [user1_education_level]
+Ngành nghề đào tạo: [user1_major]
+Chỗ ở hiện nay (trường hợp khác nơi đăng ký thường trú) (1): [user1_current_address]
+Ngày [user1_termination_date_day]/[user1_termination_date_month]/[user1_termination_date_year], tôi đã chấm dứt hợp đồng lao động/hợp đồng làm việc với [user1_former_employer_name]
+tại địa chỉ: [user1_former_employer_address]
+Lý do chấm dứt hợp đồng lao động/hợp đồng làm việc: [user1_termination_reason]
+Loại hợp đồng lao động/hợp đồng làm việc: [user1_contract_type]
+Số tháng đóng bảo hiểm thất nghiệp [user1_unemployment_insurance_months] tháng.
+Nơi đề nghị nhận trợ cấp thất nghiệp (BHXH quận/huyện hoặc qua thẻ ATM): [user1_unemployment_benefit_receiving_method]
+Kèm theo Đề nghị này là (2) [user1_attached_documents] và Sổ bảo hiểm xã hội của tôi. Đề nghị quý Trung tâm xem xét, giải quyết hưởng trợ cấp thất nghiệp cho tôi theo đúng quy định.
+Tôi cam đoan nội dung ghi trên là hoàn toàn đúng sự thật, nếu sai tôi sẽ chịu trách nhiệm trước pháp luật.
+	 .........., ngày [day] tháng [month] năm [year]
+ Người đề nghị
+  (Ký, ghi rõ họ tên)
+
+```
+
+## Example:
+Input:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+ĐỀ NGHỊ HƯỞNG TRỢ CẤP THẤT NGHIỆP
+Kính gửi: Trung tâm Dịch vụ việc làm ..........
+Tên tôi là:..........sinh ngày ..........
+Số định danh cá nhân/Chứng minh nhân dân: ..........cấp ngày.......... tháng.......... năm.......... Nơi cấp:..........
+Số sổ BHXH: ..........
+Số điện thoại:..........Địa chỉ email (nếu có)..........
+Số tài khoản (ATM nếu có).......... tại ngân hàng:..........
+Trình độ đào tạo:..........
+Ngành nghề đào tạo:..........
+Chỗ ở hiện nay (trường hợp khác nơi đăng ký thường trú) (1):..........
+Ngày ........../........../.........., tôi đã chấm dứt hợp đồng lao động/hợp đồng làm việc với (tên đơn vị)..........
+tại địa chỉ:..........
+Lý do chấm dứt hợp đồng lao động/hợp đồng làm việc:..........
+Loại hợp đồng lao động/hợp đồng làm việc:..........
+Số tháng đóng bảo hiểm thất nghiệp..........tháng.
+Nơi đề nghị nhận trợ cấp thất nghiệp (BHXH quận/huyện hoặc qua thẻ ATM):..........
+Kèm theo Đề nghị này là (2).......... và Sổ bảo hiểm xã hội của tôi. Đề nghị quý Trung tâm xem xét, giải quyết hưởng trợ cấp thất nghiệp cho tôi theo đúng quy định.
+Tôi cam đoan nội dung ghi trên là hoàn toàn đúng sự thật, nếu sai tôi sẽ chịu trách nhiệm trước pháp luật.
+	 .........., ngày .......... tháng .......... năm ..........
+ Người đề nghị
+  (Ký, ghi rõ họ tên)
+
+```
+Output:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+ĐỀ NGHỊ HƯỞNG TRỢ CẤP THẤT NGHIỆP
+Kính gửi: Trung tâm Dịch vụ việc làm [receiver]
+Tên tôi là: [user1_full_name] sinh ngày [user1_dob]
+Số định danh cá nhân/Chứng minh nhân dân: [user1_id_number] cấp ngày [user1_id_issue_day] tháng [user1_id_issue_month] năm [user1_id_issue_year] Nơi cấp: [user1_id_issue_place]
+Số sổ BHXH: [user1_social_insurance_number]
+Số điện thoại: [user1_phone_number] Địa chỉ email (nếu có) [user1_email]
+Số tài khoản (ATM nếu có) [user1_bank_account_number] tại ngân hàng: [user1_bank_name]
+Trình độ đào tạo: [user1_education_level]
+Ngành nghề đào tạo: [user1_major]
+Chỗ ở hiện nay (trường hợp khác nơi đăng ký thường trú) (1): [user1_current_address]
+Ngày [user1_termination_date_day]/[user1_termination_date_month]/[user1_termination_date_year], tôi đã chấm dứt hợp đồng lao động/hợp đồng làm việc với [user1_former_employer_name]
+tại địa chỉ: [user1_former_employer_address]
+Lý do chấm dứt hợp đồng lao động/hợp đồng làm việc: [user1_termination_reason]
+Loại hợp đồng lao động/hợp đồng làm việc: [user1_contract_type]
+Số tháng đóng bảo hiểm thất nghiệp [user1_unemployment_insurance_months] tháng.
+Nơi đề nghị nhận trợ cấp thất nghiệp (BHXH quận/huyện hoặc qua thẻ ATM): [user1_unemployment_benefit_receiving_method]
+Kèm theo Đề nghị này là (2) [user1_attached_documents] và Sổ bảo hiểm xã hội của tôi. Đề nghị quý Trung tâm xem xét, giải quyết hưởng trợ cấp thất nghiệp cho tôi theo đúng quy định.
+Tôi cam đoan nội dung ghi trên là hoàn toàn đúng sự thật, nếu sai tôi sẽ chịu trách nhiệm trước pháp luật.
+	 .........., ngày [day] tháng [month] năm [year]
+ Người đề nghị
+  (Ký, ghi rõ họ tên)
+
+```
 
 ## Example
 Input:
-'''
+```
 CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -1740,23 +2492,23 @@ TỜ KHAI THUẾ THU NHẬP CÁ NHÂN
 (Áp dụng đối với cá nhân cư trú và cá nhân không cư trú có thu nhập từ tiền lương, 
 tiền công khai thuế trực tiếp với cơ quan thuế)
 
-.......... Kỳ tính thuế: ........../..........   Tháng .......... năm .......... /Quý .......... năm .......... (Từ tháng ........../.......... đến tháng ........../..........)
+[01] Kỳ tính thuế: ........../..........   Tháng .......... năm .......... /Quý .......... năm .......... (Từ tháng ........../.......... đến tháng ........../..........)
 
-.......... Tên người nộp thuế: [user1_full_name]
-.......... Mã số thuế: ..........	
-.......... Địa chỉ: [user1_current_address]
-.......... Quận/huyện: .......... .......... Tỉnh/thành phố: ..........
-.......... Điện thoại: .......... .......... Fax: .......... .......... Email: ..........
-.......... Tên tổ chức trả thu nhập: ..........
-.......... Mã số thuế: ..........			
-.......... Địa chỉ: ..........
-.......... Quận/huyện: .......... .......... Tỉnh/thành phố: ..........
-.......... Tên đại lý thuế (nếu có): ..........
-.......... Mã số thuế: ..........				
-.......... Hợp đồng đại lý thuế: Số: .......... ngày: .......... 
-'''
+[04] Tên người nộp thuế: [user1_full_name]
+[05] Mã số thuế: ..........	
+[06] Địa chỉ: [user1_current_address]
+[07] Quận/huyện: .......... [08] Tỉnh/thành phố: ..........
+[09] Điện thoại: .......... [10] Fax: .......... [11] Email: ..........
+[12] Tên tổ chức trả thu nhập: ..........
+[13] Mã số thuế: ..........			
+[14] Địa chỉ: ..........
+[15] Quận/huyện: .......... [16] Tỉnh/thành phố: ..........
+[17] Tên đại lý thuế (nếu có): ..........
+[18] Mã số thuế: ..........				
+[19] Hợp đồng đại lý thuế: Số: .......... ngày: .......... 
+```
 Ouput:
-'''
+```
 CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
@@ -1778,12 +2530,14 @@ tiền công khai thuế trực tiếp với cơ quan thuế)
 [17] Tên đại lý thuế (nếu có): [tax_agent_name]
 [18] Mã số thuế: [tax_agent_tax_id]				
 [19] Hợp đồng đại lý thuế: Số: [tax_agent_contract_number] ngày: [tax_agent_contract_date] 
-'''
+```
+
+
 
 ## Example:
 Input: 
-'''
+```
 {form}
-'''
+```
 Output:
 """
