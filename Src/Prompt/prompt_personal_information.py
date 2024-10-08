@@ -285,6 +285,8 @@ Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm
 
 Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
+**Generate tags ONLY for fields containing placeholders. If no placeholder exists, leave the text unchanged.**
+
 2. Handle Non-Personal Information Placeholders
 
 Task: If the placeholder does not correspond to any known residence or identification tag name:
@@ -747,6 +749,8 @@ Action 3: If a placeholder requires multiple pieces of information (e.g., Ngày 
 Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
 
 Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
+
+**Generate tags ONLY for fields containing placeholders. If no placeholder exists, leave the text unchanged.**
 
 2. Handle Non-Personal Information Placeholders
 
@@ -1536,6 +1540,8 @@ Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm
 
 Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
+**Generate tags ONLY for fields containing placeholders. If no placeholder exists, leave the text unchanged.**
+
 2. Handle Non-Personal Information Placeholders
 
 Task: If the placeholder does not correspond to any known study-related tag name:
@@ -1868,6 +1874,8 @@ Action 3: If a placeholder requires multiple pieces of information (e.g., Ngày 
 Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
 
 Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
+
+**Generate tags ONLY for fields containing placeholders. If no placeholder exists, leave the text unchanged.**
 
 2. Handle Non-Personal Information Placeholders
 
@@ -2218,6 +2226,8 @@ Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm
 
 Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
+**Generate tags ONLY for fields containing placeholders. If no placeholder exists, leave the text unchanged.**
+
 2. Handle Non-Personal Information Placeholders
 Task: If the placeholder does not correspond to any known study-related tag name:
 
@@ -2460,7 +2470,7 @@ CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 
 ĐỀ NGHỊ HƯỞNG TRỢ CẤP THẤT NGHIỆP
 Kính gửi: Trung tâm Dịch vụ việc làm [receiver]
-Tên tôi là: [user1_full_name] sinh ngày [user1_dob]
+Tên tôi là: [user1_full_name] sinh ngày [user1_dob_day]
 Số định danh cá nhân/Chứng minh nhân dân: [user1_id_number] cấp ngày [user1_id_issue_day] tháng [user1_id_issue_month] năm [user1_id_issue_year] Nơi cấp: [user1_id_issue_place]
 Số sổ BHXH: [user1_social_insurance_number]
 Số điện thoại: [user1_phone_number] Địa chỉ email (nếu có) [user1_email]
