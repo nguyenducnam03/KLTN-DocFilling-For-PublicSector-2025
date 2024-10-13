@@ -329,9 +329,9 @@ def replaced_date_function(form):
       _match3 = re.findall(regex3, copy_form.lower(), re.DOTALL)
       if not (_match1 or _match2 or _match3):
         form = form.replace(f"[{tagname}]", f"[{tagname}]/[{temp1}]/[{temp2}]")
-    elif "dob" in tagname:
+    elif tagname[-3:-1] == "dob":
       form = form.replace(f"[{tagname}]", f"[{tagname}_day]/[{tagname}_month]/[{tagname}_year]")
-    elif "date" in tagname:
+    elif tagname[-4:-1] == "date":
       temp = tagname[:-5]
       form = form.replace(f"[{tagname}]", f"[{temp}_day]/[{temp}_month]/[{temp}_year]")
   return form
