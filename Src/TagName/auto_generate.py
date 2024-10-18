@@ -281,11 +281,11 @@ def extract_dates(text):
     #
     text = text.lower()
     # Các biểu thức regex
-    regex = r"(?:ngày sinh|sinh ngày|ngày tháng năm sinh|ngày, tháng, năm sinh|ngày tháng năm sinh|ngày/tháng/năm|ngày cấp|cấp ngày|ngày)\s*:*\s*\[([^\d\s][^\]\s]*?_(?:date|dob))\]"
-    regex1 = r"(?:ngày sinh|sinh ngày|ngày tháng năm sinh|ngày, tháng, năm sinh|ngày tháng năm sinh|ngày/tháng/năm|ngày cấp|cấp ngày)\s*:*\s*\[([^\[\]]+)\]/\[([^\[\]]+)\]/\[([^\[\]]+)\]"
-    regex2 = r"(?:ngày sinh|sinh ngày|ngày tháng năm sinh|ngày, tháng, năm sinh|ngày/tháng/năm|ngày cấp|cấp ngày|ngày)\s*:*\s*\[([^\s\d][^\]\s]*?_day)\]"
-    regex3 = r"(?:tháng sinh|tháng)\s*:*\s*\[([^\s\d][^\]\s]*?_month)\]"
-    regex4 = r"(?:năm sinh|năm)\s*:*\s*\[([^\s\d][^\]\s]*?_year)\]"
+    regex = r"(?:ngày sinh|sinh ngày|ngày tháng năm sinh|ngày, tháng, năm sinh|ngày tháng năm sinh|ngày/tháng/năm sinh|ngày cấp|cấp ngày|ngày)\s*:*\s*\[([^\d\s][^\]\s]*?_(?:issue_date|dob))\]"
+    regex1 = r"(?:ngày sinh|sinh ngày|ngày tháng năm sinh|ngày, tháng, năm sinh|ngày tháng năm sinh|ngày/tháng/năm sinh|ngày cấp|cấp ngày)\s*:*\s*\[([^\[\]]+)\]/\[([^\[\]]+)\]/\[([^\[\]]+)\]"
+    regex2 = r"(?:ngày sinh|sinh ngày|ngày tháng năm sinh|ngày, tháng, năm sinh|ngày/tháng/năm sinh|ngày cấp|cấp ngày|ngày)\s*:*\s*\[([^\s\d][^\]\s]*?(?:issue_day|dob_day))\]"
+    regex3 = r"(?:tháng sinh|tháng)\s*:*\s*\[([^\s\d][^\]\s]*?(?:issue_month|dob_month))\]"
+    regex4 = r"(?:năm sinh|năm)\s*:*\s*\[([^\s\d][^\]\s]*?(?:issue_day|dob_year))\]"
 
     matches = []
     match1 = re.findall(regex1, text, re.DOTALL)
@@ -323,15 +323,15 @@ def replaced_date_function(form):
       temp2 = f'{tagname[:-3]}year'
       regex1 = rf'{temp1}'
       regex2 = rf'{temp2}'
-      regex3 = rf"(?:ngày sinh|sinh ngày|ngày tháng năm sinh|ngày, tháng, năm sinh|ngày tháng năm sinh|ngày/tháng/năm|ngày cấp|cấp ngày|ngày)\s*:*\s*\[{tagname}\]\s*tháng"
+      regex3 = rf"(?:ngày sinh|sinh ngày|ngày tháng năm sinh|ngày, tháng, năm sinh|ngày tháng năm sinh|ngày/tháng/năm sinh|ngày cấp|cấp ngày|ngày)\s*:*\s*\[{tagname}\]\s*tháng"
       _match1 = re.findall(regex1, copy_form.lower(), re.DOTALL)
       _match2 = re.findall(regex2, copy_form.lower(), re.DOTALL)
       _match3 = re.findall(regex3, copy_form.lower(), re.DOTALL)
       if not (_match1 or _match2 or _match3):
         form = form.replace(f"[{tagname}]", f"[{tagname}]/[{temp1}]/[{temp2}]")
-    elif tagname[-3:-1] == "dob":
+    elif tagname[-3:] == "dob":
       form = form.replace(f"[{tagname}]", f"[{tagname}_day]/[{tagname}_month]/[{tagname}_year]")
-    elif tagname[-4:-1] == "date":
+    elif tagname[-4:] == "date":
       temp = tagname[:-5]
       form = form.replace(f"[{tagname}]", f"[{temp}_day]/[{temp}_month]/[{temp}_year]")
   return form
@@ -341,8 +341,8 @@ def replaced_date_function(form):
 
 # "Forms/Text/Input_test"           
 # "Forms/Text/Input/Output"
-def auto_generate_tag_names(llm = llm, folder_dir = "Forms/Text/Input_test/Input", start = 0 , end = 10): # Phải có start và end chứ nếu không nó sẽ lỗi gemini
-    for index, filename in enumerate(os.listdir(folder_dir)[start:end]):
+def auto_generate_tag_names(llm = llm, folder_dir = "Forms/Text/Input_test/Input", start = 0): # Phải có start và end chứ nếu không nó sẽ lỗi gemini
+    for index, filename in enumerate(os.listdir(folder_dir)[start:]):
         chain = identify_type_form(llm)
         template_prompt = None
         tagnames = None
@@ -392,7 +392,7 @@ def auto_generate_tag_names(llm = llm, folder_dir = "Forms/Text/Input_test/Input
                 print(e)
             print("End with: ", filename)
 
-# auto_generate_tag_names(start = 0, end = -1)
+# auto_generate_tag_names(start = 0)
 
 def replace_date(folder_dir = "Forms/Text/Input_test/Input/TagName"):
    for index, filename in enumerate(os.listdir(folder_dir)):
@@ -403,7 +403,7 @@ def replace_date(folder_dir = "Forms/Text/Input_test/Input/TagName"):
             form = replaced_date_function(text)
             write_file(response_dir, form)
 
-replace_date()
+replace_date("Forms\Text\Input_test\Label_Output_NDN")
 
 def auto_identify_relationship(llm = llm, folder_dir = "Forms/Text/Input/Output/TagName", save_dir = "Forms/Text/Input/Output/", start = 0, end = 10):
     for index,filename in enumerate(os.listdir(folder_dir)[start:end]):
