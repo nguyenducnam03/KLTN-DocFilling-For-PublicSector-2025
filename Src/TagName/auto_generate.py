@@ -281,11 +281,11 @@ def extract_dates(text):
     #
     text = text.lower()
     # Các biểu thức regex
-    regex = r"(?:ngày sinh|sinh ngày|ngày tháng năm sinh|ngày, tháng, năm sinh|ngày tháng năm sinh|ngày/tháng/năm sinh|ngày cấp|cấp ngày|ngày)\s*:*\s*\[([^\d\s][^\]\s]*?_(?:issue_date|dob))\]"
-    regex1 = r"(?:ngày sinh|sinh ngày|ngày tháng năm sinh|ngày, tháng, năm sinh|ngày tháng năm sinh|ngày/tháng/năm sinh|ngày cấp|cấp ngày)\s*:*\s*\[([^\[\]]+)\]/\[([^\[\]]+)\]/\[([^\[\]]+)\]"
-    regex2 = r"(?:ngày sinh|sinh ngày|ngày tháng năm sinh|ngày, tháng, năm sinh|ngày/tháng/năm sinh|ngày cấp|cấp ngày|ngày)\s*:*\s*\[([^\s\d][^\]\s]*?(?:issue_day|dob_day))\]"
-    regex3 = r"(?:tháng sinh|tháng)\s*:*\s*\[([^\s\d][^\]\s]*?(?:issue_month|dob_month))\]"
-    regex4 = r"(?:năm sinh|năm)\s*:*\s*\[([^\s\d][^\]\s]*?(?:issue_day|dob_year))\]"
+    regex = r"(?:ngày sinh|sinh ngày|ngày tháng năm sinh|ngày, tháng, năm sinh|ngày tháng năm sinh|ngày/tháng/năm sinh|ngày cấp|cấp ngày|ngày)\s*:*\s*(?:\(\d+\))?\s*\[([^\d\s][^\]\s]*?_(?:issue_date|dob))\]"
+    regex1 = r"(?:ngày sinh|sinh ngày|ngày tháng năm sinh|ngày, tháng, năm sinh|ngày tháng năm sinh|ngày/tháng/năm sinh|ngày cấp|cấp ngày)\s*:*\s*(?:\(\d+\))?\s*\[([^\[\]]+)\]/\[([^\[\]]+)\]/\[([^\[\]]+)\]"
+    regex2 = r"(?:ngày sinh|sinh ngày|ngày tháng năm sinh|ngày, tháng, năm sinh|ngày/tháng/năm sinh|ngày cấp|cấp ngày|ngày)\s*:*\s*(?:\(\d+\))?\s*\[([^\s\d][^\]\s]*?(?:issue_day|dob_day))\]"
+    regex3 = r"(?:tháng sinh|tháng)\s*:*\s*(?:\(\d+\))?\s*\[([^\s\d][^\]\s]*?(?:issue_month|dob_month))\]"
+    regex4 = r"(?:năm sinh|năm)\s*:*\s*(?:\(\d+\))?\s*\[([^\s\d][^\]\s]*?(?:issue_day|dob_year))\]"
 
     matches = []
     match1 = re.findall(regex1, text, re.DOTALL)
@@ -323,7 +323,7 @@ def replaced_date_function(form):
       temp2 = f'{tagname[:-3]}year'
       regex1 = rf'{temp1}'
       regex2 = rf'{temp2}'
-      regex3 = rf"(?:ngày sinh|sinh ngày|ngày tháng năm sinh|ngày, tháng, năm sinh|ngày tháng năm sinh|ngày/tháng/năm sinh|ngày cấp|cấp ngày|ngày)\s*:*\s*\[{tagname}\]\s*tháng"
+      regex3 = rf"(?:ngày sinh|sinh ngày|ngày tháng năm sinh|ngày, tháng, năm sinh|ngày tháng năm sinh|ngày/tháng/năm sinh|ngày cấp|cấp ngày|ngày)\s*:*\s*(?:\(\d+\))?\s*\[{tagname}\]\s*tháng"
       _match1 = re.findall(regex1, copy_form.lower(), re.DOTALL)
       _match2 = re.findall(regex2, copy_form.lower(), re.DOTALL)
       _match3 = re.findall(regex3, copy_form.lower(), re.DOTALL)
