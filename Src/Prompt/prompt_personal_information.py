@@ -1,26 +1,3 @@
-# Additional Examples:
-
-# Input: Ngày tháng năm sinh (dd/mm/yyyy): ..........
-# Output: Ngày tháng năm sinh (dd/mm/yyyy): [user1_birth_day, user1_birth_month, user1_birth_year]
-
-# Input: Thông tin liên lạc (số điện thoại, email): ..........
-# Output: Thông tin liên lạc (số điện thoại, email): [user1_phone_number, user1_email_address]
-
-# Input: Địa chỉ thường trú (số nhà, đường phố, quận/huyện, tỉnh/thành phố): ..........
-# Output: Địa chỉ thường trú (số nhà, đường phố, quận/huyện, tỉnh/thành phố): [user1_house_number, user1_street_name, user1_district, user1_city_province]
-
-# Input: Tên cha mẹ (tên cha, tên mẹ): ..........
-# Output: Tên cha mẹ (tên cha, tên mẹ): [user1_father_name, user1_mother_name]
-
-# Input: Thông tin tài khoản ngân hàng (số tài khoản, tên ngân hàng, chi nhánh): ..........
-# Output: Thông tin tài khoản ngân hàng (số tài khoản, tên ngân hàng, chi nhánh): [user1_bank_account_number, user1_bank_name, user1_bank_branch]
-
-# Input: Ngôn ngữ sử dụng (ngôn ngữ mẹ đẻ, ngôn ngữ phụ): ..........
-# Output: Ngôn ngữ sử dụng (ngôn ngữ mẹ đẻ, ngôn ngữ phụ): [user1_native_language, user1_secondary_language]
-
-# Input: Thông tin công việc hiện tại (tên công ty, chức vụ, địa chỉ): ..........
-# Output: Thông tin công việc hiện tại (tên công ty, chức vụ, địa chỉ): [user1_company_name, user1_job_title, user1_company_address]
-
 residence_identification_tagnames = """ 
 [full_name]: Họ và tên của người dùng.
 [alias_name]: Tên gọi khác của người dùng.
@@ -45,7 +22,7 @@ residence_identification_tagnames = """
 [passport_expiry_day]: Ngày hết hạn hộ chiếu của người dùng.
 [passport_expiry_month]: Ngày hết hạn hộ chiếu của người dùng.
 [passport_expiry_year]: Ngày hết hạn hộ chiếu của người dùng.
-[passport_issuer]: Cấp quan cấp hộ chiếu cho người dùng
+[passport_issue_place]: Cấp quan cấp hộ chiếu cho người dùng
 [ethnicity]: Dân tộc của người dùng.
 [religion]: Tôn giáo của người dùng.
 [nationality]: Quốc tịch của người dùng.
@@ -285,7 +262,6 @@ Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm
 
 Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
-**Generate tags ONLY for fields containing placeholders. If no placeholder exists, leave the text unchanged.**
 
 2. Handle Non-Personal Information Placeholders
 
@@ -351,10 +327,6 @@ TỜ KHAI CĂN CƯỚC CÔNG DÂN
 9. Tình trạng hôn nhân: .......... 10. Nhóm máu (nếu có): ..........
 11. Nơi đăng ký khai sinh: ..........
 12. Quê quán: ..........
-13. Nơi thường trú: ..........
-14. Nơi ở hiện tại: ..........
-15. Nghề nghiệp: .......... 16. Trình độ học vấn: ..........
-.........., ngày ..........tháng..........năm..........
 ```
 Output:
 ```
@@ -367,11 +339,9 @@ TỜ KHAI CĂN CƯỚC CÔNG DÂN
 9. Tình trạng hôn nhân: [user1_marital_status] 10. Nhóm máu (nếu có): [user1_blood_type]
 11. Nơi đăng ký khai sinh: [user1_birth_registration_place]
 12. Quê quán: [user1_hometown]
-13. Nơi thường trú: [user1_permanent_address]
-14. Nơi ở hiện tại: [user1_current_address]
-15. Nghề nghiệp: [user1_occupation] 16. Trình độ học vấn: [user1_education_level]
-[place], ngày [day] tháng [month] năm [year]
 ```
+
+
 
 ## Example:
 Input:
@@ -384,6 +354,7 @@ Kính gửi: ..........
 Họ, chữ đệm, tên người yêu cầu: ..........
 Nơi cư trú: ..........
 Giấy tờ tùy thân: ..........
+Cấp ngày: ........../........./.........
 Quan hệ với người được thay đổi, cải chính, xác định lại dân tộc, bổ sung thông tin hộ tịch:..........
 Đề nghị cơ quan đăng ký việc ..........cho người có tên dưới đây:
 Họ, chữ đệm, tên: ..........
@@ -411,6 +382,7 @@ Kính gửi: [receiver]
 Họ, chữ đệm, tên người yêu cầu: [user1_full_name]
 Nơi cư trú: [user1_current_address]
 Giấy tờ tùy thân: [user1_id_number]
+Cấp ngày: [user1_id_issue_day]/[user1_id_issue_month]/[user1_id_issue_year]
 Quan hệ với người được thay đổi, cải chính, xác định lại dân tộc, bổ sung thông tin hộ tịch: [user1_relationship_user2]
 Đề nghị cơ quan đăng ký việc [user1_request_content] cho người có tên dưới đây:
 Họ, chữ đệm, tên: [user2_full_name]
@@ -427,6 +399,34 @@ Làm tại: [place] , ngày [day]  tháng [month]  năm [year]
 Người yêu cầu
 (Ký, ghi rõ họ, chữ đệm, tên) 
 
+```
+
+## Example
+Input:
+```
+			TỜ KHAI CĂN CƯỚC CÔNG DÂN
+1. Họ và tên: ..........
+2. Ngày sinh:..........; 3. Giới tính (Nam/nữ): ..........
+4. Số CMND/CCCD: ..........
+5. Cấp ngày: ........../........../.......... 
+6. Dân tộc: ..........; 
+9. Tình trạng hôn nhân: .......... 10. Nhóm máu (nếu có): ..........
+11. Nơi đăng ký khai sinh: ..........
+12. Nơi thường trú: ..........
+13. Nghề nghiệp: ..........
+```
+Ouput:
+```
+			TỜ KHAI CĂN CƯỚC CÔNG DÂN
+1. Họ và tên: [user1_full_name]
+2. Ngày sinh: [user1_dob]; 3. Giới tính (Nam/nữ): [user1_gender]
+4. Số CMND/CCCD: [user1_id_number]
+5. Cấp ngày: [user1_id_issue_date] 
+6. Dân tộc: [user1_ethnicity];
+9. Tình trạng hôn nhân: [user1_marital_status] 10. Nhóm máu (nếu có): [user1_blood_type]
+11. Nơi đăng ký khai sinh: [user1_birth_registration_place]
+12. Nơi thường trú: [user1_permanent_address]
+13. Nghề nghiệp: [user1_occupation]
 ```
 
 ## Example:
@@ -529,7 +529,7 @@ TỜ KHAI
 6. Số điện thoại: [user1_phone_number]
 7. Thông tin về hộ chiếu đề nghị khôi phục:
     Số hộ chiếu: [user1_passport_number] ngày cấp [user1_passport_issue_day]/[user1_passport_issue_month]/[user1_passport_issue_year]
-    Thời hạn: [user1_passport_expiry_day]/[user1_passport_expiry_month]/[user1_passport_expiry_year] Cơ quan cấp: [user1_passport_issuer]
+    Thời hạn: [user1_passport_expiry_day]/[user1_passport_expiry_month]/[user1_passport_expiry_year] Cơ quan cấp: [user1_passport_issue_place]
     8. Thông tin thị thực do nước ngoài cấp: 
 	Số thị thực: [user1_visa_number] Quốc gia cấp [user1_visa_country] Thời hạn [user1_visa_expiry_date]
     9. Lý do đề nghị khôi phục hộ chiếu(3) [user1_reason]
@@ -538,6 +538,7 @@ Tôi xin cam đoan những thông tin trên là đúng sự thật./.
 
            Làm tại [place], ngày [day] tháng [month] năm [year]
 ```
+
 
 ## Example:
 Input:
@@ -583,7 +584,7 @@ TỜ KHAI
 6. Số điện thoại: [user1_phone_number]
 7. Thông tin về hộ chiếu đề nghị khôi phục:
     Số hộ chiếu: [user1_passport_number] ngày cấp [user1_passport_issue_day]/[user1_passport_issue_month]/[user1_passport_issue_year]
-    Thời hạn: [user1_passport_expiry_date] Cơ quan cấp: [user1_passport_issuer]
+    Thời hạn: [user1_passport_expiry_date] Cơ quan cấp: [user1_passport_issue_place]
     8. Thông tin thị thực do nước ngoài cấp: 
 	Số thị thực: [user1_visa_number] Quốc gia cấp [user1_visa_country] Thời hạn [user1_visa_expiry_date]
     9. Lý do đề nghị khôi phục hộ chiếu(3) [user1_reason]
@@ -596,7 +597,6 @@ Tôi xin cam đoan những thông tin trên là đúng sự thật./.
 ## Example: 
 Input:
 ```
-Form:
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 TỜ KHAI ĐĂNG KÝ KHAI SINH
@@ -648,6 +648,7 @@ Tôi chịu hoàn toàn trách nhiệm trước pháp luật về nội dung cam
 Làm tại: [place], ngày [day] tháng [month] năm [year]
 ```
 
+
 ## Example:
 Input:
 ```
@@ -690,7 +691,7 @@ Kính gửi (1): [receiver]
 10. Quốc tịch nước ngoài (nếu có): [user1_foreign_nationality]
 11. Số hộ chiếu/ Giấy tờ đi lại quốc tế do nước ngoài cấp/ Giấy tờ do cơ quan có thẩm quyền Việt Nam cấp:
 Số:	[user1_passport_number] Ngày cấp: [user1_passport_issue_day]/[user1_passport_issue_month]/[user1_passport_issue_year]
-Cơ quan cấp: [user1_passport_issuer]	 Có giá trị đến ngày: [user1_passport_expiry_day]/[user1_passport_expiry_month]/[user1_passport_expiry_year]
+Cơ quan cấp: [user1_passport_issue_place]	 Có giá trị đến ngày: [user1_passport_expiry_day]/[user1_passport_expiry_month]/[user1_passport_expiry_year]
 12. Nghề nghiệp, nơi làm việc ở nước ngoài trước khi nhập cảnh Việt Nam: [user1_foreign_occupation]
 13. Họ, chữ đệm và tên, năm sinh, quốc tịch, nghề nghiệp, nơi làm việc, chỗ ở hiện nay của cha, mẹ, vợ, chồng, con: [user1_family_info]
 14. Nơi cư trú ở nước ngoài trước khi nhập cảnh Việt Nam: [user1_foreign_address]
@@ -750,7 +751,6 @@ Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm
 
 Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
-**Generate tags ONLY for fields containing placeholders. If no placeholder exists, leave the text unchanged.**
 
 2. Handle Non-Personal Information Placeholders
 
@@ -1540,7 +1540,6 @@ Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm
 
 Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
-**Generate tags ONLY for fields containing placeholders. If no placeholder exists, leave the text unchanged.**
 
 2. Handle Non-Personal Information Placeholders
 
@@ -1626,6 +1625,117 @@ I.	Áp dụng đối với người tham gia tra cứu không thấy mã số BH
 [12]. Số nhà, đường/phố, thôn/xóm: [user1_current_address]	
 [13]. Xã: [user1_current_address_ward]	[14]	Huyện: [user1_current_address_district]	[15]. Tỉnh: [user1_current_address_province] 	
 [16]. Kê khai Phụ lục Thành viên hộ gia đình (phụ lục kèm theo) đối với người tham gia tra cứu không thấy mã số BHXH và người tham gia BHYT theo hộ gia đình để giảm trừ mức đóng.
+```
+
+## Example:
+Input:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+GIẤY ĐỀ NGHỊ NHẬN CHẾ ĐỘ BẢO HIỂM XÃ HỘI
+KHI NGƯỜI HƯỞNG TỪ TRẦN
+
+Kính gửi: Bảo hiểm xã hội ..........
+Tôi tên là:.......... Sinh ngày .......... tháng .......... năm ..........
+Số chứng minh nhân dân	..........Ngày cấp: 	.......... Nơi cấp: 	..........
+Nơi cư trú (ghi rõ: số nhà, đường phố, tổ/xã/phường):..........
+Số điện thoại liên hệ: ..........	
+Mối quan hệ với người từ trần: ..........
+Tôi xin thay mặt cho tất cả thân nhân là .......... người, gồm:
+1. Ông (Bà): .......... Sinh ngày .......... tháng .......... năm ..........
+Nơi cư trú: ..........
+Mối quan hệ với người từ trần: ..........
+2. Ông (Bà): .......... Sinh ngày .......... tháng .......... năm ..........
+Nơi cư trú: ..........
+Mối quan hệ với người từ trần: ..........
+3. ..........
+để nhận chế độ BHXH của người đang hưởng chế độ BHXH đã từ trần là Ông (Bà):..........
+Số sổ BHXH:.......... Chết ngày .......... tháng .......... năm .......... 
+Nơi đang nhận lương hưu, trợ cấp BHXH: ..........
+Tôi xin cam đoan những nội dung kê khai trên đây là đầy đủ, đúng sự thật và chịu trách nhiệm trước pháp luật về nội dung kê khai cũng như trong trường hợp xảy ra tranh chấp về việc nhận lương hưu, trợ cấp BHXH theo chế độ của người hưởng đã từ trần. Đề nghị cơ quan BHXH xem xét, giải quyết chế độ BHXH cho gia đình chúng tôi theo quy định.
+
+  .........., ngày .......... tháng .......... năm ..........
+Xác nhận của chính quyền địa phương 
+nơi người đề nghị đang cư trú
+(Ký, ghi rõ họ tên và đóng dấu)	.........., ngày.......... tháng .......... năm..........
+Người đề nghị
+(ký, ghi rõ họ tên)
+
+Chữ ký của các thân nhân
+Người thứ nhất: ..........
+(Ký, ghi rõ họ tên)
+
+Người thứ hai: ..........
+(Ký, ghi rõ họ tên)
+
+
+
+Người thứ ba: ..........
+(Ký, ghi rõ họ tên)
+
+	Xét duyệt của cơ quan BHXH                                  
+- Tổng số tháng được truy lĩnh:.......... tháng
+  Từ tháng.......... năm .......... đến tháng.......... năm ..........
+- Tổng số tiền được truy lĩnh: .......... đồng
+   Bằng chữ: ..........
+           .........., ngày .......... tháng .......... năm ..........
+                   Giám đốc BHXH
+                  (Ký tên, đóng dấu)
+
+```
+Output:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+GIẤY ĐỀ NGHỊ NHẬN CHẾ ĐỘ BẢO HIỂM XÃ HỘI
+KHI NGƯỜI HƯỞNG TỪ TRẦN
+
+Kính gửi: Bảo hiểm xã hội [local_insurance_office]
+Tôi tên là: [user1_full_name] Sinh ngày [user1_dob_day] tháng [user1_dob_month] năm [user1_dob_year]
+Số chứng minh nhân dân [user1_id_number] Ngày cấp: [user1_id_issue_date] Nơi cấp: [user1_id_issue_place]
+Nơi cư trú (ghi rõ: số nhà, đường phố, tổ/xã/phường): [user1_current_address]
+Số điện thoại liên hệ: [user1_phone]
+Mối quan hệ với người từ trần: [user1_relationship_with_deceased]
+Tôi xin thay mặt cho tất cả thân nhân là [user1_number_of_relatives] người, gồm:
+1. Ông (Bà): [user2_full_name] Sinh ngày [user2_dob_day] tháng [user2_dob_month] năm [user2_dob_year]
+Nơi cư trú: [user2_current_address]
+Mối quan hệ với người từ trần: [user2_relationship_with_deceased]
+2. Ông (Bà): [user3_full_name] Sinh ngày [user3_dob_day] tháng [user3_dob_month] năm [user3_dob_year]
+Nơi cư trú: [user3_current_address]
+Mối quan hệ với người từ trần: [user3_relationship_with_deceased]
+3. [user4_full_name]
+để nhận chế độ BHXH của người đang hưởng chế độ BHXH đã từ trần là Ông (Bà): [deceased_full_name]
+Số sổ BHXH: [deceased_social_insurance_number] Chết ngày [deceased_death_day] tháng [deceased_death_month] năm [deceased_death_year]
+Nơi đang nhận lương hưu, trợ cấp BHXH: [deceased_benefit_receiving_location]
+Tôi xin cam đoan những nội dung kê khai trên đây là đầy đủ, đúng sự thật và chịu trách nhiệm trước pháp luật về nội dung kê khai cũng như trong trường hợp xảy ra tranh chấp về việc nhận lương hưu, trợ cấp BHXH theo chế độ của người hưởng đã từ trần. Đề nghị cơ quan BHXH xem xét, giải quyết chế độ BHXH cho gia đình chúng tôi theo quy định.
+
+[user1_current_address], ngày [user1_submission_day] tháng [user1_submission_month] năm [user1_submission_year]
+Xác nhận của chính quyền địa phương
+nơi người đề nghị đang cư trú
+(Ký, ghi rõ họ tên và đóng dấu) [place], ngày [day]tháng[month] năm[year]
+Người đề nghị
+(ký, ghi rõ họ tên)
+
+Chữ ký của các thân nhân
+Người thứ nhất: [user2_signature]
+(Ký, ghi rõ họ tên)
+
+Người thứ hai: [user3_signature]
+(Ký, ghi rõ họ tên)
+
+Người thứ ba: [user4_signature]
+(Ký, ghi rõ họ tên)
+
+Xét duyệt của cơ quan BHXH
+- Tổng số tháng được truy lĩnh: [deceased_benefit_backpay_months] tháng
+Từ tháng [deceased_benefit_backpay_start_month] năm [deceased_benefit_backpay_start_year] đến tháng [deceased_benefit_backpay_end_month] năm [deceased_benefit_backpay_end_year]
+- Tổng số tiền được truy lĩnh: [deceased_benefit_backpay_amount] đồng
+Bằng chữ: [deceased_benefit_backpay_amount_words]
+[local_insurance_office], ngày [insurance_office_decision_day] tháng [insurance_office_decision_month] năm [insurance_office_decision_year]
+Giám đốc BHXH
+(Ký tên, đóng dấu)
 ```
 
 ## Example:
@@ -1875,7 +1985,6 @@ Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm
 
 Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
-**Generate tags ONLY for fields containing placeholders. If no placeholder exists, leave the text unchanged.**
 
 2. Handle Non-Personal Information Placeholders
 
@@ -2226,7 +2335,6 @@ Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm
 
 Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
 
-**Generate tags ONLY for fields containing placeholders. If no placeholder exists, leave the text unchanged.**
 
 2. Handle Non-Personal Information Placeholders
 Task: If the placeholder does not correspond to any known study-related tag name:

@@ -43,7 +43,7 @@ def redefined_tag_names(llm = llm, folder_dir = "Forms/Text/Input_test/Input/Tag
         if filename.endswith(".txt"):
             print("Start with: ", filename)
             file_dir = folder_dir + '/' + filename
-            response_dir = "Forms/Text/Input_test/Input/TagName2" + filename 
+            response_dir = "Forms/Text/Input_test/Input/TagName2/" + filename 
             text = read_file(file_dir)
             prompt = PromptTemplate.from_template(redefine_tag_names_template_prompt)
             chain = prompt | llm | StrOutputParser()
@@ -53,3 +53,5 @@ def redefined_tag_names(llm = llm, folder_dir = "Forms/Text/Input_test/Input/Tag
             except Exception as e:
                 print(e)
             print("End with: ", filename)
+
+redefined_tag_names()

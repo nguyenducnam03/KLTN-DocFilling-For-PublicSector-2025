@@ -8,16 +8,18 @@ def identify_type_key(content):
     chain = identify_type_form(llm)
     type = chain.invoke(content)
     print(type)
-    if "Residence" in type:
+    if "1" in type:
         return 'residence_identification_tagnames'
-    elif "Education" in type:
+    elif "2" in type:
         return 'study_tagnames'
-    elif "Health" in type:
+    elif "3" in type:
         return 'health_and_medical_tagnames'
-    elif "Vehicle" in type:
+    elif "4" in type:
         return 'vehicle_driver_tagnames'
-    elif "Employment" in type:
+    elif "5" in type:
         return 'job_tagnames'
+    elif "6" in type:
+        return "other"
     else:
         return 'residence_identification_tagnames'
 
@@ -30,13 +32,14 @@ def save_tagname_dict(tagname_dict, save_path):
         pickle.dump(tagname_dict, f)
 
 
-def extract_tagname(folder_path = 'Forms/Text/Input/Output/TagName/', start = 0, end = 2):
+def extract_tagname(folder_path = 'Forms/Text/Input_test/Input/TagName1', start = 0, end = 2):
     tagname_dict = {
-    'residence_identification_tagnames': {},
-    'study_tagnames': {},
-    'health_and_medical_tagnames': {},
-    'vehicle_driver_tagnames': {},
-    'job_tagnames': {}
+        'residence_identification_tagnames': {},
+        'study_tagnames': {},
+        'health_and_medical_tagnames': {},
+        'vehicle_driver_tagnames': {},
+        'job_tagnames': {},
+        'other': {}
     }
     if os.path.exists('tagname_dict.pkl'):
         tagname_dict = load_tagname_dict()

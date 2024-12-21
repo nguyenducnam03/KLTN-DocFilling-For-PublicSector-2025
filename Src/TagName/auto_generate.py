@@ -342,7 +342,7 @@ def replaced_date_function(form):
 # "Forms/Text/Input_test"           
 # "Forms/Text/Input/Output"
 def auto_generate_tag_names(llm = llm, folder_dir = "Forms/Text/Input_test/Input", start = 0): # Phải có start và end chứ nếu không nó sẽ lỗi gemini
-    for index, filename in enumerate(os.listdir(folder_dir)[start:]):
+    for index, filename in enumerate(os.listdir(folder_dir)):
         chain = identify_type_form(llm)
         template_prompt = None
         tagnames = None
@@ -392,7 +392,7 @@ def auto_generate_tag_names(llm = llm, folder_dir = "Forms/Text/Input_test/Input
                 print(e)
             print("End with: ", filename)
 
-# auto_generate_tag_names(start = 0)
+auto_generate_tag_names()
 
 def replace_date(folder_dir = "Forms/Text/Input_test/Input/TagName"):
    for index, filename in enumerate(os.listdir(folder_dir)):
@@ -403,7 +403,7 @@ def replace_date(folder_dir = "Forms/Text/Input_test/Input/TagName"):
             form = replaced_date_function(text)
             write_file(response_dir, form)
 
-replace_date("Forms\Text\Input_test\Label_Output_NDN")
+# replace_date("Forms\Text\Input_test\Label_Output_NDN")
 
 def auto_identify_relationship(llm = llm, folder_dir = "Forms/Text/Input/Output/TagName", save_dir = "Forms/Text/Input/Output/", start = 0, end = 10):
     for index,filename in enumerate(os.listdir(folder_dir)[start:end]):
