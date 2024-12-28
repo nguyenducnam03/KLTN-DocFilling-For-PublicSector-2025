@@ -1,331 +1,364 @@
-pre_define_tag_names = '''
-[full_name]: "Họ và tên của người dùng.",
-[alias_name]: "Tên gọi khác của người dùng.",
-[dob_day]: "Ngày sinh của người dùng.",
-[dob_month]: "Tháng sinh của người dùng.",
-[dob_year]: "Năm sinh của người dùng.",
-[dob]: "Ngày, tháng, năm sinh của người dùng.",
-[dob_text]: "Ngày, tháng, năm sinh của người dùng được viết bằng chữ.",
-[gender]: "Giới tính của người dùng.",
-[id_number]: "Số chứng minh nhân dân hoặc căn cước công dân của người dùng.",
-[id_issue_day]: "Ngày cấp chứng minh nhân dân hoặc căn cước công dân của người dùng.",
-[id_issue_month]: "Tháng cấp chứng minh nhân dân hoặc căn cước công dân của người dùng.",
-[id_issue_year]: "Năm cấp chứng minh nhân dân hoặc căn cước công dân của người dùng.",
-[id_issue_date]: "Ngày cấp đầy đủ (ngày, tháng, năm) của số chứng minh nhân dân hoặc căn cước công dân của người dùng.",
-[id_issue_place]: "Nơi cấp chứng minh nhân dân hoặc căn cước công dân của người dùng.",
-[passport_number]: "Số hộ chiếu của người dùng.",
-[passport_issue_day]: "Ngày cấp hộ chiếu của người dùng.",
-[passport_issue_month]: "Tháng cấp hộ chiếu của người dùng.",
-[passport_issue_year]: "Năm cấp hộ chiếu của người dùng.",
-[passport_issue_date]: "Ngày, tháng, năm cấp hộ chiếu của người dùng.",
-[passport_issue_place]: "Nơi cấp hộ chiếu của người dùng.",
-[passport_expiry_day]: "Ngày hết hạn hộ chiếu của người dùng.",
-[passport_expiry_month]: "Tháng hết hạn hộ chiếu của người dùng.",
-[passport_expiry_year]: "Năm hết hạn hộ chiếu của người dùng.",
-[passport_expiry_date]: "Ngày hết hạn của hộ chiếu.",
-[ethnicity]: "Dân tộc của người dùng.",
-[religion]: "Tôn giáo của người dùng.",
-[nationality]: "Quốc tịch của người dùng.",
-[marital_status]: "Tình trạng hôn nhân của người dùng.",
-[blood_type]: "Nhóm máu của người dùng.",
-[birth_registration_place]: "Nơi đăng ký khai sinh của người dùng.",
-[birth_registration_place_ward]: "Phường/xã nơi đăng ký khai sinh của người dùng.",
-[birth_registration_place_district]: "Quận/huyện nơi đăng ký khai sinh của người dùng.",
-[birth_registration_place_province]: "Tỉnh/thành phố nơi đăng ký khai sinh của người dùng.",
-[hometown]: "Quê quán của người dùng.",
-[permanent_address]: "Địa chỉ thường trú của người dùng.",
-[current_address]: "Địa chỉ hiện tại của người dùng.",
-[current_address_ward]: "Phường/xã nơi ở hiện tại của người dùng.",
-[current_address_district]: "Quận/huyện nơi ở hiện tại của người dùng.",
-[current_address_province]: "Tỉnh/thành nơi ở hiện tại của người dùng.",
-[occupation]: "Nghề nghiệp của người dùng.",
-[education_level]: "Trình độ học vấn của người dùng.",
-[phone]: "Số điện thoại của người dùng.",
-[phone_home]: "Số điện thoại bàn của người dùng.",
-[email]: "Địa chỉ email của người dùng.",
-[user1_visa_number]: "Số thị thực(visa) của người dùng.",
-[user1_visa_country]: "Quốc gia cấp thị thực(visa) cho người dùng.",
-[user1_visa_expiry_day]: "Ngày hết hạn thị thực(visa) của người dùng.",
-[user1_visa_expiry_month]: "Tháng hết hạn thị thực(visa) của người dùng.",
-[user1_visa_expiry_year]: "Năm hết hạn thị thực(visa) của người dùng.",
-[year_of_study]: "Là học sinh, sinh viên năm thứ.",
-[class]: "Tên lớp hiện tại của người dùng.",
-[school]: "Tên trường của người dùng.",
-[school_principal]: "Hiệu trưởng của trường.",
-[course]: "Khóa học của người dùng.",
-[faculty]: "Khoa của người dùng.",
-[student_id_number]: "Mã số sinh viên của người dùng tại trường đại học.",
-[duration_of_course]: "Thời gian của khóa học của người dùng.",
-[graduation_date]: "Ngày tốt nghiệp của người dùng.",
-[degree]: "Bằng cấp đạt được của người dùng.",
-[grade]: "Điểm đạt được của người dùng.",
-[study_result_rating]: "Kết quả xếp loại của người dùng.",
-[semester]: "Học kỳ của người dùng.",
-[school_year]: "Năm học của người dùng.",
-[supervisor_name]: "Tên người hướng dẫn của người dùng.",
-[school_address]: "Địa chỉ trường học của người dùng.",
-[school_phone]: "Số điện thoại của trường học của người dùng.",
-[organization]: "Cơ quan quản lý trực tiếp của người dùng.",
-[decision_number]: "Số quyết định liên quan đến yêu cầu của người dùng.",
-[decision_day]: "Ngày khi quyết định được đưa ra, liên quan đến người dùng.",
-[decision_month]: "Tháng khi quyết định được đưa ra, liên quan đến người dùng.",
-[decision_year]: "Năm khi quyết định được đưa ra, liên quan đến người dùng.",
-[study_decision_number]: "Số quyết định cử đi học của người dùng.",
-[study_decision_day]: "Ngày khi quyết định cử đi học, liên quan đến người dùng.",
-[study_decision_month]: "Tháng quyết định cử đi học, liên quan đến người dùng.",
-[study_decision_year]: "Năm quyết định cử đi học, liên quan đến người dùng.",
-[decision_issuer]: "Cá nhân hoặc tổ chức đã ban hành quyết định liên quan đến người dùng.",
-[social_insurance_number]: "Số sổ bảo hiểm xã hội của người dùng.",
-[health_insurance_card_number]: "Số thẻ bảo hiểm y tế của người dùng.",
-[health_insurance_registration_place]: "Nơi đăng ký bảo hiểm y tế của người dùng.",
-[bank_account]: "Số tài khoản ngân hàng của người dùng.",
-[bank_name]: "Tên ngân hàng của người dùng.",
-[parent_name]: "Tên phụ huynh của người dùng.",
-[driving_license_number]: "Số giấy phép lái xe của người dùng.",
-[driving_license_issuer]: "Cơ quan cấp giấy phép lái xe của người dùng.",
-[driving_license_place]: "Nơi cấp giấy phép lái xe của người dùng.",
-[driving_license_issue_day]: "Ngày cấp giấy phép lái xe của người dùng.",
-[driving_license_issue_month]: "Tháng cấp giấy phép lái xe của người dùng.",
-[driving_license_issue_year]: "Năm cấp giấy phép lái xe của người dùng.",
-[driving_license_category]: "Hạng giấy phép lái xe cơ giới đường bộ của người dùng.",
-[tax_invoice_number]: "Số hóa đơn điện tử mã số thuế.",
-[tax_declaration_code_issuing_agency]: "Mã hồ sơ khai lệ phí trước bạ Cơ quan cấp.",
-[electronic_customs_declaration_number_issuing_agency]: "Số tờ khai hải quan điện tử cơ quan cấp.",
-[transport_license_issue_date]: "Ngày, tháng, năm cấp giấy phép kinh doanh vận tải.",
-[transport_license_issue_place]: "Nơi cấp giấy phép kinh doanh vận tải.",
-[vehicle_engine_number1]: "Số máy 1 (Engine N0).",
-[vehicle_engine_number2]: "Số máy 2 (Engine N0).",
-[vehicle_chassis_number]: "Số khung (Chassis N0).",
-[request_content]: "Nội dung hoặc yêu cầu cụ thể của người dùng trong biểu mẫu.",
-[reason]: "Lý do do người dùng cung cấp để điền vào biểu mẫu.",
-[suggestion]: "Kiến nghị, đề xuất đối với cơ quan quản lý trực tiếp."
-[receiver]: Cá nhân hoặc tổ chức nhận hoặc xử lý biểu mẫu được người dùng điền.
-[document_number]: Số của tài liệu hoặc hồ sơ, thường để tham chiếu hoặc lưu trữ.
-[day]: Ngày khi biểu mẫu được người dùng điền.
-[month]: Tháng khi biểu mẫu được người dùng điền.
-[year]: Năm khi biểu mẫu được người dùng điền.
-[place]: Nơi mà biểu mẫu được người dùng điền.
-'''
+redefine_full_name_template_prompt =  '''
+# Hãy thực hiện tác vụ sau đây:  
+1. Đọc nội dung văn bản bên dưới.  
+2. Xác định tất cả các thông tin liên quan đến từng người dùng (user) trong văn bản, bao gồm:  
+   - Họ và tên.  
+   - Ngày/tháng/năm sinh.  
+   - Giới tính (nếu có).  
+   - Giấy tờ tùy thân (số CMND, ngày cấp, nơi cấp).  
+   - Địa chỉ (hộ khẩu thường trú, nơi ở hiện tại).  
+   - Quan hệ với người chết (nếu có).  
+3. Với mỗi thông tin liên quan đến một user:  
+   - Đổi các tag tương ứng thành dạng `[userX_<field_name>]`, với `X` là thứ tự xuất hiện của người đó trong danh sách (bắt đầu từ 1), và `<field_name>` là trường thông tin (ví dụ: `full_name`, `dob_day`, `id_number`, v.v.).  
+  - Nếu tag đã đúng định dạng, kiểm tra xem thứ tự `X` có khớp với thứ tự thực tế của user trong văn bản hay không. Nếu không khớp, chỉnh sửa lại cho đúng.
 
-redefine_tag_names_template_prompt =  '''
-Here is a form template with certain fields represented as placeholder tags. The tag names should match a predefined list, but some tags in this form don't align with the list and need to be corrected. Your task is to generate the output using only the predefined tag names.
+**Lưu ý**:  
+- Chỉ chỉnh sửa các tag liên quan đến thông tin của user.  
+- Không chỉnh sửa các tag không liên quan đến thông tin cá nhân của user.  
+ 
 
-Predefined Tags List:
+**Yêu cầu đầu ra**:  
+- Trả về văn bản sau khi đã chỉnh sửa đúng các tag thông tin liên quan đến từng user, đảm bảo thứ tự và định dạng chính xác.
 
-{pre_define_tag_names}
-
-Commonly Mistaken Tags: Errors frequently occur when similar but incorrect tags are used.
-
-# Instructions:
-
-1. Identify incorrect tags: Review each placeholder tag in the form. If a tag does not match any tag in the predefined list, treat it as an error.
-
-2. Replace incorrect tags: For each incorrect tag, choose the closest match from the predefined tag list based on the intended meaning.
-
-3. Update related tags consistently:
-
-- If a corrected tag relates to other tags (e.g., family member names, contact information, roles), update all related tags to maintain consistency.
-- Special Rule: For tags involving a person's name, always use the format [userX_full_name] regardless of their role or function. For example:
-    Incorrect: "Chủ nhiệm, chủ trì thiết kế: [user1_design_leader]"
-    Corrected: "Chủ nhiệm, chủ trì thiết kế: [user1_full_name]"
-
-4. Maintain structure: Do not alter the form's layout, spacing, or non-placeholder content. Only change the placeholder tags as needed.
-
-5. Output only the corrected form: Return only the corrected form with placeholder tags now matching the predefined tags list.
-
-## Example:
-Input:
-```
-CÔNG TY [company_name]
-Số: [document_number]/CV-[document_number]
-CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
-
-Độc lập - Tự do - Hạnh phúc
-
-                                [place], ngày [day] tháng [month] năm [year]
-Kính gửi: [receiver]
-(V/v: [request_content])
-
-Tên doanh nghiệp:  CÔNG TY [company_name]
-- Số điện thoại liên hệ: [company_phone_number] Fax: [company_fax_number]
-- Email: [company_email]
-- Mã số thuế: [company_tax_id]
-- Ngành nghề kinh doanh: [company_business_field]
-- Địa chỉ trụ sở chính: [company_address]
-Người đại diện theo pháp luật: [company_legal_representative_name]
-- Chức vụ: [company_legal_representative_position]
-- CMND/CCCD/Hộ chiếu số: [company_legal_representative_id_number]  Nơi cấp: [company_legal_representative_id_issue_place] Ngày cấp: [company_legal_representative_id_issue_day]/[company_legal_representative_id_issue_month]/[company_legal_representative_id_issue_year]
-- Nội dung: [company_request_content] (Trình bày tình hình doanh nghiệp, những vấn đề, thắc mắc mà doanh nghiệp đang vướng phải)
-
-Công ty chúng tôi xin cam kết nội dung trên là đúng và xin hoàn toàn chịu trách nhiệm trước pháp luật.
-
-
-Nơi nhận:
-
-- Như trên;
-
-- Lưu.
-
-Đại diện Doanh nghiệp
-
-Giám Đốc
-
-(Ký tên và đóng dấu)
-```
-Output:
-```
-CÔNG TY [company_name]
-Số: [document_number]/CV-[document_number]
-CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
-
-Độc lập - Tự do - Hạnh phúc
-
-                                [place], ngày [day] tháng [month] năm [year]
-Kính gửi: [receiver]
-(V/v: [request_content])
-
-Tên doanh nghiệp:  CÔNG TY [company_name]
-- Số điện thoại liên hệ: [company_phone_number] Fax: [company_fax_number]
-- Email: [company_email]
-- Mã số thuế: [company_tax_id]
-- Ngành nghề kinh doanh: [company_business_field]
-- Địa chỉ trụ sở chính: [company_address]
-Người đại diện theo pháp luật: [user1_full_name]
-- Chức vụ: [user1_position]
-- CMND/CCCD/Hộ chiếu số: [user1_id_number]  Nơi cấp: [user1_id_issue_place] Ngày cấp: [user1_id_issue_day]/[user1_id_issue_month]/[user1_id_issue_year]
-- Nội dung: [company_request_content] (Trình bày tình hình doanh nghiệp, những vấn đề, thắc mắc mà doanh nghiệp đang vướng phải)
-
-Công ty chúng tôi xin cam kết nội dung trên là đúng và xin hoàn toàn chịu trách nhiệm trước pháp luật.
-
-
-Nơi nhận:
-
-- Như trên;
-
-- Lưu.
-
-Đại diện Doanh nghiệp
-
-Giám Đốc
-
-(Ký tên và đóng dấu)
-```
-
-## Example:
-Input:
+ 
+# Ví dụ
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
-                                                                            
-GIẤY ĐỀ NGHỊ MUA ĐIỆN 
-SỬ DỤNG MỤC ĐÍCH NGOÀI SINH HOẠT
-Kính gửi: [receiver]
-1.Tên cơ quan hoặc cá nhân đăng ký mua điện: [user1_organization_name] (1).
-2.Đại diện là ông (bà): [user1_representative] (2).
-3.Số CMND/Hộ chiếu/CMCAND/CMQĐND: [user1_id_number] Cơ quan cấp [user1_id_issue_place] ngày [user1_id_issue_date]
-4.Theo giấy uỷ quyền [user1_authorization_document_number] ngày làm việc [user1_authorization_date] của [user1_authorization_issuer]      (3)
-5.Số điện thoại liên hệ và nhận nhắn tin (SMS): [user1_phone];
-6. Fax [user1_fax] ; 7.Email [user1_email] (4)
-8.Tài khoản số: [user1_account_number] Tại ngân hàng: [user1_bank_name] (5)
-9.Hình thức thanh toán: [user1_payment_method]
-10.Địa chỉ giao dịch: [user1_address]; 
-11.Mã số thuế: [user1_tax_code]
-12,Mục đích sử dụng điện: [user1_electricity_purpose]
-13.Địa điểm đăng ký sử dụng điện: [user1_electricity_location]
-14.Công suất đăng ký sử dụng: [user1_electricity_capacity] kW
-15.Tình trạng sử dụng điện hiện tại: (Chưa có điện / Đang dùng công tơ chung): [user1_electricity_status]
-16.Tên chủ hộ dùng chung/số HĐMBĐ/mã số KH/địa chỉ [user2_shared_household_info] (6).
+---------------
+TỜ KHAI ĐỀ NGHỊ HỖ TRỢ CHI PHÍ MAI TÁNG
+(Áp dụng đối với đối tượng quy định tại Điều 5, khoản 1 Điều 14 Nghị định số [document_number])
+I. THÔNG TIN NGƯỜI CHẾT ĐƯỢC MAI TÁNG (Nếu có)
+1. Họ và tên (Viết chữ in hoa). [deceased_full_name]
+Ngày/tháng/năm sinh: [deceased_dob_day]/[deceased_dob_month]/[deceased_dob_year] Giới tính: [deceased_gender] Dân tộc: [deceased_ethnicity]
+2. Hộ khẩu thường trú: [deceased_permanent_address]
+3. Ngày [deceased_death_day] tháng [deceased_death_month] năm [deceased_death_year] chết
+4. Nguyên nhân chết [deceased_death_reason]
+5. Thời gian mai táng [deceased_burial_time]
+6. Địa điểm mai táng [deceased_burial_location]
+II. THÔNG TIN CƠ QUAN, TỔ CHỨC, HỘ GIA ĐÌNH, CÁ NHÂN ĐỨNG RA MAI TÁNG CHO NGƯỜI CHẾT
+1. Trường hợp cơ quan, tổ chức đứng ra mai táng
+a) Tên cơ quan, tổ chức: [organisation_name]
+- Địa chỉ: [organisation_address]
+b) Họ và tên người đại diện cơ quan: [organisation_representative_name]
+- Chức vụ: [organisation_representative_position]
+2. Trường hợp hộ gia đình, cá nhân đứng ra mai táng
+a) Họ và tên (Chủ hộ hoặc người đại diện). [user1_full_name]
+Ngày/tháng/năm sinh: [user1_dob_day]/[user1_dob_month]/[user1_dob_year]
+Giấy CMND số: [user1_id_number] cấp ngày [user1_id_issue_date] Nơi cấp [user1_id_issue_place]
+b) Hộ khẩu thường trú: [user1_permanent_address]
+Nơi ở: [user1_current_address]
+c) Quan hệ với người chết: [user1_relationship_with_deceased]
+Tôi xin cam đoan những lời khai trên là đúng, nếu có điều gì khai không đúng tôi xin chịu trách nhiệm hoàn toàn.
 
+Ngày [day] tháng [month] năm [year]
+Người khai
+(Ký, ghi rõ họ tên. Nếu cơ quan, tổ chức thì ký, đóng dấu)
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
-                                                                            
-GIẤY ĐỀ NGHỊ MUA ĐIỆN 
-SỬ DỤNG MỤC ĐÍCH NGOÀI SINH HOẠT
-Kính gửi: [receiver]
-1.Tên cơ quan hoặc cá nhân đăng ký mua điện: [user1_organization_name] (1).
-2.Đại diện là ông (bà): [user1_full_name] (2).
-3.Số CMND/Hộ chiếu/CMCAND/CMQĐND: [user1_id_number] Cơ quan cấp [user1_id_issue_place] ngày [user1_id_issue_date]
-4.Theo giấy uỷ quyền [user1_authorization_document_number] ngày làm việc [user1_authorization_date] của [user1_authorization_issuer]      (3)
-5.Số điện thoại liên hệ và nhận nhắn tin (SMS): [user1_phone];
-6. Fax [user1_fax] ; 7.Email [user1_email] (4)
-8.Tài khoản số: [user1_account_number] Tại ngân hàng: [user1_bank_name] (5)
-9.Hình thức thanh toán: [user1_payment_method]
-10.Địa chỉ giao dịch: [user1_address]; 
-11.Mã số thuế: [user1_tax_code]
-12,Mục đích sử dụng điện: [user1_electricity_purpose]
-13.Địa điểm đăng ký sử dụng điện: [user1_electricity_location]
-14.Công suất đăng ký sử dụng: [user1_electricity_capacity] kW
-15.Tình trạng sử dụng điện hiện tại: (Chưa có điện / Đang dùng công tơ chung): [user1_electricity_status]
-16.Tên chủ hộ dùng chung/số HĐMBĐ/mã số KH/địa chỉ [user2_shared_household_info] (6).
+---------------
+TỜ KHAI ĐỀ NGHỊ HỖ TRỢ CHI PHÍ MAI TÁNG
+(Áp dụng đối với đối tượng quy định tại Điều 5, khoản 1 Điều 14 Nghị định số [document_number])
+I. THÔNG TIN NGƯỜI CHẾT ĐƯỢC MAI TÁNG (Nếu có)
+1. Họ và tên (Viết chữ in hoa). [deceased_full_name]
+Ngày/tháng/năm sinh: [user1_dob_day]/[user1_dob_month]/[user1_dob_year] Giới tính: [user1_gender] Dân tộc: [user1_ethnicity]
+2. Hộ khẩu thường trú: [user1_permanent_address]
+3. Ngày [user1_death_day] tháng [user1_death_month] năm [user1_death_year] chết
+4. Nguyên nhân chết [user1_death_reason]
+5. Thời gian mai táng [user1_burial_time]
+6. Địa điểm mai táng [user1_burial_location]
+II. THÔNG TIN CƠ QUAN, TỔ CHỨC, HỘ GIA ĐÌNH, CÁ NHÂN ĐỨNG RA MAI TÁNG CHO NGƯỜI CHẾT
+1. Trường hợp cơ quan, tổ chức đứng ra mai táng
+a) Tên cơ quan, tổ chức: [organisation_name]
+- Địa chỉ: [organisation_address]
+b) Họ và tên người đại diện cơ quan: [organisation_representative_name]
+- Chức vụ: [organisation_representative_position]
+2. Trường hợp hộ gia đình, cá nhân đứng ra mai táng
+a) Họ và tên (Chủ hộ hoặc người đại diện). [user2_full_name]
+Ngày/tháng/năm sinh: [user2_dob_day]/[user2_dob_month]/[user2_dob_year]
+Giấy CMND số: [user2_id_number] cấp ngày [user2_id_issue_date] Nơi cấp [user2_id_issue_place]
+b) Hộ khẩu thường trú: [user2_permanent_address]
+Nơi ở: [user2_current_address]
+c) Quan hệ với người chết: [user2_relationship_with_user1]
+Tôi xin cam đoan những lời khai trên là đúng, nếu có điều gì khai không đúng tôi xin chịu trách nhiệm hoàn toàn.
 
+Ngày [day] tháng [month] năm [year]
+Người khai
+(Ký, ghi rõ họ tên. Nếu cơ quan, tổ chức thì ký, đóng dấu)
 ```
 
-## Example:
-Input:
+# Ví dụ
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
-THÔNG BÁO THAY ĐỔI THÔNG TIN NGƯỜI HƯỞNG
-Kính gửi: Bảo hiểm xã hội quận/huyện/thị xã [local_insurance_office]
-Tên tôi là: [user1_full_name] Ngày, tháng, năm sinh: [user1_dob]
-Số sổ BHXH/Số định danh: [user1_social_insurance_number]
-Số chứng minh nhân dân: [user1_id_number] ngày cấp: [user1_id_issue_date], nơi cấp: [user1_id_issue_place]
-Từ tháng [user1_change_request_month] năm [user1_change_request_year], đề nghị cơ quan BHXH thay đổi, bổ sung thông tin của tôi như sau:
-Giới tính: [user1_gender]
-Số điện thoại: [user1_phone]
-Số điện thoại người thân khi cần liên lạc: [user1_emergency_contact_phone]
-Địa chỉ cư trú (ghi đầy đủ theo thứ tự số nhà, ngõ, ngách/hẻm, đường phố, tổ/thôn/xóm/ấp, xã/phường/thị trấn, huyện/quận/thị xã/thành phố, tỉnh/thành phố): 
-[user1_current_address]
-Hình thức nhận lương hưu, trợ cấp BHXH hàng tháng:
-Nhận bằng tiền mặt:
-Địa chỉ nhận (ghi đầy đủ:xã/phường, tổ dân phố/tổ chi trả, quận/huyện/thị xã, tỉnh/ thành phố): [user1_benefit_receiving_address]
-Nhận qua Tài khoản:
-Số tài khoản cá nhân: [user1_bank_account]
-Ngân hàng nơi mở TK: [user1_bank_name]
-Tôi xin cam đoan các thông tin sửa đổi, bổ sung của tôi là đúng, nếu sai tôi xin chịu trách nhiệm trước pháp luật.
-	[user1_current_address] , ngày [user1_submission_day] tháng [user1_submission_month] năm [user1_submission_year]
+GIẤY ĐỀ NGHỊ NHẬN CHẾ ĐỘ BẢO HIỂM XÃ HỘI
+KHI NGƯỜI HƯỞNG TỪ TRẦN
+
+Kính gửi: Bảo hiểm xã hội [local_insurance_office]
+Tôi tên là: [user1_full_name] Sinh ngày [user1_dob_day] tháng [user1_dob_month] năm [user1_dob_year]
+Số chứng minh nhân dân [user1_id_number] Ngày cấp: [user1_id_issue_date] Nơi cấp: [user1_id_issue_place]
+Nơi cư trú (ghi rõ: số nhà, đường phố, tổ/xã/phường): [user1_current_address]
+Số điện thoại liên hệ: [user1_phone]
+Mối quan hệ với người từ trần: [user1_relationship_with_deceased]
+Tôi xin thay mặt cho tất cả thân nhân là [user1_number_of_relatives] người, gồm:
+1. Ông (Bà): [user2_full_name] Sinh ngày [user2_dob_day] tháng [user2_dob_month] năm [user2_dob_year]
+Nơi cư trú: [user2_current_address]
+Mối quan hệ với người từ trần: [user2_relationship_with_deceased]
+2. Ông (Bà): [user3_full_name] Sinh ngày [user3_dob_day] tháng [user3_dob_month] năm [user3_dob_year]
+Nơi cư trú: [user3_current_address]
+Mối quan hệ với người từ trần: [user3_relationship_with_deceased]
+3. [user4_full_name]
+để nhận chế độ BHXH của người đang hưởng chế độ BHXH đã từ trần là Ông (Bà): [user5_full_name]
+Số sổ BHXH: [user5_social_insurance_number] Chết ngày [user5_death_day] tháng [user5_death_month] năm [user5_death_year]
+Nơi đang nhận lương hưu, trợ cấp BHXH: [user5_benefit_receiving_location]
+Tôi xin cam đoan những nội dung kê khai trên đây là đầy đủ, đúng sự thật và chịu trách nhiệm trước pháp luật về nội dung kê khai cũng như trong trường hợp xảy ra tranh chấp về việc nhận lương hưu, trợ cấp BHXH theo chế độ của người hưởng đã từ trần. Đề nghị cơ quan BHXH xem xét, giải quyết chế độ BHXH cho gia đình chúng tôi theo quy định.
+
+[user1_current_address], ngày [user1_submission_day] tháng [user1_submission_month] năm [user1_submission_year]
+Xác nhận của chính quyền địa phương
+nơi người đề nghị đang cư trú
+(Ký, ghi rõ họ tên và đóng dấu) [place], ngày [day]tháng[month] năm[year]
 Người đề nghị
+(ký, ghi rõ họ tên)
+
+Chữ ký của các thân nhân
+Người thứ nhất: [user2_signature]
 (Ký, ghi rõ họ tên)
 
+Người thứ hai: [user3_signature]
+(Ký, ghi rõ họ tên)
+
+Người thứ ba: [user4_signature]
+(Ký, ghi rõ họ tên)
+
+Xét duyệt của cơ quan BHXH
+- Tổng số tháng được truy lĩnh: [deceased_benefit_backpay_months] tháng
+Từ tháng [deceased_benefit_backpay_start_month] năm [deceased_benefit_backpay_start_year] đến tháng [deceased_benefit_backpay_end_month] năm [deceased_benefit_backpay_end_year]
+- Tổng số tiền được truy lĩnh: [deceased_benefit_backpay_amount] đồng
+Bằng chữ: [deceased_benefit_backpay_amount_words]
+[local_insurance_office], ngày [insurance_office_decision_day] tháng [insurance_office_decision_month] năm [insurance_office_decision_year]
+Giám đốc BHXH
+(Ký tên, đóng dấu)
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
-THÔNG BÁO THAY ĐỔI THÔNG TIN NGƯỜI HƯỞNG
-Kính gửi: Bảo hiểm xã hội quận/huyện/thị xã [receiver]
-Tên tôi là: [user1_full_name] Ngày, tháng, năm sinh: [user1_dob]
-Số sổ BHXH/Số định danh: [user1_social_insurance_number]
-Số chứng minh nhân dân: [user1_id_number] ngày cấp: [user1_id_issue_date], nơi cấp: [user1_id_issue_place]
-Từ tháng [user1_change_request_month] năm [user1_change_request_year], đề nghị cơ quan BHXH thay đổi, bổ sung thông tin của tôi như sau:
-Giới tính: [user1_gender]
-Số điện thoại: [user1_phone]
-Số điện thoại người thân khi cần liên lạc: [user1_emergency_contact_phone]
-Địa chỉ cư trú (ghi đầy đủ theo thứ tự số nhà, ngõ, ngách/hẻm, đường phố, tổ/thôn/xóm/ấp, xã/phường/thị trấn, huyện/quận/thị xã/thành phố, tỉnh/thành phố): 
-[user1_current_address]
-Hình thức nhận lương hưu, trợ cấp BHXH hàng tháng:
-Nhận bằng tiền mặt:
-Địa chỉ nhận (ghi đầy đủ:xã/phường, tổ dân phố/tổ chi trả, quận/huyện/thị xã, tỉnh/ thành phố): [user1_benefit_receiving_address]
-Nhận qua Tài khoản:
-Số tài khoản cá nhân: [user1_bank_account]
-Ngân hàng nơi mở TK: [user1_bank_name]
-Tôi xin cam đoan các thông tin sửa đổi, bổ sung của tôi là đúng, nếu sai tôi xin chịu trách nhiệm trước pháp luật.
-	[place] , ngày [day] tháng [month] năm [year]
+GIẤY ĐỀ NGHỊ NHẬN CHẾ ĐỘ BẢO HIỂM XÃ HỘI
+KHI NGƯỜI HƯỞNG TỪ TRẦN
+
+Kính gửi: Bảo hiểm xã hội [local_insurance_office]
+Tôi tên là: [user1_full_name] Sinh ngày [user1_dob_day] tháng [user1_dob_month] năm [user1_dob_year]
+Số chứng minh nhân dân [user1_id_number] Ngày cấp: [user1_id_issue_date] Nơi cấp: [user1_id_issue_place]
+Nơi cư trú (ghi rõ: số nhà, đường phố, tổ/xã/phường): [user1_current_address]
+Số điện thoại liên hệ: [user1_phone]
+Mối quan hệ với người từ trần: [user1_relationship_with_deceased]
+Tôi xin thay mặt cho tất cả thân nhân là [user1_number_of_relatives] người, gồm:
+1. Ông (Bà): [user2_full_name] Sinh ngày [user2_dob_day] tháng [user2_dob_month] năm [user2_dob_year]
+Nơi cư trú: [user2_current_address]
+Mối quan hệ với người từ trần: [user2_relationship_with_deceased]
+2. Ông (Bà): [user3_full_name] Sinh ngày [user3_dob_day] tháng [user3_dob_month] năm [user3_dob_year]
+Nơi cư trú: [user3_current_address]
+Mối quan hệ với người từ trần: [user3_relationship_with_deceased]
+3. [user4_full_name]
+để nhận chế độ BHXH của người đang hưởng chế độ BHXH đã từ trần là Ông (Bà): [deceased_full_name]
+Số sổ BHXH: [deceased_social_insurance_number] Chết ngày [deceased_death_day] tháng [deceased_death_month] năm [deceased_death_year]
+Nơi đang nhận lương hưu, trợ cấp BHXH: [deceased_benefit_receiving_location]
+Tôi xin cam đoan những nội dung kê khai trên đây là đầy đủ, đúng sự thật và chịu trách nhiệm trước pháp luật về nội dung kê khai cũng như trong trường hợp xảy ra tranh chấp về việc nhận lương hưu, trợ cấp BHXH theo chế độ của người hưởng đã từ trần. Đề nghị cơ quan BHXH xem xét, giải quyết chế độ BHXH cho gia đình chúng tôi theo quy định.
+
+[user1_current_address], ngày [user1_submission_day] tháng [user1_submission_month] năm [user1_submission_year]
+Xác nhận của chính quyền địa phương
+nơi người đề nghị đang cư trú
+(Ký, ghi rõ họ tên và đóng dấu) [place], ngày [day]tháng[month] năm[year]
 Người đề nghị
+(ký, ghi rõ họ tên)
+
+Chữ ký của các thân nhân
+Người thứ nhất: [user2_signature]
 (Ký, ghi rõ họ tên)
+
+Người thứ hai: [user3_signature]
+(Ký, ghi rõ họ tên)
+
+Người thứ ba: [user4_signature]
+(Ký, ghi rõ họ tên)
+
+Xét duyệt của cơ quan BHXH
+- Tổng số tháng được truy lĩnh: [deceased_benefit_backpay_months] tháng
+Từ tháng [deceased_benefit_backpay_start_month] năm [deceased_benefit_backpay_start_year] đến tháng [deceased_benefit_backpay_end_month] năm [deceased_benefit_backpay_end_year]
+- Tổng số tiền được truy lĩnh: [deceased_benefit_backpay_amount] đồng
+Bằng chữ: [deceased_benefit_backpay_amount_words]
+[local_insurance_office], ngày [insurance_office_decision_day] tháng [insurance_office_decision_month] năm [insurance_office_decision_year]
+Giám đốc BHXH
+(Ký tên, đóng dấu)
+```
+
+# Ví dụ
+Đầu vào:
+```
+CƠ QUAN CẤP GIẤY PHÉP
+XÂY DỰNG [new_tagname]
+-------
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+---------------
+    [place], ngày [day] tháng [month] năm [year]
+GIẤY PHÉP XÂY DỰNG
+Số:    [document_number]/GPXD
+(Sử dụng cho công trình không theo tuyến)
+
+1. Cấp cho: [user1_full_name]
+Địa chỉ: số nhà: [user1_house_number] đường (phố) [user1_street] phường (xã): [user1_ward] quận (huyện) [user1_district] tỉnh/thành phố [user1_province]
+2. Được phép xây dựng công trình: (tên công trình) [user1_construction_name]
+- Theo thiết kế: [user1_construction_design]
+- Do: (tên tổ chức tư vấn) [user1_consultant_name] lập
+
+- Chủ nhiệm, chủ trì thiết kế: [user1_design_leader]
+- Đơn vị thẩm định, thẩm tra (nếu có): [user1_audit_unit]
+- Chủ trì thẩm tra thiết kế: [user1_audit_leader]
+- Gồm các nội dung sau:
+
++ Vị trí xây dựng (ghi rõ lô đất, địa chỉ): [user1_construction_location]
++ Cốt nền xây dựng công trình: [user1_construction_foundation]
++ Mật độ xây dựng: [user1_construction_density] hệ số sử dụng đất: [user1_land_use_coefficient]
++ Chỉ giới đường đỏ: [user1_red_line], chỉ giới xây dựng: [user1_construction_line]
++ Màu sắc công trình (nếu có): [user1_construction_color]
++ Chiều sâu công trình (tính từ cốt 0,00 đối với công trình có tầng hầm): [user1_construction_depth]
+Đối với công trình dân dụng và công trình có kết cấu dạng nhà, bổ sung các nội dung sau:
+
++ Diện tích xây dựng tầng 1 (tầng trệt): [user1_construction_floor_area] m2
+
++ Tổng diện tích sàn (bao gồm cả tầng hầm và tầng lửng): [user1_construction_total_area] m2
+
++ Chiều cao công trình: [user1_construction_height] m;
+
++ Số tầng (trong đó ghi rõ số tầng hầm và tầng lửng): [user1_construction_floors]
+3. Giấy tờ về đất đai: [user1_land_documents]
+4. Giấy phép này có hiệu lực khởi công xây dựng trong thời hạn 12 tháng kể từ ngày cấp; quá thời hạn trên thì phải đề nghị gia hạn giấy phép xây dựng.
+
+ 
+
+Nơi nhận:
+- Chủ đầu tư;
+- Lưu: VT, [new_tagname]
+THỦ TRƯỞNG CƠ QUAN
+CẤP GIẤY PHÉP XÂY DỰNG
+(Ký tên, đóng dấu)
+```
+Đầu ra:
+```
+CƠ QUAN CẤP GIẤY PHÉP
+XÂY DỰNG [new_tagname]
+-------
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+---------------
+    [place], ngày [day] tháng [month] năm [year]
+GIẤY PHÉP XÂY DỰNG
+Số:    [document_number]/GPXD
+(Sử dụng cho công trình không theo tuyến)
+
+1. Cấp cho: [user1_full_name]
+Địa chỉ: số nhà: [user1_house_number] đường (phố) [user1_street] phường (xã): [user1_ward] quận (huyện) [user1_district] tỉnh/thành phố [user1_province]
+2. Được phép xây dựng công trình: (tên công trình) [user1_construction_name]
+- Theo thiết kế: [user1_construction_design]
+- Do: (tên tổ chức tư vấn) [user1_consultant_name] lập
+
+- Chủ nhiệm, chủ trì thiết kế: [user2_full_name]
+- Đơn vị thẩm định, thẩm tra (nếu có): [user3_full_name]
+- Chủ trì thẩm tra thiết kế: [user3_full_name]
+- Gồm các nội dung sau:
+
++ Vị trí xây dựng (ghi rõ lô đất, địa chỉ): [user1_construction_location]
++ Cốt nền xây dựng công trình: [user1_construction_foundation]
++ Mật độ xây dựng: [user1_construction_density] hệ số sử dụng đất: [user1_land_use_coefficient]
++ Chỉ giới đường đỏ: [user1_red_line], chỉ giới xây dựng: [user1_construction_line]
++ Màu sắc công trình (nếu có): [user1_construction_color]
++ Chiều sâu công trình (tính từ cốt 0,00 đối với công trình có tầng hầm): [user1_construction_depth]
+Đối với công trình dân dụng và công trình có kết cấu dạng nhà, bổ sung các nội dung sau:
+
++ Diện tích xây dựng tầng 1 (tầng trệt): [user1_construction_floor_area] m2
+
++ Tổng diện tích sàn (bao gồm cả tầng hầm và tầng lửng): [user1_construction_total_area] m2
+
++ Chiều cao công trình: [user1_construction_height] m;
+
++ Số tầng (trong đó ghi rõ số tầng hầm và tầng lửng): [user1_construction_floors]
+3. Giấy tờ về đất đai: [user1_land_documents]
+4. Giấy phép này có hiệu lực khởi công xây dựng trong thời hạn 12 tháng kể từ ngày cấp; quá thời hạn trên thì phải đề nghị gia hạn giấy phép xây dựng.
+
+ 
+
+Nơi nhận:
+- Chủ đầu tư;
+- Lưu: VT, [new_tagname]
+THỦ TRƯỞNG CƠ QUAN
+CẤP GIẤY PHÉP XÂY DỰNG
+(Ký tên, đóng dấu)
+```
+
+# Ví dụ
+Đầu vào:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc 
+
+ĐƠN ĐỀ NGHỊ CHI TRẢ TIỀN MIỄN, GIẢM HỌC PHÍ
+(Dùng cho học sinh, sinh viên đang học tại các cơ sở giáo dục nghề nghiệp và giáo dục đại học tư thục)
+Kính gửi: Tên cơ sở giáo dục nghề nghiệp và giáo dục đại học tư thục.
+Họ và tên: [user1_full_name]
+Ngày, tháng, năm sinh: [user1_dob]
+Nơi sinh: [user1_birthplace]
+Lớp: [user1_class] Khóa [user1_course] Khoa: [user1_faculty]
+Họ tên cha/mẹ học sinh, sinh viên: [user1_parent_name]
+Hộ khẩu thường trú (ghi đầy đủ): [user1_permanent_address]
+Xã (Phường): [user1_ward] Huyện (Quận): [user1_district]
+Tỉnh (Thành phố): [user1_province]
+Thuộc đối tượng: [user1_student_type] (ghi rõ đối tượng được quy định tại Nghị định số 81/2021/NĐ-CP)
+Căn cứ vào Nghị định số 81/2021/NĐ-CP của Chính phủ, tôi làm đơn này đề nghị được xem xét, giải quyết để được cấp bù tiền hỗ trợ miễn, giảm học phí theo quy định và chế độ hiện hành.
+ 
+ 	[place], ngày [day] tháng [month] năm [year]
+Người làm đơn (3)
+(Ký tên và ghi rõ họ tên)
+ 
+
+```
+Đầu ra:
+```
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc 
+
+ĐƠN ĐỀ NGHỊ CHI TRẢ TIỀN MIỄN, GIẢM HỌC PHÍ
+(Dùng cho học sinh, sinh viên đang học tại các cơ sở giáo dục nghề nghiệp và giáo dục đại học tư thục)
+Kính gửi: Tên cơ sở giáo dục nghề nghiệp và giáo dục đại học tư thục.
+Họ và tên: [user1_full_name]
+Ngày, tháng, năm sinh: [user1_dob]
+Nơi sinh: [user1_birthplace]
+Lớp: [user1_class] Khóa [user1_course] Khoa: [user1_faculty]
+Họ tên cha/mẹ học sinh, sinh viên: [user2_full_name]
+Hộ khẩu thường trú (ghi đầy đủ): [user2_permanent_address]
+Xã (Phường): [user2_ward] Huyện (Quận): [user2_district]
+Tỉnh (Thành phố): [user2_province]
+Thuộc đối tượng: [user2_student_type] (ghi rõ đối tượng được quy định tại Nghị định số 81/2021/NĐ-CP)
+Căn cứ vào Nghị định số 81/2021/NĐ-CP của Chính phủ, tôi làm đơn này đề nghị được xem xét, giải quyết để được cấp bù tiền hỗ trợ miễn, giảm học phí theo quy định và chế độ hiện hành.
+ 
+ 	[place], ngày [day] tháng [month] năm [year]
+Người làm đơn (3)
+(Ký tên và ghi rõ họ tên)
+ 
 
 ```
 
-## Example:
-Input:
+# Ví dụ
+Đầu vào:
 ```
 {form}
 ```
-
 '''
 

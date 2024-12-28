@@ -238,22 +238,6 @@ def identify_type_form(llm):
     )
     return chain
 
-form = """
-            CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-                Độc lập - Tự do - Hạnh phúc
-                
-            TỜ KHAI THAY ĐỔI THÔNG TIN CƯ TRÚ
-
-    Kính gửi(1):..........
-1. Họ, chữ đệm và tên:	..........
-2. Ngày, tháng, năm sinh:........../........../ ..........       3. Giới tính:	..........
-4. CCCD: ..........
-5. Số điện thoại liên hệ:..........6. Email:..........	
-7. Họ, chữ đệm và tên chủ hộ:.......... 8. Mối quan hệ với chủ hộ:..........
-9.Số định danh cá nhân của chủ hộ: ..........
-10. Nội dung đề nghị(2): ..........	
-"""
-
 # chain = identify_type_form(llm)
 
 # print(chain.invoke(form))
@@ -392,7 +376,7 @@ def auto_generate_tag_names(llm = llm, folder_dir = "Forms/Text/Input_test/Input
                 print(e)
             print("End with: ", filename)
 
-auto_generate_tag_names()
+# auto_generate_tag_names()
 
 def replace_date(folder_dir = "Forms/Text/Input_test/Input/TagName"):
    for index, filename in enumerate(os.listdir(folder_dir)):
@@ -416,3 +400,33 @@ def auto_identify_relationship(llm = llm, folder_dir = "Forms/Text/Input/Output/
             response2 = llm.model.generate_content(prompt_parts2)
             write_file(respones_dir, response2.text)
 
+
+
+def define_tag_name(llm = llm, folder_dir = "Forms/Text/Input_test/Input", start = 0): # Phải có start và end chứ nếu không nó sẽ lỗi gemini
+    type_forms = {'residence_identification_tagnames': 0, 'study_tagnames': 0, 'health_medical_template_prompt': 0, 'vehicle_driver_template_prompt': 0, 
+                'job_template_prompt': 0, 'other': 0}
+    for index, filename in enumerate(os.listdir(folder_dir)):
+        chain = identify_type_form(llm)
+        if filename.endswith(".txt") and '00' in filename:
+            print("Start with: ", filename)
+            file_dir = folder_dir + '/' + filename
+            response_dir = folder_dir + '/TagName/' + filename
+            text = read_file(file_dir)
+            type = chain.invoke(text)
+            print(type.strip())
+            if "1" in type:
+                type_forms['residence_identification_tagnames'] += 1
+            elif "2" in type:
+                type_forms['study_tagnames'] += 1
+            elif "3" in type:
+                type_forms['health_medical_template_prompt'] += 1
+            elif "4" in type:
+                type_forms['vehicle_driver_template_prompt'] += 1
+            elif "5" in type:
+                type_forms['job_template_prompt'] += 1
+            else:
+                type_forms['other'] += 1
+    return type_forms
+
+type_forms = define_tag_name()
+print(type_forms)

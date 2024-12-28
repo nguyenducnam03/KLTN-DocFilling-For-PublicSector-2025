@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 load_dotenv()
 gemini_key = os.getenv("GEMINI_KEY")
 
-llm = GoogleGenerativeAI(model = 'gemini-1.5-flash', timeout= None, max_tokens = 1000, temperature = 0, top_k = 1, top_p = 1,  google_api_key = gemini_key)
+llm = GoogleGenerativeAI(model = 'gemini-2.0-flash-exp', timeout= None, max_tokens = 1000, temperature = 0, top_k = 1, top_p = 1,  google_api_key = gemini_key)
 
 def read_file(file_path):
     try:
@@ -45,10 +45,10 @@ def redefined_tag_names(llm = llm, folder_dir = "Forms/Text/Input_test/Input/Tag
             file_dir = folder_dir + '/' + filename
             response_dir = "Forms/Text/Input_test/Input/TagName2/" + filename 
             text = read_file(file_dir)
-            prompt = PromptTemplate.from_template(redefine_tag_names_template_prompt)
+            prompt = PromptTemplate.from_template(redefine_full_name_template_prompt)
             chain = prompt | llm | StrOutputParser()
             try:
-                response = chain.invoke({"pre_define_tag_names": pre_define_tag_names, "form": text})
+                response = chain.invoke({"form": text})
                 write_file(response_dir, response)
             except Exception as e:
                 print(e)
