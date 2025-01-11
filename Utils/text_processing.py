@@ -7,6 +7,7 @@ from Utils.multi_value_dict import MultiValueDict
 from Config.tagnames import list_cccd_passport_tagnames, list_general_tagnames
 
 
+
 class Text_Processing:
     def __init__(self):
         pass
@@ -236,6 +237,7 @@ class Text_Processing:
         """
         LLM_contextual_to_tagname = MultiValueDict()
         # Lấy tagname từ LLM filled form
+        # print("contextual_llm",contextual_llm)
         for i in range(len(contextual_llm)):
             if i == 0:
                 hash_name = self.get_hash_name_from_context(contextual_llm, i, i + 1)
@@ -346,7 +348,11 @@ class Text_Processing:
         # Replace each occurrence of [#another] with the corresponding tagname
         for tag in list_tag_name:
             if tag == "[#another]":
+<<<<<<< HEAD
+                form = form.replace("[#another]", f"[another]", 1)
+=======
                 form = form.replace("[#another]", "[another]", 1)
+>>>>>>> 5bf4af3cabce276c9eab0587b04835f567ad043a
             else:
                 form = form.replace("[#another]", f"{tag}", 1)
         form = form.replace("[another]", "[#another]")

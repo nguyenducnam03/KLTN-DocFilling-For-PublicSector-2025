@@ -87,6 +87,7 @@ def calculate_similarity(tagnames1, tagnames2):
     return metrics, accuracy
 
 
+
 def print_tagnames(tagnames):
     print("======Tagnames======")
     for index, tagname in enumerate(tagnames):

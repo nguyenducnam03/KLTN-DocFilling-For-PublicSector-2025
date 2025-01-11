@@ -43,13 +43,11 @@ residence_identification_tagnames = """
 [phone]: Số điện thoại của người dùng
 [phone_home]: Số điện thoại bàn của người dùng
 [email]: Email của người dùng.
-[user1_visa_number]: Số thị thực(visa) của người dùng
-[user1_visa_country]: Quốc gia cấp thị thực(visa) cho người dùng
-[user1_visa_expiry_day]: Ngày hết hạn thị thực(visa) của người dùng
-[user1_visa_expiry_month]: Tháng hết hạn thị thực(visa) của người dùng
-[user1_visa_expiry_year]: Năm hết hạn thị thực(visa) của người dùng
-[request_content]: Nội dung hoặc yêu cầu cụ thể của người dùng trong biểu mẫu. Có thể là chi tiết về lý do gửi biểu mẫu, chẳng hạn như yêu cầu cấp thẻ căn cước mới, thay đổi thông tin cá nhân, v.v.
-[reason]: Lý do do người dùng cung cấp để điền vào biểu mẫu.
+[visa_number]: Số thị thực(visa) của người dùng
+[visa_country]: Quốc gia cấp thị thực(visa) cho người dùng
+[visa_expiry_day]: Ngày hết hạn thị thực(visa) của người dùng
+[visa_expiry_month]: Tháng hết hạn thị thực(visa) của người dùng
+[visa_expiry_year]: Năm hết hạn thị thực(visa) của người dùng
 """
 
 study_tagnames = """
@@ -76,7 +74,7 @@ study_tagnames = """
 [school_principal]: Hiệu trưởng của trường
 [course]: Khóa học của người dùng. 
 [faculty]: Khoa của người dùng.
-[student_id_number]: Mã số sinh viên của người dùng tại trường đại học.
+[student_id_number]: Mã số sinh viên của người dùng tại trường học.
 [education_level]: Trình độ học vấn của người dùng.
 [duration_of_course]: Thời gian của khóa học của người dùng.
 [graduation_date]: Ngày tốt nghiệp của người dùng.

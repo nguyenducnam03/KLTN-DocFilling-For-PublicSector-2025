@@ -8,7 +8,7 @@ from Evaluate.my_metrics import similarity_result_two_folders
 from Utils.text_processing import Text_Processing
 
 input_folders = [input_raw_folder, input_hand_process_folder]
-version_llm_filled = "Hung_04_Nov_2024"
+version_llm_filled = "Hung_19_Oct_2024"
 # version_llm_filled = time.strftime("Ver_%Y-%m-%d-%H-%M-%S")
 # ============= 1. Generates tagnames =============
 
@@ -89,7 +89,7 @@ for index, filename in enumerate(os.listdir(label_by_hand_folder)):
 # ============= 3. Evaluate =============
 
 label_folder = "Forms\Label_Output_By_Hand\Differents"
-llm_filled_folder = "Forms\Output\Post_processor\Hung_04_Nov_2024\Differents"
+llm_filled_folder = f"Forms\Output\Post_processor\{version_llm_filled}\Differents"
 df = similarity_result_two_folders(label_folder, llm_filled_folder)
 # Save to csv
 df.to_csv(f"Results\{version_llm_filled}.csv", index=False)

@@ -11,9 +11,9 @@ from Prompts.identify_form_types import identify_form_type_template, type_form_f
 from Config.LLM import embeddings
 
 
+
 def identify_form_type(llm, form):
     # Tạo retriever
-
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
     splits = text_splitter.create_documents([type_form_feature])
     vectostore = FAISS.from_documents(splits, embeddings)

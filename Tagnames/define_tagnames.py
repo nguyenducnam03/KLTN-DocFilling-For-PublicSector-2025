@@ -1,7 +1,8 @@
 import os
 import sys
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# print(sys.path)
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
@@ -24,6 +25,7 @@ from Config.tagnames import (
 )
 from Config.LLM import gemini
 from Utils.text_processing import Text_Processing
+
 
 
 def define_tagname(llm, text):
