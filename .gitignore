@@ -1,11 +1,20 @@
 # Enviroment
-# .gitignore
 myenv/
-
+Forms/
+.gitignore
 #Lib
 .chainlit/
 __pycache__/
+Src/__pycache__
 
+#Folder
+TEST/
+GenerateData/
+Presentation/
+Forms/
+Results/
+
+#Temp file
 chainlit.md
 tempCodeRunnerFile.py
 
