@@ -1,65 +1,57 @@
 residence_identification_template_prompt = """
-# Instruction: Residence and Identification Form
+# Hướng dẫn: Biểu mẫu Cư trú và Giấy tờ tùy thân
 
-# Goal:
-The purpose of this form is to accurately capture and store essential personal identification and residence-related details of users. The data collected includes vital information required for legal and government documentation, ensuring that each individual is correctly identified and located. The form covers personal identification (name, birth details, ID numbers), residence information (permanent, current addresses), and additional details such as nationality and marital status. Your task is to ensure each placeholder is replaced with the correct tag name to reflect the user's information. If a placeholder does not match any defined tag, generate a new tag name.
+# Định nghĩa:
 
-# Your Task:
+Biểu mẫu này nhằm thu thập và lưu trữ chính xác thông tin nhận dạng cá nhân và địa chỉ cư trú của người dùng. Dữ liệu thu thập bao gồm thông tin quan trọng cần thiết cho các tài
+liệu pháp lý và chính phủ, đảm bảo mỗi cá nhân được xác định và định vị chính xác. Biểu mẫu bao gồm thông tin nhận dạng cá nhân (họ tên, ngày sinh, số CMND/CCCD), thông tin cư trú
+(địa chỉ thường trú, địa chỉ hiện tại) và các chi tiết bổ sung như quốc tịch và tình trạng hôn nhân. 
 
-You are responsible for determining the correct tag name for each placeholder in a residence and identification form. Your task is to ensure that every placeholder in the form is accurately replaced with the corresponding tag name, based on the user's personal information and the tag names provided. If a placeholder does not match any defined tag, generate a new tag name accordingly.
+# Nhiệm vụ của bạn:
 
-- Input Format:
+Bạn có trách nhiệm xác định tên thẻ phù hợp cho từng chỗ trống trong biểu mẫu cư trú và nhận dạng. Hãy đảm bảo rằng mọi chỗ trống trong biểu mẫu được thay thế chính xác bằng tên
+thẻ tương ứng, dựa trên thông tin cá nhân của người dùng và danh sách tên thẻ được cung cấp. Nếu một chỗ trống không khớp với bất kỳ tên thẻ nào đã xác định, hãy thay thế chỗ trống
+đó bằng [another] để chỉ ra sự không chắc chắn hoặc thiếu thông tin.
 
-The input is a sample form containing placeholders (..........) for collecting information.
-Each placeholder represents a piece of information that needs to be mapped to a specific tag name, depending on the type of information it corresponds to.
+Sau đây là các bước thực hiện.
 
-- Output Format:
+**Bước 1:** Xác định người dùng duy nhất
 
-The output should be a standardized version of the form, where placeholders have been replaced by tags in the format [userX_tagname] or [tagname].
-The placeholder tags should be replaced based on a set of predefined tag names for various types of personal and academic information.
-Example output should include accurately mapped tags for each type of information required in the form, ensuring clarity and consistency.
+- Nhiệm vụ: Xác định số lượng người dùng duy nhất được đề cập trong biểu mẫu.
+- Hành động: Gán một mã định danh duy nhất cho từng người dùng (ví dụ: user1, user2, v.v.).
+- Lưu ý: Mỗi người dùng sẽ có một tập hợp riêng các thẻ tương ứng với thông tin cá nhân của họ.
 
-Input and output are placed in ``` ```
+**Bước 2:** Thay thế các chỗ trống trong thông tin cá nhân
+- Nhiệm vụ: Với mỗi chỗ trống (..........), kiểm tra xem nó có khớp với một thẻ trong danh sách {residence_identification_tagnames} hay không.
+- Hành động 1: Nếu có, thay thế chỗ trống bằng thẻ tương ứng theo định dạng [userX_tagname], trong đó X là số định danh của người dùng.
+- Hành động 2: Nếu một chỗ trống đại diện cho nhiều thông tin liên quan (ví dụ: "Ngày, tháng, năm sinh: ........." hoặc "Ngày sinh: ........."), gộp các thông tin này thành một thẻ duy nhất (ví dụ: [userX_dob] cho ngày sinh).
+- Hành động 3: Nếu một chỗ trống yêu cầu nhiều thông tin (ví dụ: "Ngày và nơi cấp: .........."), tạo các thẻ riêng biệt cho từng chi tiết trong cùng một cặp ngoặc vuông và phân tách bằng dấu phẩy (ví dụ: [user1_id_issue_date, user1_id_issue_place] cho ngày cấp và nơi cấp CMND/CCCD).
+- Hành động 4: Nếu một chỗ trống ám chỉ nhiều thông tin (ví dụ: "Hiện đang (làm gì, ở đâu)"), tạo các thẻ riêng biệt trong cùng một tập hợp ngoặc vuông, phân tách bằng dấu phẩy. Ví dụ: [user1_occupation, user1_current_address].
+- Hành động 5: Nếu không tìm thấy thẻ phù hợp, thay thế chỗ trống bằng [another].
 
-1. Identify Unique Users
+**Bước 3:** Xử lý các chỗ trống không liên quan đến thông tin cá nhân
+- Nhiệm vụ: Xác định và xử lý các chỗ trống không xuất hiện trong danh sách tên thẻ cho thông tin cá nhân.
+- Hành động 1: Kiểm tra trong danh sách {remaining_tag_names}.
+- Hành động 2: Nếu có tên thẻ phù hợp, thay thế chỗ trống bằng thẻ tương ứng.
+- Hành động 3: Nếu không tìm thấy, thay thế chỗ trống bằng [another].
 
-Task: Determine the number of unique users mentioned in the form. Action: Assign a unique identifier to each user (e.g., user1, user2, etc.).
+**Bước 4:** Đảm bảo tính nhất quán và chính xác
+- Nhiệm vụ: Đảm bảo rằng mỗi chỗ trống được thay thế chính xác theo mã định danh của người dùng và bản chất của thông tin.
+- Hành động: Rà soát lại biểu mẫu để xác nhận rằng tất cả các chỗ trống đã được thay thế chính xác, đảm bảo tính toàn vẹn của thông tin người dùng và cấu trúc biểu mẫu.
 
-Match and Replace Personal Information Placeholders
+# Định dạng đầu vào:
+Đầu vào là một biểu mẫu mẫu chứa các chỗ trống (..........) để thu thập thông tin.
+Mỗi chỗ trống đại diện cho một phần thông tin cần được ánh xạ đến một tên thẻ cụ thể, tùy thuộc vào loại thông tin tương ứng.
 
-Task: For each placeholder (..........), check if it corresponds to a residence or identification tag name from the provided list {residence_identification_tagnames}.
+# Định dạng đầu ra:
+Đầu ra phải là một phiên bản chuẩn hóa của biểu mẫu, trong đó các chỗ trống đã được thay thế bằng các thẻ theo định dạng [userX_tagname] hoặc [tagname].
+Các thẻ thay thế phải dựa trên danh sách tên thẻ được xác định trước cho các loại thông tin cá nhân và học thuật khác nhau.
+Đầu ra phải đảm bảo rõ ràng, chính xác và nhất quán.
 
-Action 1: If a match is found, replace the placeholder with the corresponding tag name in the format [userX_tagname], where X is the user identifier.
+Đầu vào và đầu ra được đặt trong ``` ```
 
-Action 2: If a single placeholder should represent multiple related tags (e.g., Ngày, tháng, năm sinh: ......... or Ngày sinh: .........), combine these related tags into a single tag name (e.g., [userX_dob] for date of birth). Avoid splitting into multiple placeholders.
-
-Action 3: If a placeholder requires multiple pieces of information (e.g., Ngày và nơi cấp: ..........), ensure to create separate tags for each specific detail within the same square brackets separated by commas (e.g., [user1_id_issue_date, user1_id_issue_place] for id issue date and id issue place)
-
-Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
-
-Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
-
-
-2. Handle Non-Personal Information Placeholders
-
-Task: If the placeholder does not correspond to any known residence or identification tag name:
-
-Action 1: Check against the {remaining_tag_names}.
-
-Action 2: If a match is found, replace the placeholder with the corresponding tag name from this list.
-
-Action 3: If no match is found, generate a new tag name in the format [new_tagname] and replace the placeholder with this generated tag name.
-
-3. Ensure Consistency and Accuracy
-
-Task: Ensure that each placeholder is accurately replaced according to the user's unique identifier and the nature of the information provided.
-
-Action: Review the form to confirm that all placeholders are correctly replaced, maintaining the integrity of the user information and the form structure.
-
-Output only.
-
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 TỜ KHAI CĂN CƯỚC CÔNG DÂN
 1. Họ, chữ đệm và tên(1): ..........
@@ -75,7 +67,7 @@ TỜ KHAI CĂN CƯỚC CÔNG DÂN
 15. Nghề nghiệp: .......... 16. Trình độ học vấn: ..........
 .........., ngày ..........tháng..........năm..........
 ```
-Output:
+Đầu ra:
 ```
 TỜ KHAI CĂN CƯỚC CÔNG DÂN
 1. Họ, chữ đệm và tên(1): [user1_full_name]
@@ -92,8 +84,8 @@ TỜ KHAI CĂN CƯỚC CÔNG DÂN
 [place], ngày [day] tháng [month] năm [year]
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 TỜ KHAI CĂN CƯỚC CÔNG DÂN
 1. Họ, chữ đệm và tên(1): ..........
@@ -105,7 +97,7 @@ TỜ KHAI CĂN CƯỚC CÔNG DÂN
 11. Nơi đăng ký khai sinh: ..........
 12. Quê quán: ..........
 ```
-Output:
+Đầu ra:
 ```
 TỜ KHAI CĂN CƯỚC CÔNG DÂN
 1. Họ, chữ đệm và tên(1): [user1_full_name]
@@ -120,8 +112,8 @@ TỜ KHAI CĂN CƯỚC CÔNG DÂN
 
 
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -149,7 +141,7 @@ Người yêu cầu
 (Ký, ghi rõ họ, chữ đệm, tên)
 
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -178,8 +170,8 @@ Người yêu cầu
 
 ```
 
-## Example
-Input:
+## Biểu mẫu
+Đầu vào:
 ```
 			TỜ KHAI CĂN CƯỚC CÔNG DÂN
 1. Họ và tên: ..........
@@ -206,8 +198,8 @@ Ouput:
 13. Nghề nghiệp: [user1_occupation]
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -234,7 +226,7 @@ Người yêu cầu
 (Ký, ghi rõ họ, chữ đệm, tên)
 
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -262,8 +254,8 @@ Người yêu cầu
 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -289,7 +281,7 @@ Tôi xin cam đoan những thông tin trên là đúng sự thật./.
 
            Làm tại.........., ngày..........tháng..........năm..........
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -317,8 +309,8 @@ Tôi xin cam đoan những thông tin trên là đúng sự thật./.
 ```
 
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -344,7 +336,7 @@ Tôi xin cam đoan những thông tin trên là đúng sự thật./.
 
            Làm tại.........., ngày..........tháng..........năm..........
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -371,8 +363,8 @@ Tôi xin cam đoan những thông tin trên là đúng sự thật./.
            Làm tại [place], ngày [day] tháng [month] năm [year]
 ```
 
-## Example: 
-Input:
+## Biểu mẫu: 
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -398,7 +390,7 @@ Tôi cam đoan nội dung đề nghị đăng ký khai sinh trên đây là đú
 Tôi chịu hoàn toàn trách nhiệm trước pháp luật về nội dung cam đoan của mình.
 Làm tại: .........., ngày .......... tháng .......... năm ..........
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -426,8 +418,8 @@ Làm tại: [place], ngày [day] tháng [month] năm [year]
 ```
 
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 TỜ KHAI THAY ĐỔI THÔNG TIN CƯ TRÚ
 (Dùng cho công dân Việt Nam định cư ở nước ngoài 
@@ -452,7 +444,7 @@ Cơ quan cấp:..........	 Có giá trị đến ngày:........../........../...
 17. Họ và tên chủ hộ:..........18. Quan hệ với chủ hộ:..........
 19. Số định danh cá nhân/ CMND của chủ hộ:..........
 ```									
-Output:
+Đầu ra:
 ```
 TỜ KHAI THAY ĐỔI THÔNG TIN CƯ TRÚ
 (Dùng cho công dân Việt Nam định cư ở nước ngoài 
@@ -479,76 +471,67 @@ Cơ quan cấp: [user1_passport_issue_place]	 Có giá trị đến ngày: [user
 ```
 
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 {form}
 ```
-Ouput: 
+Đầu ra: 
 """
 
 study_template_prompt = """
-# Instruction: Study Form
+# Hướng dẫn: Biểu mẫu Học tập
 
-# Goal:
-The purpose of this form is to accurately capture and store essential academic and personal details of users in an educational context. The data collected includes information such as name, date of birth, student ID, academic details (class, course, faculty, and school), and contact information. This form is essential for student records, academic tracking, and official documentation. Your task is to ensure each placeholder is replaced with the correct tag name to reflect the user's information. If a placeholder does not match any defined tag, generate a new tag name.
+# Định nghĩa
 
-# Your Task:
+Biểu mẫu này nhằm thu thập và lưu trữ chính xác thông tin cá nhân và học tập quan trọng của người dùng trong bối cảnh giáo dục. Dữ liệu thu thập bao gồm thông tin như họ tên,
+ngày sinh, mã sinh viên, thông tin học tập (lớp, khóa học, khoa và trường) và thông tin liên hệ. Biểu mẫu này rất quan trọng cho việc quản lý hồ sơ sinh viên, theo dõi học tập
+và tài liệu chính thức.
 
-You are responsible for determining the correct tag name for each placeholder in a study-related form. Your task is to ensure that every placeholder in the form is accurately replaced with the corresponding tag name, based on the user's academic and personal information and the tag names provided. If a placeholder does not match any defined tag, generate a new tag name accordingly.
+# Nhiệm vụ của bạn:
 
-- Input Format:
+Bạn có trách nhiệm xác định tên thẻ phù hợp cho từng chỗ trống trong biểu mẫu liên quan đến học tập. Hãy đảm bảo rằng mọi chỗ trống trong biểu mẫu được thay thế chính xác bằng
+tên thẻ tương ứng, dựa trên thông tin cá nhân và học tập của người dùng cùng danh sách tên thẻ được cung cấp. Nếu một chỗ trống không khớp với bất kỳ tên thẻ nào đã xác định,
+hãy thay thế nó bằng [another] để chỉ ra sự không chắc chắn hoặc thiếu thông tin.
 
-The input is a sample form containing placeholders (..........) for collecting information.
-Each placeholder represents a piece of information that needs to be mapped to a specific tag, depending on the type of information it corresponds to.
+Sau đây là các bước thực hiện.
 
-- Output Format:
+**Bước 1:** Xác định người dùng duy nhất
 
-The output should be a standardized version of the form, where placeholders have been replaced by tags in the format [userX_tagname] or [tagname].
-The placeholder tags should be replaced based on a set of predefined tag names for various types of personal and academic information.
-Example output should include accurately mapped tags for each type of information required in the form, ensuring clarity and consistency.
+- Nhiệm vụ: Xác định số lượng người dùng duy nhất được đề cập trong biểu mẫu.
+- Hành động: Gán một mã định danh duy nhất cho từng người dùng (ví dụ: user1, user2, v.v.).
+- Lưu ý: Mỗi người dùng sẽ có một tập hợp riêng các thẻ tương ứng với thông tin cá nhân của họ.
 
-Input and output are placed in ``` ```
+**Bước 2:** Thay thế các chỗ trống trong thông tin cá nhân
+- Nhiệm vụ: Với mỗi chỗ trống (..........), kiểm tra xem nó có khớp với một thẻ trong danh sách {study_tagnames} hay không.
+- Hành động 1: Nếu có, thay thế chỗ trống bằng thẻ tương ứng theo định dạng [userX_tagname], trong đó X là số định danh của người dùng.
+- Hành động 2: Nếu một chỗ trống đại diện cho nhiều thông tin liên quan (ví dụ: "Ngày, tháng, năm sinh: ........." hoặc "Ngày sinh: ........."), gộp các thông tin này thành một thẻ duy nhất (ví dụ: [userX_dob] cho ngày sinh).
+- Hành động 3: Nếu một chỗ trống yêu cầu nhiều thông tin (ví dụ: "Ngày và nơi cấp: .........."), tạo các thẻ riêng biệt cho từng chi tiết trong cùng một cặp ngoặc vuông và phân tách bằng dấu phẩy (ví dụ: [user1_id_issue_date, user1_id_issue_place] cho ngày cấp và nơi cấp CMND/CCCD).
+- Hành động 4: Hành động 4: Nếu một chỗ trống ám chỉ nhiều thông tin (ví dụ: "Hiện đang (học ngành gì, trường nào)"), tạo các thẻ riêng biệt trong cùng một tập hợp ngoặc vuông, phân tách bằng dấu phẩy. Ví dụ: [user1_major, user1_university].
 
-1. Identify Unique Users
+**Bước 3:** Xử lý các chỗ trống không liên quan đến thông tin cá nhân
+- Nhiệm vụ: Xác định và xử lý các chỗ trống không xuất hiện trong danh sách tên thẻ cho thông tin cá nhân.
+- Hành động 1: Kiểm tra trong danh sách {remaining_tag_names}.
+- Hành động 2: Nếu có tên thẻ phù hợp, thay thế chỗ trống bằng thẻ tương ứng.
+- Hành động 3: Nếu không tìm thấy, thay thế chỗ trống bằng [another].
 
-Task: Determine the number of unique users mentioned in the form. Action: Assign a unique identifier to each user (e.g., user1, user2, etc.).
+**Bước 4:** Đảm bảo tính nhất quán và chính xác
+- Nhiệm vụ: Đảm bảo rằng mỗi chỗ trống được thay thế chính xác theo mã định danh của người dùng và bản chất của thông tin.
+- Hành động: Rà soát lại biểu mẫu để xác nhận rằng tất cả các chỗ trống đã được thay thế chính xác, đảm bảo tính toàn vẹn của thông tin người dùng và cấu trúc biểu mẫu.
 
-Match and Replace Personal and Academic Information Placeholders
+# Định dạng đầu vào:
+Đầu vào là một biểu mẫu mẫu chứa các chỗ trống (..........) để thu thập thông tin.
+Mỗi chỗ trống đại diện cho một phần thông tin cần được ánh xạ đến một tên thẻ cụ thể, tùy thuộc vào loại thông tin tương ứng.
 
-Task: For each placeholder (..........), check if it corresponds to a study-related tag name from the provided list {study_tagnames}.
+# Định dạng đầu ra:
+Đầu ra phải là một phiên bản chuẩn hóa của biểu mẫu, trong đó các chỗ trống đã được thay thế bằng các thẻ theo định dạng [userX_tagname] hoặc [tagname].
+Các thẻ thay thế phải dựa trên danh sách tên thẻ được xác định trước cho các loại thông tin cá nhân và học thuật khác nhau.
+Đầu ra phải đảm bảo rõ ràng, chính xác và nhất quán.
 
-Action 1: If a match is found, replace the placeholder with the corresponding tag name in the format [userX_tagname], where X is the user identifier.
+Đầu vào và đầu ra được đặt trong ``` ```
 
-Action 2: If a single placeholder should represent multiple related tags (e.g., Ngày, tháng, năm sinh: ......... or Ngày sinh: .........), combine these related tags into a single tag name (e.g., [userX_dob] for date of birth). Avoid splitting into multiple placeholders.
-
-Action 3: If a placeholder requires multiple pieces of information (e.g., Ngày và nơi cấp: ..........), ensure to create separate tags for each specific detail within the same square brackets separated by commas (e.g., [user1_id_issue_date, user1_id_issue_place] for id issue date and id issue place)
-
-Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
-
-Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
-
-
-2. Handle Non-Personal Information Placeholders
-
-Task: If the placeholder does not correspond to any known study-related tag name:
-
-Action 1: Check against the {remaining_tag_names}.
-
-Action 2: If a match is found, replace the placeholder with the corresponding tag name from this list.
-
-Action 3: If no match is found, generate a new tag name in the format [new_tagname] and replace the placeholder with this generated tag name.
-
-3. Ensure Consistency and Accuracy
-
-Task: Ensure that each placeholder is accurately replaced according to the user's unique identifier and the nature of the information provided.
-
-Action: Review the form to confirm that all placeholders are correctly replaced, maintaining the integrity of the user information and the form structure.
-
-Output only.
-
-## Example
-Input:
+## Biểu mẫu
+Đầu vào:
 ```
 ĐƠN ĐỀ NGHỊ XÁC NHẬN VÀ CẤP HỖ TRỢ
 (Dùng cho học sinh, sinh viên đang học tại các cơ sở giáo dục nghề nghiệp công lập)
@@ -566,7 +549,7 @@ Người làm đơn
 (Ký và ghi rõ họ tên)
 
 ```
-Ouptut:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -588,8 +571,8 @@ Người làm đơn
 
 ```
 
-## Example
-Input:
+## Biểu mẫu
+Đầu vào:
 ```
 ĐƠN ĐỀ NGHỊ XÁC NHẬN VÀ CẤP HỖ TRỢ
 (Dùng cho học sinh, sinh viên đang học tại các cơ sở giáo dục nghề nghiệp công lập)
@@ -607,7 +590,7 @@ Người làm đơn
 (Ký và ghi rõ họ tên)
 
 ```
-Ouptut:
+Ouptutt
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -629,8 +612,8 @@ Người làm đơn
 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -655,7 +638,7 @@ Người làm đơn
 (Ký và ghi rõ họ tên)
  
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -681,8 +664,8 @@ Người làm đơn
 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -725,7 +708,7 @@ Tôi cam đoan nội dung báo cáo là hoàn toàn trung thực, chính xác v�
 Người báo cáo
 (Ký và ghi rõ họ tên)
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -769,8 +752,8 @@ Người báo cáo
 (Ký và ghi rõ họ tên)
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -793,7 +776,7 @@ Nơi trẻ mẫu giáo có hộ khẩu thường trú
 Người làm đơn
 (Ký, ghi rõ họ tên)
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -817,8 +800,8 @@ Người làm đơn
 (Ký, ghi rõ họ tên)
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -841,7 +824,7 @@ Người làm đơn
 (Ký, ghi rõ họ tên)
 
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -865,8 +848,8 @@ Người làm đơn
 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -900,7 +883,7 @@ Người làm đơn
 (Ký và ghi rõ họ tên)
 
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -933,8 +916,8 @@ Người làm đơn
 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -966,7 +949,7 @@ Người làm đơn
 (Ký, ghi rõ họ, tên hoặc điểm chỉ )
 
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -999,8 +982,8 @@ Người làm đơn
 
 
 ```
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -1037,7 +1020,7 @@ Bố (mẹ) hoặc người đại diện hợp pháp
 (ký và ghi rõ họ tên)
 
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -1075,8 +1058,8 @@ Bố (mẹ) hoặc người đại diện hợp pháp
 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -1113,7 +1096,7 @@ Bố (mẹ) hoặc người đại diện hợp pháp
 (ký và ghi rõ họ tên)
 
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -1151,8 +1134,8 @@ Bố (mẹ) hoặc người đại diện hợp pháp
 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -1174,7 +1157,7 @@ Người làm đơn
 (Ký và ghi rõ họ tên)
 
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -1197,8 +1180,8 @@ Người làm đơn
 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -1232,7 +1215,7 @@ Người làm đơn
 (Ký và ghi rõ họ tên)
 
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -1266,78 +1249,71 @@ Người làm đơn
 (Ký và ghi rõ họ tên)
 
 ```
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 {form}
 ```
-Output:
+Đầu ra:
 """
 
 health_medical_template_prompt = """
-# Instruction: Health and Medical Form
+# Instruction: Biểu mẫu sức khỏe và y tế
 
-# Goal:
-The goal of this form is to gather critical health and medical-related information about users, including personal identification, social and health insurance data, and contact details. This information is vital for medical records, insurance claims, and health-related administrative tasks. Your task is to ensure that all placeholders in the form are correctly replaced with the corresponding tag names for accuracy in health and medical documentation.
+# Định nghĩa
+Biểu mẫu này nhằm thu thập thông tin quan trọng liên quan đến sức khỏe và y tế của người dùng, bao gồm:
+- Thông tin cá nhân (họ tên, ngày sinh, số CMND/CCCD, địa chỉ liên hệ).
+- Dữ liệu bảo hiểm xã hội và bảo hiểm y tế (số thẻ BHYT, mã số bảo hiểm xã hội).
+- Chi tiết liên hệ (số điện thoại, địa chỉ email).
+- Tiền sử bệnh lý và thông tin y tế (bệnh nền, dị ứng, tiền sử phẫu thuật).
+Thông tin này rất quan trọng đối với hồ sơ y tế, yêu cầu bảo hiểm và các thủ tục hành chính liên quan đến y tế.
 
-# Your Task:
+# Nhiệm vụ của bạn:
 
-You are responsible for determining the correct tag name for each placeholder in a health and medical-related form. Your task is to ensure that every placeholder in the form is accurately replaced with the corresponding tag name, based on the user's medical and personal information. If a placeholder does not match any defined tag, generate a new tag name accordingly.
-
-- Input Format:
-
-The input is a sample form containing placeholders (..........) for collecting information.
-Each placeholder represents a piece of information that needs to be mapped to a specific tag, depending on the type of information it corresponds to.
-
-- Output Format:
-
-The output should be a standardized version of the form, where placeholders have been replaced by tags in the format [userX_tagname] or [tagname].
-The placeholder tags should be replaced based on a set of predefined tag names for various types of personal and academic information.
-Example output should include accurately mapped tags for each type of information required in the form, ensuring clarity and consistency.
-
-Input and output are placed in ``` ```
-
-1. Identify Unique Users
-
-Task: Determine the number of unique users mentioned in the form.
-
-Action: Assign a unique identifier to each user (e.g., user1, user2, etc.).
-
-Match and Replace Personal and Medical Information Placeholders
-
-Task: For each placeholder (..........), check if it corresponds to a health and medical-related tag name from the provided list {health_and_medical_tagnames}.
-
-Action 1: If a match is found, replace the placeholder with the corresponding tag name in the format [userX_tagname], where X is the user identifier.
-
-Action 2: If a single placeholder should represent multiple related tags (e.g., Ngày, tháng, năm sinh: ......... or Ngày sinh: .........), combine these related tags into a single tag name (e.g., [userX_dob] for date of birth). Avoid splitting into multiple placeholders.
-
-Action 3: If a placeholder requires multiple pieces of information (e.g., Ngày và nơi cấp: ..........), ensure to create separate tags for each specific detail within the same square brackets separated by commas (e.g., [user1_id_issue_date, user1_id_issue_place] for id issue date and id issue place)
-
-Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
-
-Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
+Bạn có trách nhiệm xác định tên thẻ phù hợp cho từng chỗ trống trong biểu mẫu y tế. Hãy đảm bảo rằng mọi chỗ trống trong biểu mẫu được thay thế chính xác bằng tên thẻ tương ứng, 
+dựa trên thông tin cá nhân, bảo hiểm và y tế của người dùng. Nếu một chỗ trống không khớp với bất kỳ tên thẻ nào đã xác định, hãy thay thế chỗ trống
+đó bằng [another] để chỉ ra sự không chắc chắn hoặc thiếu thông tin.
 
 
-2. Handle Non-Personal Information Placeholders
+Sau đây là các bước thực hiện.
 
-Task: If the placeholder does not correspond to any known study-related tag name:
+**Bước 1:** Xác định người dùng duy nhất
 
-Action 1: Check against the {remaining_tag_names}.
+- Nhiệm vụ: Xác định số lượng người dùng duy nhất được đề cập trong biểu mẫu.
+- Hành động: Gán một mã định danh duy nhất cho từng người dùng (ví dụ: user1, user2, v.v.).
+- Lưu ý: Mỗi người dùng sẽ có một tập hợp riêng các thẻ tương ứng với thông tin cá nhân của họ.
 
-Action 2: If a match is found, replace the placeholder with the corresponding tag name from this list.
+**Bước 2:** Thay thế các chỗ trống trong thông tin cá nhân
+- Nhiệm vụ: Với mỗi chỗ trống (..........), kiểm tra xem nó có khớp với một thẻ trong danh sách {health_and_medical_tagnames} hay không.
+- Hành động 1: Nếu có, thay thế chỗ trống bằng thẻ tương ứng theo định dạng [userX_tagname], trong đó X là số định danh của người dùng.
+- Hành động 2: Nếu một chỗ trống đại diện cho nhiều thông tin liên quan (ví dụ: "Ngày, tháng, năm sinh: ........." hoặc "Ngày sinh: ........."), gộp các thông tin này thành một thẻ duy nhất (ví dụ: [userX_dob] cho ngày sinh).
+- Hành động 3: Nếu một chỗ trống yêu cầu nhiều thông tin (ví dụ: "Ngày và nơi cấp: .........."), tạo các thẻ riêng biệt cho từng chi tiết trong cùng một cặp ngoặc vuông và phân tách bằng dấu phẩy (ví dụ: [user1_id_issue_date, user1_id_issue_place] cho ngày cấp và nơi cấp CMND/CCCD).
+- Hành động 4: Nếu một chỗ trống ám chỉ nhiều thông tin (ví dụ: "Hiện đang (làm gì, ở đâu)"), tạo các thẻ riêng biệt trong cùng một tập hợp ngoặc vuông, phân tách bằng dấu phẩy. Ví dụ: [user1_occupation, user1_current_address].
+- Hành động 5: Nếu không tìm thấy thẻ phù hợp, thay thế chỗ trống bằng [another].
 
-Action 3: If no match is found, generate a new tag name in the format [new_tagname] and replace the placeholder with this generated tag name.
+**Bước 3:** Xử lý các chỗ trống không liên quan đến thông tin cá nhân
+- Nhiệm vụ: Xác định và xử lý các chỗ trống không xuất hiện trong danh sách tên thẻ cho thông tin cá nhân.
+- Hành động 1: Kiểm tra trong danh sách {remaining_tag_names}.
+- Hành động 2: Nếu có tên thẻ phù hợp, thay thế chỗ trống bằng thẻ tương ứng.
+- Hành động 3: Nếu không tìm thấy, thay thế chỗ trống bằng [another].
 
-3. Ensure Consistency and Accuracy
+**Bước 4:** Đảm bảo tính nhất quán và chính xác
+- Nhiệm vụ: Đảm bảo rằng mỗi chỗ trống được thay thế chính xác theo mã định danh của người dùng và bản chất của thông tin.
+- Hành động: Rà soát lại biểu mẫu để xác nhận rằng tất cả các chỗ trống đã được thay thế chính xác, đảm bảo tính toàn vẹn của thông tin người dùng và cấu trúc biểu mẫu.
 
-Task: Ensure that each placeholder is accurately replaced according to the user's unique identifier and the nature of the information provided.
+# Định dạng đầu vào:
+Đầu vào là một biểu mẫu mẫu chứa các chỗ trống (..........) để thu thập thông tin.
+Mỗi chỗ trống đại diện cho một phần thông tin cần được ánh xạ đến một tên thẻ cụ thể, tùy thuộc vào loại thông tin tương ứng.
 
-Action: Review the form to confirm that all placeholders are correctly replaced, maintaining the integrity of the user information and the form structure.
+# Định dạng đầu ra:
+Đầu ra phải là một phiên bản chuẩn hóa của biểu mẫu, trong đó các chỗ trống đã được thay thế bằng các thẻ theo định dạng [userX_tagname] hoặc [tagname].
+Các thẻ thay thế phải dựa trên danh sách tên thẻ được xác định trước cho các loại thông tin cá nhân và học thuật khác nhau.
+Đầu ra phải đảm bảo rõ ràng, chính xác và nhất quán.
 
-Output only.
+Đầu vào và đầu ra được đặt trong ``` ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
                         TỜ KHAI THAM GIA, ĐIỀU CHỈNH THÔNG TIN BẢO HIỂM XÃ HỘI, BẢO HIỂM Y TẾ
 
@@ -1353,7 +1329,7 @@ I.	Áp dụng đối với người tham gia tra cứu không thấy mã số BH
 [13]. Xã: ..........	[14]	Huyện: ..........	[15]. Tỉnh: ..........	
 [16]. Kê khai Phụ lục Thành viên hộ gia đình (phụ lục kèm theo) đối với người tham gia tra cứu không thấy mã số BHXH và người tham gia BHYT theo hộ gia đình để giảm trừ mức đóng.
 ```
-Output:
+Đầu ra:
 ```
                         TỜ KHAI THAM GIA, ĐIỀU CHỈNH THÔNG TIN BẢO HIỂM XÃ HỘI, BẢO HIỂM Y TẾ
 
@@ -1370,8 +1346,8 @@ I.	Áp dụng đối với người tham gia tra cứu không thấy mã số BH
 [16]. Kê khai Phụ lục Thành viên hộ gia đình (phụ lục kèm theo) đối với người tham gia tra cứu không thấy mã số BHXH và người tham gia BHYT theo hộ gia đình để giảm trừ mức đóng.
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
                         TỜ KHAI THAM GIA, ĐIỀU CHỈNH THÔNG TIN BẢO HIỂM XÃ HỘI, BẢO HIỂM Y TẾ
 
@@ -1387,7 +1363,7 @@ I.	Áp dụng đối với người tham gia tra cứu không thấy mã số BH
 [13]. Xã: ..........	[14]	Huyện: ..........	[15]. Tỉnh: ..........	
 [16]. Kê khai Phụ lục Thành viên hộ gia đình (phụ lục kèm theo) đối với người tham gia tra cứu không thấy mã số BHXH và người tham gia BHYT theo hộ gia đình để giảm trừ mức đóng.
 ```
-Output:
+Đầu ra:
 ```
                         TỜ KHAI THAM GIA, ĐIỀU CHỈNH THÔNG TIN BẢO HIỂM XÃ HỘI, BẢO HIỂM Y TẾ
 
@@ -1404,8 +1380,8 @@ I.	Áp dụng đối với người tham gia tra cứu không thấy mã số BH
 [16]. Kê khai Phụ lục Thành viên hộ gia đình (phụ lục kèm theo) đối với người tham gia tra cứu không thấy mã số BHXH và người tham gia BHYT theo hộ gia đình để giảm trừ mức đóng.
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -1461,7 +1437,7 @@ Người thứ ba: ..........
                   (Ký tên, đóng dấu)
 
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -1515,8 +1491,8 @@ Giám đốc BHXH
 (Ký tên, đóng dấu)
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 
@@ -1548,7 +1524,7 @@ Người đề nghị
 (Ký, ghi rõ họ tên)
 
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 
@@ -1581,8 +1557,8 @@ Người đề nghị
 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 
@@ -1614,7 +1590,7 @@ Người đề nghị
 (Ký, ghi rõ họ tên)
 
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 
@@ -1647,8 +1623,8 @@ Người đề nghị
 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 BẢO HIỂM XÃ HỘI TỈNH
 PHÒNG........../BHXH HUYỆN..........
@@ -1677,7 +1653,7 @@ Tên chủ tài khoản: ..........
 NGƯỜI NHẬN
 (Ký và ghi rõ họ tên)
 ```
-Output:
+Đầu ra:
 ```
 BẢO HIỂM XÃ HỘI TỈNH
 
@@ -1711,78 +1687,73 @@ NGƯỜI NHẬN
 (Ký và ghi rõ họ tên)
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 {form}
 ```
-Output:
+Đầu ra:
 """
 
 vehicle_driver_template_prompt = """
-# Instruction: Vehicle Driver Form
+# Instruction: Biểu mẫu phương tiện và người lái
 
-# Goal:
-The goal of this form is to collect essential information related to vehicle drivers, including personal identification details, driving licenses, tax information, and transport licenses. Accurate data is crucial for vehicle registration, driving license issuance, and compliance with transport regulations. Your task is to ensure that all placeholders in the form are correctly replaced with the appropriate tag names for accurate documentation related to vehicle driving and transportation.
+# Định nghĩa
 
-# Your Task:
+Biểu mẫu này nhằm thu thập thông tin quan trọng liên quan đến tài xế, bao gồm:
 
-You are responsible for determining the correct tag name for each placeholder in a vehicle driver-related form. Your task is to ensure that every placeholder in the form is accurately replaced with the corresponding tag name, based on the user's vehicle-related and personal information. If a placeholder does not match any defined tag, generate a new tag name accordingly.
+- Thông tin cá nhân (họ tên, ngày sinh, số CMND/CCCD, địa chỉ).
+- Chi tiết giấy phép lái xe (số GPLX, hạng bằng, ngày cấp, nơi cấp).
+- Thông tin thuế và đăng ký phương tiện (mã số thuế, biển số xe, loại xe).
+- Giấy phép vận tải (số giấy phép vận tải, ngày cấp, cơ quan cấp).
+Dữ liệu thu thập sẽ hỗ trợ quá trình đăng ký phương tiện, cấp giấy phép lái xe và đảm bảo tuân thủ các quy định về giao thông vận tải.
 
-- Input Format:
+# Nhiệm vụ của bạn:
 
-The input is a sample form containing placeholders (..........) for collecting information.
-Each placeholder represents a piece of information that needs to be mapped to a specific tag, depending on the type of information it corresponds to.
-
-- Output Format:
-
-The output should be a standardized version of the form, where placeholders have been replaced by tags in the format [userX_tagname] or [tagname].
-The placeholder tags should be replaced based on a set of predefined tag names for various types of personal and academic information.
-Example output should include accurately mapped tags for each type of information required in the form, ensuring clarity and consistency.
-
-Input and output are placed in ``` ```
-
-1. Identify Unique Users
-
-Task: Determine the number of unique users mentioned in the form.
-
-Action: Assign a unique identifier to each user (e.g., user1, user2, etc.).
-
-Match and Replace Personal and Vehicle Information Placeholders
-
-Task: For each placeholder (..........), check if it corresponds to a vehicle driver-related tag name from the provided list {vehicle_driver_tagnames}.
-
-Action 1: If a match is found, replace the placeholder with the corresponding tag name in the format [userX_tagname], where X is the user identifier.
-
-Action 2: If a single placeholder should represent multiple related tags (e.g., Ngày, tháng, năm sinh: ......... or Ngày sinh: .........), combine these related tags into a single tag name (e.g., [userX_dob] for date of birth). Avoid splitting into multiple placeholders.
-
-Action 3: If a placeholder requires multiple pieces of information (e.g., Ngày và nơi cấp: ..........), ensure to create separate tags for each specific detail within the same square brackets separated by commas (e.g., [user1_id_issue_date, user1_id_issue_place] for id issue date and id issue place)
-
-Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
-
-Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
+Bạn có trách nhiệm xác định tên thẻ phù hợp cho từng chỗ trống trong biểu mẫu lái xe. Hãy đảm bảo rằng mọi chỗ trống trong biểu mẫu được thay thế chính xác bằng tên thẻ tương ứng,
+dựa trên thông tin cá nhân, bằng lái xe, thuế và vận tải của tài xế.Nếu một chỗ trống không khớp với bất kỳ tên thẻ nào đã xác định, hãy thay thế chỗ trống đó bằng [another] để chỉ
+ra sự không chắc chắn hoặc thiếu thông tin.
 
 
-2. Handle Non-Personal Information Placeholders
+Sau đây là các bước thực hiện.
 
-Task: If the placeholder does not correspond to any known study-related tag name:
+**Bước 1:** Xác định người dùng duy nhất
 
-Action 1: Check against the {remaining_tag_names}.
+- Nhiệm vụ: Xác định số lượng người dùng duy nhất được đề cập trong biểu mẫu.
+- Hành động: Gán một mã định danh duy nhất cho từng người dùng (ví dụ: user1, user2, v.v.).
+- Lưu ý: Mỗi người dùng sẽ có một tập hợp riêng các thẻ tương ứng với thông tin cá nhân của họ.
 
-Action 2: If a match is found, replace the placeholder with the corresponding tag name from this list.
+**Bước 2:** Thay thế các chỗ trống trong thông tin cá nhân
+- Nhiệm vụ: Với mỗi chỗ trống (..........), kiểm tra xem nó có khớp với một thẻ trong danh sách {vehicle_driver_tagnames} hay không.
+- Hành động 1: Nếu có, thay thế chỗ trống bằng thẻ tương ứng theo định dạng [userX_tagname], trong đó X là số định danh của người dùng.
+- Hành động 2: Nếu một chỗ trống đại diện cho nhiều thông tin liên quan (ví dụ: "Ngày, tháng, năm sinh: ........." hoặc "Ngày sinh: ........."), gộp các thông tin này thành một thẻ duy nhất (ví dụ: [userX_dob] cho ngày sinh).
+- Hành động 3: Nếu một chỗ trống yêu cầu nhiều thông tin (ví dụ: "Ngày và nơi cấp: .........."), tạo các thẻ riêng biệt cho từng chi tiết trong cùng một cặp ngoặc vuông và phân tách bằng dấu phẩy (ví dụ: [user1_id_issue_date, user1_id_issue_place] cho ngày cấp và nơi cấp CMND/CCCD).
+- Hành động 4: Nếu một chỗ trống ám chỉ nhiều thông tin (ví dụ: "Hiện đang (làm gì, ở đâu)"), tạo các thẻ riêng biệt trong cùng một tập hợp ngoặc vuông, phân tách bằng dấu phẩy. Ví dụ: [user1_occupation, user1_current_address].
+- Hành động 5: Nếu không tìm thấy thẻ phù hợp, thay thế chỗ trống bằng [another].
 
-Action 3: If no match is found, generate a new tag name in the format [new_tagname] and replace the placeholder with this generated tag name.
+**Bước 3:** Xử lý các chỗ trống không liên quan đến thông tin cá nhân
+- Nhiệm vụ: Xác định và xử lý các chỗ trống không xuất hiện trong danh sách tên thẻ cho thông tin cá nhân.
+- Hành động 1: Kiểm tra trong danh sách {remaining_tag_names}.
+- Hành động 2: Nếu có tên thẻ phù hợp, thay thế chỗ trống bằng thẻ tương ứng.
+- Hành động 3: Nếu không tìm thấy, thay thế chỗ trống bằng [another].
 
-3. Ensure Consistency and Accuracy
+**Bước 4:** Đảm bảo tính nhất quán và chính xác
+- Nhiệm vụ: Đảm bảo rằng mỗi chỗ trống được thay thế chính xác theo mã định danh của người dùng và bản chất của thông tin.
+- Hành động: Rà soát lại biểu mẫu để xác nhận rằng tất cả các chỗ trống đã được thay thế chính xác, đảm bảo tính toàn vẹn của thông tin người dùng và cấu trúc biểu mẫu.
 
-Task: Ensure that each placeholder is accurately replaced according to the user's unique identifier and the nature of the information provided.
+# Định dạng đầu vào:
+Đầu vào là một biểu mẫu mẫu chứa các chỗ trống (..........) để thu thập thông tin.
+Mỗi chỗ trống đại diện cho một phần thông tin cần được ánh xạ đến một tên thẻ cụ thể, tùy thuộc vào loại thông tin tương ứng.
 
-Action: Review the form to confirm that all placeholders are correctly replaced, maintaining the integrity of the user information and the form structure.
+# Định dạng đầu ra:
+Đầu ra phải là một phiên bản chuẩn hóa của biểu mẫu, trong đó các chỗ trống đã được thay thế bằng các thẻ theo định dạng [userX_tagname] hoặc [tagname].
+Các thẻ thay thế phải dựa trên danh sách tên thẻ được xác định trước cho các loại thông tin cá nhân và học thuật khác nhau.
+Đầu ra phải đảm bảo rõ ràng, chính xác và nhất quán.
 
-Output only.
+Đầu vào và đầu ra được đặt trong ``` ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 GIẤY KHAI ĐĂNG KÝ XE (Vehicle registation declaration)
 A. PHẦN CHỦ XE TỰ KÊ KHAI (self declaration vehicle owner’s)
@@ -1804,7 +1775,7 @@ Số máy 1 (Engine N0):..........
 Số máy 2 (Engine N0):..........
 Số khung (Chassis N0):..........
 ```
-Output:
+Đầu ra:
 ```
 GIẤY KHAI ĐĂNG KÝ XE (Vehicle registation declaration)
 A. PHẦN CHỦ XE TỰ KÊ KHAI (self declaration vehicle owner's)
@@ -1827,8 +1798,8 @@ Số máy 2 (Engine N0):[user1_vehicle_engine_number2]
 Số khung (Chassis N0):[user1_vehicle_chassis_number] 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 GIẤY KHAI ĐĂNG KÝ XE (Vehicle registation declaration)
 A. PHẦN CHỦ XE TỰ KÊ KHAI (self declaration vehicle owner’s)
@@ -1850,7 +1821,7 @@ Số máy 1 (Engine N0):..........
 Số máy 2 (Engine N0):..........
 Số khung (Chassis N0):..........
 ```
-Output:
+Đầu ra:
 ```
 GIẤY KHAI ĐĂNG KÝ XE (Vehicle registation declaration)
 A. PHẦN CHỦ XE TỰ KÊ KHAI (self declaration vehicle owner's)
@@ -1873,8 +1844,8 @@ Số máy 2 (Engine N0):[user1_vehicle_engine_number2]
 Số khung (Chassis N0):[user1_vehicle_chassis_number] 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 GIẤY KHAI ĐĂNG KÝ XE (Vehicle registation declaration)
 A. PHẦN CHỦ XE TỰ KÊ KHAI (self declaration vehicle owner’s)
@@ -1896,7 +1867,7 @@ Số máy 1 (Engine N0):..........
 Số máy 2 (Engine N0):..........
 Số khung (Chassis N0):..........
 ```
-Output:
+Đầu ra:
 ```
 GIẤY KHAI ĐĂNG KÝ XE (Vehicle registation declaration)
 A. PHẦN CHỦ XE TỰ KÊ KHAI (self declaration vehicle owner's)
@@ -1919,8 +1890,8 @@ Số máy 2 (Engine N0):[user1_vehicle_engine_number2]
 Số khung (Chassis N0):[user1_vehicle_chassis_number] 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 MẪU ĐƠN ĐỀ NGHỊ ĐỔI, CẤP LẠI GIẤY PHÉP LÁI XE (1)
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1943,7 +1914,7 @@ NGƯỜI LÀM ĐƠN
 (Ký và ghi rõ họ, tên)
 
 ```
-Output:
+Đầu ra:
 ```
 MẪU ĐƠN ĐỀ NGHỊ ĐỔI, CẤP LẠI GIẤY PHÉP LÁI XE (1)
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1967,8 +1938,8 @@ NGƯỜI LÀM ĐƠN
 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 MẪU ĐƠN ĐỀ NGHỊ ĐỔI, CẤP LẠI GIẤY PHÉP LÁI XE (1)
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1991,7 +1962,7 @@ NGƯỜI LÀM ĐƠN
 (Ký và ghi rõ họ, tên)
 
 ```
-Output:
+Đầu ra:
 ```
 MẪU ĐƠN ĐỀ NGHỊ ĐỔI, CẤP LẠI GIẤY PHÉP LÁI XE (1)
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -2015,8 +1986,8 @@ NGƯỜI LÀM ĐƠN
 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 SOCIALIST REPUBLIC OF VIETNAM
 Independent - Freedom - Happiness
@@ -2039,7 +2010,7 @@ NGƯỜI LÀM ĐƠN (APPLICANT)
 (Signature and Full name)
 
 ```
-Output:
+Đầu ra:
 ```
 SOCIALIST REPUBLIC OF VIETNAM
 Independent - Freedom - Happiness
@@ -2062,75 +2033,71 @@ NGƯỜI LÀM ĐƠN (APPLICANT)
 (Signature and Full name)
 
 ```
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 {form}
 ```
-Output:
+Đầu ra:
 """
 
 job_template_prompt = """
 
-# Instruction: Job-Related Form
+# Instruction: Biểu mẫu việc làm
 
-# Goal: The goal of this form is to gather comprehensive information related to employment, and unemployment benefits. Accurate completion of this form is crucial for verifying employment history, managing social insurance records, and processing unemployment benefits. Your task is to ensure that all placeholders in the form are correctly replaced with the appropriate tag names for job-related and personal information. If a placeholder does not match any defined tag, generate a new tag name accordingly.
+# Định nghĩa
 
-# Your Task:
+Biểu mẫu này nhằm thu thập thông tin quan trọng liên quan đến việc làm, bảo hiểm xã hội và trợ cấp thất nghiệp. Việc điền chính xác thông tin trong biểu mẫu rất quan trọng để:
 
-You are responsible for determining the correct tag name for each placeholder in a job-related form. Your task is to ensure that every placeholder in the form is accurately replaced with the corresponding tag name, based on the user's vehicle-related and personal information. If a placeholder does not match any defined tag, generate a new tag name accordingly.
+- Xác minh lịch sử làm việc (công ty, vị trí, thời gian làm việc).
+- Quản lý hồ sơ bảo hiểm xã hội (mã số bảo hiểm, thời gian đóng bảo hiểm).
+- Xử lý trợ cấp thất nghiệp (thời gian thất nghiệp, lý do nghỉ việc).
 
-- Input Format:
+# Nhiệm vụ của bạn:
 
-The input is a sample form containing placeholders (..........) for collecting information.
-Each placeholder represents a piece of information that needs to be mapped to a specific tag, depending on the type of information it corresponds to.
-
-- Output Format:
-
-The output should be a standardized version of the form, where placeholders have been replaced by tags in the format [userX_tagname] or [tagname].
-The placeholder tags should be replaced based on a set of predefined tag names for various types of personal and academic information.
-Example output should include accurately mapped tags for each type of information required in the form, ensuring clarity and consistency.
-
-Input and output are placed in ``` ```
-
-1. Identify Unique Users
-Task: Determine the number of unique users mentioned in the form.
-
-Action: Assign a unique identifier to each user (e.g., user1, user2, etc.).
-
-Match and Replace Personal and Vehicle Information Placeholders
-
-Task: For each placeholder (..........), check if it corresponds to a vehicle driver-related tag name from the provided list {job_tagnames}.
-
-Action 1: If a match is found, replace the placeholder with the corresponding tag name in the format [userX_tagname], where X is the user identifier.
-
-Action 2: If a single placeholder should represent multiple related tags (e.g., Ngày, tháng, năm sinh: ......... or Ngày sinh: .........), combine these related tags into a single tag name (e.g., [userX_dob] for date of birth). Avoid splitting into multiple placeholders.
-
-Action 3: If a placeholder requires multiple pieces of information (e.g., Ngày và nơi cấp: ..........), ensure to create separate tags for each specific detail within the same square brackets separated by commas (e.g., [user1_id_issue_date, user1_id_issue_place] for id issue date and id issue place)
-
-Action 4: If the placeholder implies multiple details (e.g., "Hiện đang (làm gì, ở đâu)"), generate separate tags for each detail within the same set of square brackets and separate them using a comma. For example: [user1_occupation, user1_current_address].
-
-Action 5: If no match is found, generate a new tag name in the format [userX_new_tagname] and replace the placeholder with this generated tag name.
+Bạn có trách nhiệm xác định tên thẻ phù hợp cho từng chỗ trống trong biểu mẫu liên quan đến việc làm. Hãy đảm bảo rằng mọi chỗ trống trong biểu mẫu được thay thế chính xác bằng tên thẻ tương ứng, dựa trên thông tin cá nhân, lịch sử làm việc và bảo hiểm xã hội của người lao động..Nếu một chỗ trống không khớp với bất kỳ tên thẻ nào đã xác định, hãy thay thế chỗ trống đó bằng [another] để chỉ
+ra sự không chắc chắn hoặc thiếu thông tin.
 
 
-2. Handle Non-Personal Information Placeholders
-Task: If the placeholder does not correspond to any known study-related tag name:
+Sau đây là các bước thực hiện.
 
-Action 1: Check against the {remaining_tag_names}.
+**Bước 1:** Xác định người dùng duy nhất
 
-Action 2: If a match is found, replace the placeholder with the corresponding tag name from this list.
+- Nhiệm vụ: Xác định số lượng người dùng duy nhất được đề cập trong biểu mẫu.
+- Hành động: Gán một mã định danh duy nhất cho từng người dùng (ví dụ: user1, user2, v.v.).
+- Lưu ý: Mỗi người dùng sẽ có một tập hợp riêng các thẻ tương ứng với thông tin cá nhân của họ.
 
-Action 3: If no match is found, generate a new tag name in the format [new_tagname] and replace the placeholder with this generated tag name.
+**Bước 2:** Thay thế các chỗ trống trong thông tin cá nhân
+- Nhiệm vụ: Với mỗi chỗ trống (..........), kiểm tra xem nó có khớp với một thẻ trong danh sách {job_tagnames} hay không.
+- Hành động 1: Nếu có, thay thế chỗ trống bằng thẻ tương ứng theo định dạng [userX_tagname], trong đó X là số định danh của người dùng.
+- Hành động 2: Nếu một chỗ trống đại diện cho nhiều thông tin liên quan (ví dụ: "Ngày, tháng, năm sinh: ........." hoặc "Ngày sinh: ........."), gộp các thông tin này thành một thẻ duy nhất (ví dụ: [userX_dob] cho ngày sinh).
+- Hành động 3: Nếu một chỗ trống yêu cầu nhiều thông tin (ví dụ: "Ngày và nơi cấp: .........."), tạo các thẻ riêng biệt cho từng chi tiết trong cùng một cặp ngoặc vuông và phân tách bằng dấu phẩy (ví dụ: [user1_id_issue_date, user1_id_issue_place] cho ngày cấp và nơi cấp CMND/CCCD).
+- Hành động 4: Nếu một chỗ trống ám chỉ nhiều thông tin (ví dụ: "Hiện đang (làm gì, ở đâu)"), tạo các thẻ riêng biệt trong cùng một tập hợp ngoặc vuông, phân tách bằng dấu phẩy. Ví dụ: [user1_occupation, user1_current_address].
+- Hành động 5: Nếu không tìm thấy thẻ phù hợp, thay thế chỗ trống bằng [another].
 
-3. Ensure Consistency and Accuracy
-Task: Ensure that each placeholder is accurately replaced according to the user's unique identifier and the nature of the information provided.
+**Bước 3:** Xử lý các chỗ trống không liên quan đến thông tin cá nhân
+- Nhiệm vụ: Xác định và xử lý các chỗ trống không xuất hiện trong danh sách tên thẻ cho thông tin cá nhân.
+- Hành động 1: Kiểm tra trong danh sách {remaining_tag_names}.
+- Hành động 2: Nếu có tên thẻ phù hợp, thay thế chỗ trống bằng thẻ tương ứng.
+- Hành động 3: Nếu không tìm thấy, thay thế chỗ trống bằng [another].
 
-Action: Review the form to confirm that all placeholders are correctly replaced, maintaining the integrity of the user information and the form structure.
+**Bước 4:** Đảm bảo tính nhất quán và chính xác
+- Nhiệm vụ: Đảm bảo rằng mỗi chỗ trống được thay thế chính xác theo mã định danh của người dùng và bản chất của thông tin.
+- Hành động: Rà soát lại biểu mẫu để xác nhận rằng tất cả các chỗ trống đã được thay thế chính xác, đảm bảo tính toàn vẹn của thông tin người dùng và cấu trúc biểu mẫu.
 
-Output only.
+# Định dạng đầu vào:
+Đầu vào là một biểu mẫu mẫu chứa các chỗ trống (..........) để thu thập thông tin.
+Mỗi chỗ trống đại diện cho một phần thông tin cần được ánh xạ đến một tên thẻ cụ thể, tùy thuộc vào loại thông tin tương ứng.
 
-## Example:
-Input:
+# Định dạng đầu ra:
+Đầu ra phải là một phiên bản chuẩn hóa của biểu mẫu, trong đó các chỗ trống đã được thay thế bằng các thẻ theo định dạng [userX_tagname] hoặc [tagname].
+Các thẻ thay thế phải dựa trên danh sách tên thẻ được xác định trước cho các loại thông tin cá nhân và học thuật khác nhau.
+Đầu ra phải đảm bảo rõ ràng, chính xác và nhất quán.
+
+Đầu vào và đầu ra được đặt trong ``` ```
+
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -2149,7 +2116,7 @@ Trường hợp người lao động chưa có bản sao hợp đồng lao độ
  Đề nghị quý Trung tâm xem xét, thực hiện các thủ tục về chấm dứt hưởng trợ cấp thất nghiệp để bảo lưu thời gian đóng bảo hiểm thất nghiệp tương ứng với số tháng hưởng trợ cấp thất nghiệp mà tôi chưa nhận tiền tại cơ quan bảo hiểm xã hội./.
                                                                           .........., ngày .......... tháng .......... năm ..........
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -2169,8 +2136,8 @@ Trường hợp người lao động chưa có bản sao hợp đồng lao độ
                                                                           [place], ngày [day] tháng [month] năm [year]
 ``` 
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -2189,7 +2156,7 @@ Trường hợp người lao động chưa có bản sao hợp đồng lao độ
  Đề nghị quý Trung tâm xem xét, thực hiện các thủ tục về chấm dứt hưởng trợ cấp thất nghiệp để bảo lưu thời gian đóng bảo hiểm thất nghiệp tương ứng với số tháng hưởng trợ cấp thất nghiệp mà tôi chưa nhận tiền tại cơ quan bảo hiểm xã hội./.
                                                                           .........., ngày .......... tháng .......... năm ..........
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -2209,8 +2176,8 @@ Trường hợp người lao động chưa có bản sao hợp đồng lao độ
                                                                           [place], ngày [day] tháng [month] năm [year]
 ```        
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -2235,7 +2202,7 @@ Người đề nghị
 (Ký, ghi rõ họ tên)
 
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -2261,8 +2228,8 @@ Người đề nghị
 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -2290,7 +2257,7 @@ Tôi cam đoan nội dung ghi trên là hoàn toàn đúng sự thật, nếu sa
   (Ký, ghi rõ họ tên)
 
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -2319,8 +2286,8 @@ Tôi cam đoan nội dung ghi trên là hoàn toàn đúng sự thật, nếu sa
 
 ```
 
-## Example:
-Input:
+## Biểu mẫu:
+Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -2348,7 +2315,7 @@ Tôi cam đoan nội dung ghi trên là hoàn toàn đúng sự thật, nếu sa
   (Ký, ghi rõ họ tên)
 
 ```
-Output:
+Đầu ra:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -2377,8 +2344,8 @@ Tôi cam đoan nội dung ghi trên là hoàn toàn đúng sự thật, nếu sa
 
 ```
 
-## Example
-Input:
+## Biểu mẫu
+Đầu vào:
 ```
 CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
@@ -2429,10 +2396,10 @@ tiền công khai thuế trực tiếp với cơ quan thuế)
 
 
 
-## Example:
-Input: 
+## Biểu mẫu:
+Đầu vào: 
 ```
 {form}
 ```
-Output:
+Đầu ra:
 """

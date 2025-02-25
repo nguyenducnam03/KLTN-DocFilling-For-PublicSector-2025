@@ -6,7 +6,7 @@ load_dotenv()
 gemini_key = os.getenv("GEMINI_KEY")
 
 gemini = GoogleGenerativeAI(
-    model="gemini-2.0-flash-exp",
+    model="gemini-2.0-flash",
     timeout=None,
     max_tokens=1000,
     temperature=0,

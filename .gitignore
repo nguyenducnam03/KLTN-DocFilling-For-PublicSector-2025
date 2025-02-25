@@ -27,13 +27,6 @@ tagname_dict.pkl
 test_evalute.py
 
 test.py
-<<<<<<< HEAD
-
-remove_diff_tag_name.py
-
-Forms
-
-=======
 new_requirements.txt
 
 # of Nam
@@ -41,4 +34,3 @@ new_requirements.txt
 *.json
 *.txt
 *.ipynb
->>>>>>> NDN

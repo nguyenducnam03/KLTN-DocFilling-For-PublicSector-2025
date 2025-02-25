@@ -65,32 +65,35 @@ def filled_input_from_filled_form(input_folder, filled_folder, output_folder):
 #     filled_input_from_filled_form(input_folder, llm_filled_folder, output_folder)
 
 ## 2.2 Remove different tagnames from label folder
+def remove_different_tagnames_from_label(Handed_folder):
+    for index, filename in enumerate(os.listdir(Handed_folder)):
+        if filename.endswith(".txt"):
+            # Input - filled
+            file_label_dir = Handed_folder + "/" + filename
+            # Read
+            label_text = Text_Processing().Read_txt_file(file_label_dir)
+            # Print debug
+            try:
+                # Remove different tagnames
+                label_text_different = Text_Processing().remove_different_tagnames(
+                    label_text
+                )
+                # Save
+                output_path_different = Handed_folder + "/Differents/" + filename
+                Text_Processing().Save_txt_file(output_path_different, label_text_different)
 
-for index, filename in enumerate(os.listdir(label_by_hand_folder)):
-    if filename.endswith(".txt"):
-        # Input - filled
-        file_label_dir = label_by_hand_folder + "/" + filename
-        # Read
-        label_text = Text_Processing().Read_txt_file(file_label_dir)
-        # Print debug
-        try:
-            # Remove different tagnames
-            label_text_different = Text_Processing().remove_different_tagnames(
-                label_text
-            )
-            # Save
-            output_path_different = label_by_hand_folder + "/Differents/" + filename
-            Text_Processing().Save_txt_file(output_path_different, label_text_different)
+            except Exception as e:
+                print(f"Error: {e} at file {filename}")
+                break
 
-        except Exception as e:
-            print(f"Error: {e} at file {filename}")
-            break
 
-# ============= 3. Evaluate =============
+# filled_input_from_filled_form("Data/Input/", "Data/LLM_filled/", "Data/Output/")
+# remove_different_tagnames_from_label("Data/Handed_label/")
 
-label_folder = "Forms\Label_Output_By_Hand\Differents"
-llm_filled_folder = f"Forms\Output\Post_processor\{version_llm_filled}\Differents"
-df = similarity_result_two_folders(label_folder, llm_filled_folder)
-# Save to csv
-df.to_csv(f"Results\{version_llm_filled}.csv", index=False)
-print(df)
+
+# # ============= 3. Evaluate =============
+# label_folder = "Data\Handed_label\Differents"
+# llm_filled_folder = "Data\Output\Differents"
+# df = similarity_result_two_folders(label_folder, llm_filled_folder)
+# # Save to csv
+# df.to_csv("results.csv", index=False)
