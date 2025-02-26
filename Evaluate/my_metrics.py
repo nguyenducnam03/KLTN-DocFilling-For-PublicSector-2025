@@ -264,11 +264,17 @@ def similarity_result_two_folders(folder1, folder2):
             file_dir_output = output_folder + "/" + filename
             file_dir_input = input_folder + "/" + filename
             # Create Make clickable hyperlinks for Excel 5 files
-            file_dir_input_hyperlink = f'=HYPERLINK("{os.path.abspath(file_dir_input).replace("\\", "/")}","{filename}")'
-            file_dir_output_hyperlink = f'=HYPERLINK("{os.path.abspath(file_dir_output).replace("\\", "/")}","{filename}")'
-            file_dir_output_process_hyperlink = f'=HYPERLINK("{os.path.abspath(file_dir_output_process).replace("\\", "/")}","{filename}")'
-            file_dir_label_hyperlink = f'=HYPERLINK("{os.path.abspath(file_dir_label).replace("\\", "/")}","{filename}")'
-            file_dir_label_process_hyperlink = f'=HYPERLINK("{os.path.abspath(file_dir_label_process).replace("\\", "/")}","{filename}")'
+            input_path = os.path.abspath(file_dir_input).replace("\\", "/")
+            output_path = os.path.abspath(file_dir_output).replace("\\", "/")
+            output_process_path = os.path.abspath(file_dir_output_process).replace("\\", "/")
+            label_path = os.path.abspath(file_dir_label).replace("\\", "/")
+            label_process_path = os.path.abspath(file_dir_label_process).replace("\\", "/")
+
+            file_dir_input_hyperlink = f'=HYPERLINK("{input_path}","{filename}")'
+            file_dir_output_hyperlink = f'=HYPERLINK("{output_path}","{filename}")'
+            file_dir_output_process_hyperlink = f'=HYPERLINK("{output_process_path}","{filename}")'
+            file_dir_label_hyperlink = f'=HYPERLINK("{label_path}","{filename}")'
+            file_dir_label_process_hyperlink = f'=HYPERLINK("{label_process_path}","{filename}")'
             # Add to form_names to store it
             form_names.append([file_dir_input_hyperlink, file_dir_output_hyperlink, file_dir_output_process_hyperlink, file_dir_label_hyperlink, file_dir_label_process_hyperlink])
             index_result += 1
