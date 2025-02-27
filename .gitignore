@@ -1,11 +1,20 @@
 # Enviroment
-# .gitignore
 myenv/
-
+Forms/
+.gitignore
 #Lib
 .chainlit/
 __pycache__/
+Src/__pycache__
 
+#Folder
+TEST/
+GenerateData/
+Presentation/
+Results/
+Temp/
+
+#Temp file
 chainlit.md
 tempCodeRunnerFile.py
 
@@ -18,8 +27,11 @@ tagname_dict.pkl
 test_evalute.py
 
 test.py
+new_requirements.txt
 
-remove_diff_tag_name.py
-
-Forms
-
+# of Nam
+.ipynb_checkpoints/
+*.json
+*.txt
+*.ipynb
+.ruff_cache/
