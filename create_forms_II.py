@@ -231,7 +231,7 @@ merged_data_tagname = {**data_tagname, **data_tagname_noise}
 
 # Gen form 11
 prompt = """
-# **AI Tạo Biểu Mẫu Hành Chính Từ Thông Tin Cá Nhân**
+# AI Tạo Biểu Mẫu Từ Thông Tin Cá Nhân
 
 ## **1. Đầu vào:**  
 Dữ liệu đầu vào là danh sách chứa thông tin của **một hoặc nhiều cá nhân** dưới dạng **cặp khóa - giá trị** (*key-value*).  
@@ -286,7 +286,6 @@ Mỗi cá nhân sẽ được tạo một biểu mẫu phù hợp với các tr�
 
 ---
 ## **4. Cách trình bày biểu mẫu nhiều cá nhân**  
-- **Dạng bảng**: Khi cần danh sách gọn gàng (VD: danh sách tạm trú, danh sách nhân sự).  
 - **Dạng danh sách liệt kê**: Khi cần mô tả chi tiết từng cá nhân.  
 
 ---
@@ -1092,17 +1091,16 @@ def map_values_to_tagnames(form: str, data: dict, data_tagname: dict) -> str:
             if isinstance(val, list):
                 for v in val:
                     if v.strip() == value:
-                        return data_tagname[key].replace("0", f"{count}")
+                        return f"[{data_tagname[key].replace('0', str(count))}]"
             elif val == value and key in data_tagname:
-                return data_tagname[key].replace("0", f"{count}")
+                return f"[{data_tagname[key].replace('0', str(count))}]"
         
         return match.group(0)  # Giữ nguyên nếu không tìm thấy
     
     return re.sub(pattern, replace_match, form)
 
 
-
-Num_forms = 100
+Num_forms = 3
 for i in range(Num_forms):
     if i%1==0:
         print(f"Process until {i}") 
