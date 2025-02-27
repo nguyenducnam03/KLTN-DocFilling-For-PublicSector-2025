@@ -111,7 +111,7 @@ def calculate_similarity(contextual1, contextual2, tagnames1, tagnames2, form1, 
         if standardized_tag1 in our_40_tagnames:
             count_label += 1
             if standardized_tag2 in our_40_tagnames:
-                if tag1 == tag2:
+                if standardized_tag1 == standardized_tag2:
                     A1_A1 += 1  # Exact match
                 else:
                     # error_A1_A2.append((tag1, tag2))
