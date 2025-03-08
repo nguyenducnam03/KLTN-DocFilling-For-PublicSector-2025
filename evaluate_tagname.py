@@ -1,18 +1,17 @@
 from Evaluate.my_metrics import similarity_result_two_folders
 import pandas as pd
 import time
-from Config import Data_num, Output_num, Type, Label_Input_num
+from Config import Index
 
 from collections import Counter
 
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment, Font, Border, Side
-import ast
 
 # === Folder Addresses (All path should be here) ===
-label_folder = f"Temp\Data_{Data_num}\{Type}\Label{Label_Input_num}\Differents"
-llm_filled_folder = f"Temp\Data_{Data_num}\{Type}\Output{Output_num}\Processed_Output\Differents"
-root_folder = f"Temp\Data_{Data_num}\{Type}"
+label_folder = f"DataX/Test/Label{Index}\Differents"
+llm_filled_folder = f"DataX/Test/Output{Index}\Processed_Output\Differents"
+root_folder = "DataX/Test/"
 
 
 # Function to process df_detail
@@ -61,7 +60,7 @@ def process_df_detail(df_detail):
 df_detail = process_df_detail(df_detail)
 
 # Save detail to csv
-df_detail.to_csv(f"{root_folder}/Result_{Output_num}.csv", index=False,encoding='utf-8-sig')
+df_detail.to_csv(f"{root_folder}/Result_{Index}.csv", index=False,encoding='utf-8-sig')
 
 
 # Summary data
@@ -202,7 +201,7 @@ def df_detail_to_summary_excel(df_detail, excel_filename, name_sheet):
     print(f"Excel file '{excel_filename}' saved successfully!")
 
 # Save Summary to Excel
-name_xlsx = f"{root_folder}/Summary_{Output_num}.xlsx"
+name_xlsx = f"{root_folder}/Summary_{Index}.xlsx"
 name_sheet = "Summary"
 df_detail_to_summary_excel (df_detail, name_xlsx, name_sheet)
 

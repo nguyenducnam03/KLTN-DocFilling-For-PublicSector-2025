@@ -6,9 +6,9 @@ from Utils.text_processing import Text_Processing
 import pandas as pd
 from collections import Counter
 import json
-from Config.config import Data_num, Output_num, Type
+from Config.config import Index
 # Folde address
-root_folder = f"Temp\Data_{Data_num}\{Type}"
+root_folder = "DataX/Test/"
 
 def analyze_errors_type_1(error_list):
     """
@@ -74,7 +74,7 @@ def calculate_similarity(contextual1, contextual2, tagnames1, tagnames2, form1, 
     error_A1_A2, error_A1_B, error_B_A1 = [], [], []
     error_A1_A2_detail, error_A1_B_detail, error_B_A1_detail = [], [], []
     count_label = 0  # To track valid tagnames in subset_A
-    copy_contextual_input_dir = f"{root_folder}/Output{Output_num}/Copy_Contextual_Input/"+ filename + ".json"
+    copy_contextual_input_dir = f"{root_folder}/Output{Index}/Copy_Contextual_Input/"+ filename + ".json"
     # Read copy_contextual_input
     with open(copy_contextual_input_dir, "r", encoding="utf-8") as f:
         # print(copy_contextual_input_dir)

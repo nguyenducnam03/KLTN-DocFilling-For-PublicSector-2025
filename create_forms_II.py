@@ -675,7 +675,11 @@ Email: [nguyenvantoi@gmail.com]
 Quê quán: [Nam Định]
 
 
-Người khai thông tin(Ký, ghi rõ họ tên): [Trống]
+Người khai thông tin 1(Ký, ghi rõ họ tên): [Phạm Hoàng Nam]
+
+Người khai thông tin 2(Ký, ghi rõ họ tên): [Lê Thanh Hằng]
+
+Người khai thông tin 3(Ký, ghi rõ họ tên): [Nguyễn Đức Anh]
 ```
 
 Input:
@@ -781,7 +785,9 @@ Số điện thoại: [0123456789]
 Số hộ chiếu: [C12345678]
 Tôn giáo: [Không]
 
-Người khai thông tin(Ký, ghi rõ họ tên): [Trống]
+Người khai thông tin 1 (Ký, ghi rõ họ tên): [Trần Minh Khoa]
+
+Người khai thông tin 2 (Ký, ghi rõ họ tên): [Nguyễn Đức Anh]
 ```
 
 Input:
@@ -1049,12 +1055,12 @@ def check_generated_form(form: str, data: dict) -> tuple[bool, str]:
     allowed_values = list(set(allowed_values))
     # Initialize valid flag
     is_valid = True
-    
     # Replace values in form
     def replace_value(match):
         value = match.group(1).strip()
         nonlocal is_valid  # Allow modification of the outer variable
         if value not in allowed_values:
+            # print(value)
             is_valid = False  # Mark as invalid
         return ".........."
 
@@ -1078,13 +1084,19 @@ def map_values_to_tagnames(form: str, data: dict, data_tagname: dict) -> str:
     """
     pattern = r'\[([^\]]+)\]'
     names = {'Nguyễn Đức Anh', 'Trần Minh Khoa', 'Lê Thanh Hằng', 'Phạm Hoàng Nam'}
+    dict = {}
+    for name in names:
+        dict[name] = 0
     count = 0  # Biến đếm để tăng giá trị i mỗi lần gặp names
-    
     def replace_match(match):
         nonlocal count
         value = match.group(1)
         if value in names:
-            count += 1
+            if dict[value] == 0:
+                count += 1
+                dict[value] = count
+            else:
+                count = dict[value]
         if value == "Trống":
             return "[#another]"
         for key, val in data.items():
@@ -1100,18 +1112,58 @@ def map_values_to_tagnames(form: str, data: dict, data_tagname: dict) -> str:
     return re.sub(pattern, replace_match, form)
 
 
-Num_forms = 3
-for i in range(Num_forms):
+
+def merge_all(*datasets):
+    """
+    Hợp nhất tất cả các tập dữ liệu được truyền vào.
+    
+    :param datasets: Các dictionary dữ liệu có thể truyền vào
+    :return: Một dictionary hợp nhất từ tất cả các dictionary
+    """
+    if not datasets:
+        return {}
+
+    merged_data = defaultdict(list)
+
+    for dataset in datasets:
+        for key, value in dataset.items():
+            if isinstance(value, list):
+                merged_data[key].extend(value)
+            else:
+                merged_data[key].append(value)
+
+    return dict(merged_data)
+
+
+
+
+# for i in range(500):
+#     file_name = f"input_{i}.txt"
+#     file_save_path_info = f"{info_folder}/{file_name}"
+#     file_save_path_input = f"{input_folder}/{file_name}"
+#     file_save_path_label = f"{label_folder}/{file_name}"
+#     with open(file_save_path_info, "r", encoding="utf-8") as f:
+#         response = f.read()
+#     user_data = merge_all(data, data2, data3, data4)
+#     merged_data = {**user_data, **noise_data}
+#     label_tagname_form = map_values_to_tagnames(response, merged_data, merged_data_tagname)
+#     # Save to label folder
+#     with open(file_save_path_label, "w", encoding="utf-8") as f:
+#         f.write(label_tagname_form)
+
+
+Num_forms = 500
+for i in range(476, Num_forms):
     if i%1==0:
         print(f"Process until {i}") 
     file_name = f"input_{i}.txt"
     file_save_path_label = f"{label_folder}/{file_name}"
     file_save_path_info = f"{info_folder}/{file_name}"
+    user_data = random_merge(data, data2, data3, data4)
+    merged_data = {**user_data, **noise_data}
+    data_form = extract_random_data(merged_data, noise_data)
     # Check if not file_save_path exist file already
     if not os.path.exists(file_save_path_info):    
-        user_data = random_merge(data, data2, data3, data4)
-        merged_data = {**user_data, **noise_data}
-        data_form = extract_random_data(merged_data, noise_data)
         response = generate_form(prompt, data_form)
         is_valid, input_form = check_generated_form(response, merged_data)
     else:
@@ -1148,7 +1200,4 @@ for i in range(Num_forms):
             response = generate_form(prompt, data_form)
             # is_valid, input_form = check_generated_form(response, data)
             is_valid, input_form = check_generated_form(response, merged_data)
-
-
-
 

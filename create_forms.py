@@ -29,12 +29,12 @@ with open("Temp/folder_form.json", "r", encoding="utf-8") as f:
     folder_form = json.load(f)
 
 type_forms = [
-'1. Cư trú và giấy tờ tùy thân',
-'2. Giáo dục',
-'3. Y tế và sức khỏe',
-'4. Phương tiện và lái xe',
-'5. Việc làm',
-'6. Khác'
+    '1. Cư trú và giấy tờ tùy thân',
+    '2. Giáo dục',
+    '3. Y tế và sức khỏe',
+    '4. Phương tiện và lái xe',
+    '5. Việc làm',
+    '6. Khác'
 ]
 
 def generate_form(formatted_tagnames, remaining_tag_names, random_forms_text):

@@ -484,11 +484,7 @@ Cơ quan cấp: [user1_passport_issue_place]	 Có giá trị đến ngày: [user
 ```
 {form}
 ```
-<<<<<<< HEAD
-Đầu ra: 
-=======
 Đầu ra:
->>>>>>> NDN
 """
 
 study_template_prompt = """
@@ -819,7 +815,7 @@ CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 Độc lập - Tự do - Hạnh phúc
 
 ĐƠN ĐỀ NGHỊ HỖ TRỢ HỌC TẬP
-(Dùng cho cha mẹ trẻ mẫu giáo hoặc người chăm sóc trẻ mẫu giáo học tại các cơ sở giáo dục công lập)
+
 Kính gửi: .......... (Cơ sở giáo dục)
 Họ và tên cha mẹ (hoặc người chăm sóc): ..........
 Hộ khẩu thường trú tại:..........
@@ -827,7 +823,8 @@ Là cha/mẹ (hoặc người chăm sóc) của em:..........
 Sinh ngày: ........../........../..........
 Dân tộc:..........
 Hiện đang học (tại lớp, trường):..........
-Tôi làm đơn này đề nghị các cấp quản lý xem xét, giải quyết cấp tiền hỗ trợ học tập theo quy định và chế độ hiện hành./.
+Tôi làm đơn này đề nghị các cấp quản lý xem xét, giải quyết cấp tiền hỗ trợ
+ học tập theo quy định và chế độ hiện hành.
 
 XÁC NHẬN CỦA ỦY BAN NHÂN DÂN CẤP XÃ1
 Nơi trẻ mẫu giáo có hộ khẩu thường trú
@@ -1282,11 +1279,7 @@ Thông tin này rất quan trọng đối với hồ sơ y tế, yêu cầu bả
 
 # Nhiệm vụ của bạn:
 
-<<<<<<< HEAD
 Bạn có trách nhiệm xác định tên thẻ phù hợp cho từng chỗ trống trong biểu mẫu y tế. Hãy đảm bảo rằng mọi chỗ trống trong biểu mẫu được thay thế chính xác bằng tên thẻ tương ứng, 
-=======
-Bạn có trách nhiệm xác định tên thẻ phù hợp cho từng chỗ trống trong biểu mẫu y tế. Hãy đảm bảo rằng mọi chỗ trống trong biểu mẫu được thay thế chính xác bằng tên thẻ tương ứng,
->>>>>>> NDN
 dựa trên thông tin cá nhân, bảo hiểm và y tế của người dùng. Nếu một chỗ trống không khớp với bất kỳ tên thẻ nào đã xác định, hãy thay thế chỗ trống
 đó bằng [another] để chỉ ra sự không chắc chắn hoặc thiếu thông tin.
 
@@ -2413,11 +2406,7 @@ tiền công khai thuế trực tiếp với cơ quan thuế)
 
 
 ## Biểu mẫu:
-<<<<<<< HEAD
-Đầu vào: 
-=======
 Đầu vào:
->>>>>>> NDN
 ```
 {form}
 ```

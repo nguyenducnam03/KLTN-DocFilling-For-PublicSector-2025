@@ -2,14 +2,14 @@ import os
 from Tagnames.define_tagnames import generate_tagnames
 from Utils.text_processing import Text_Processing
 import json 
-from Config.config import Data_num, Output_num, Type, Label_Input_num
+from Config.config import Index
 # General
 
 # Folder addresses Data_x
-input_folder = f"Temp/Data_{Data_num}/{Type}/Input{Label_Input_num}"
+label_folder = f"DataX/Test/Label{Index}"
+input_folder = f"DataX/Test/Info{Index}"
+output_folder = f"DataX/Test/Output{Index}"
 input_folders = [input_folder]
-label_folder = f"Temp/Data_{Data_num}/{Type}/Label{Label_Input_num}"
-output_folder = f"Temp/Data_{Data_num}/{Type}/Output{Output_num}"
 
 
 # Ensuse output folder exists
