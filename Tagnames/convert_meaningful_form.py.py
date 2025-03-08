@@ -13,10 +13,12 @@ from Config.config import Index
 
 # Folder
 label_folder = f"DataX/Test/Label{Index}"
-input_folder = f"DataX/Test/Info{Index}"
+input_folder = f"DataX/Test/Input{Index}"
+info_folder = f"DataX/Test/Info{Index}"
 # Ensure the folder exists
 os.makedirs(label_folder, exist_ok=True)
 os.makedirs(input_folder, exist_ok=True)
+os.makedirs(info_folder, exist_ok=True)
 
 user_dict = {
     "Người làm đơn": {
@@ -132,13 +134,42 @@ def get_random_users(user_dict, min_users=2, max_users=3):
         result.append(user_str)
     
     return '\n\n'.join(result)
-    
 
 def create_meaningful_form(llm, data):
     prompt = PromptTemplate.from_template(create_multi_user_prompt)
-    chain = prompt | gemini | StrOutputParser()
+    chain = prompt | llm | StrOutputParser()
     response = chain.invoke({"input": data})
     return response
+
+def replace_users_with_sorted(text):
+    user_positions = {}
+
+    # Tìm tất cả các user trong văn bản
+    matches = list(re.finditer(r'\[(user\d+)_.*?\]', text))
+
+    for match in matches:
+        user = match.group(1)
+        if user not in user_positions:
+            user_positions[user] = match.start()
+
+    # Sắp xếp theo vị trí xuất hiện
+    sorted_users = sorted(user_positions, key=user_positions.get)
+
+    # Tạo mapping từ user gốc sang user theo thứ tự
+    user_mapping = {user: f'user{i+1}' for i, user in enumerate(sorted_users)}
+
+    # Hàm thay thế sử dụng lambda để giữ nguyên phần sau dấu "_"
+    def replacer(match):
+        old_user = match.group(1)
+        suffix = match.group(2)
+        return f'[{user_mapping[old_user]}_{suffix}]' 
+    
+    # Áp dụng thay thế một lần duy nhất
+    updated_text = re.sub(r'\[(user\d+)_(.*?)\]', replacer, text)
+
+    return updated_text
+
+
 
 def generate_data_type_II(llm, number):
     
@@ -146,12 +177,17 @@ def generate_data_type_II(llm, number):
         file_name = f"data_{i}.txt"
         input_path = f"{input_folder}/{file_name}"
         label_path = f"{label_folder}/{file_name}"
+        info_path = f"{info_folder}/{file_name}"
         print(f"Processing file: {file_name}")
         
         data = get_random_users(user_dict)
         meaningful_form = create_meaningful_form(llm, data)
         
         input_form = re.sub(r'\[([^\]]+)\]', '..........', meaningful_form)
+
+        # Write info file
+        with open(info_path,  'w', encoding = "utf-8") as f:
+            f.write(data)
         
         # Write input file
         with open(input_path, 'w', encoding='utf-8') as f:
@@ -163,4 +199,4 @@ def generate_data_type_II(llm, number):
     
 
 
-generate_data_type_II(gemini, 5)
+generate_data_type_II(gemini, 20)
