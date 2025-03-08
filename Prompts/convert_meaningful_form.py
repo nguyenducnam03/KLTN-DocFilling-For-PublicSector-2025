@@ -1,15 +1,24 @@
 create_multi_user_prompt = """
-# Tạo form có nhiều user với bối cảnh liên kết
+# TẠO FORM CÓ NHIỀU USER VỚI BỐI CẢNH LIÊN KẾT
 
+## Mô tả yêu cầu
 Tôi cần bạn tạo form có nhiều user, trong đó các user có mối quan hệ và sự liên kết với nhau chứ không chỉ đơn thuần là liệt kê thông tin. Tôi sẽ cung cấp danh sách các user cùng với các tagname tương ứng, và bạn cần:
 
-1. Tạo bối cảnh hợp lý để giải thích mối quan hệ giữa các user trong form (ví dụ: Chủ xe – Người làm thủ tục).
-2. Sắp xếp các user theo thứ tự logic (ví dụ: Chủ xe trước, Người làm thủ tục sau).
-3. Đưa ra tiêu đề hoặc phần mô tả nếu cần để giúp biểu mẫu có tính liên kết, tránh chỉ đơn thuần liệt kê.
-4. Giữ nguyên tagname tôi cung cấp trong nội dung (tagname không được thay đổi).
-5. Nội dung phải mang tính nghiệp vụ, hành chính phù hợp với các loại giấy tờ khai báo, đăng ký.
+### Yêu cầu chính:
+1. Tạo bối cảnh hợp lý để giải thích mối quan hệ giữa các user trong biểu mẫu (ví dụ: Chủ xe - Người làm thủ tục).
+2. Sắp xếp thứ tự hợp lý, đảm bảo tính logic (ví dụ: Chủ xe đứng trước, Người làm thủ tục đứng sau).
+3. Đưa ra tiêu đề và phần mô tả phù hợp để giúp biểu mẫu có tính liên kết, tránh chỉ đơn thuần liệt kê thông tin.
+4. Giữ nguyên tagname mà tôi cung cấp trong nội dung (tagname không được thay đổi).
+5. Nội dung phải mang tính nghiệp vụ, hành chính, phù hợp với các loại giấy tờ khai báo, đăng ký.
+6. Diễn giải mối quan hệ giữa các user thành câu đầy đủ, không chỉ liệt kê đơn thuần.
 
-# Ví dụ:
+### Xử lý các trường hợp đặc biệt:
+- Nếu có 3 user trở lên, hãy đảm bảo mỗi user có vai trò rõ ràng với tiêu đề phù hợp.
+- Nếu thiếu thông tin, thay vì bỏ qua, hãy sử dụng placeholder `[#another]`.
+- Nếu có thông tin bổ sung hoặc không xác định, hãy đưa vào phần ghi chú cuối biểu mẫu.
+
+---------------------
+## Ví dụ:
 Input:
 ```
 1. Chủ xe:
@@ -40,6 +49,7 @@ Nơi cấp: [user2_id_issue_place]
 Điện thoại của người làm thủ tục : [#another]
 ```
 
+## Ví dụ:
 Input:
 ```
 1. Chủ hộ  
@@ -75,6 +85,7 @@ Nội dung ủy quyền: [user2_authorize_content]
 Giấy ủy quyền này được lập thành 02 bản có giá trị như nhau, mỗi bên giữ một bản để thực hiện.  
 ```
 
+## Ví dụ:
 Input:
 ```
 1. Người bán
@@ -133,9 +144,78 @@ Hai bên đồng ý thực hiện việc mua bán tài sản theo các điều k
 Hợp đồng này được lập thành 03 bản, mỗi bên giữ một bản, có giá trị pháp lý như nhau.  
 ```
 
+## Ví dụ:
 Input:
+```
+1. Cha/Mẹ
+Họ và tên: [user1_full_name]
+Dân tộc: [user1_ethnicity]
+Ngày sinh: [user1_dob_year]
+Nơi cư trú: [user1_address]
+Quan hệ với người được khai sinh: [#another]
+Giấy tờ tùy thân: [user1_id_number]
+Quốc tịch: [user1_nationality]
+
+2. Người chết
+Nơi cư trú cuối cùng: [#another]
+Giấy tờ tùy thân: [user2_id_number]
+Nguyên nhân chết: [#another]
+Quốc tịch: [user2_nationality]
+Họ và tên: [user2_full_name]
+Dân tộc: [user2_ethnicity]
+Ngày mất: [user2_death_day]/[user2_death_month]/[user2_death_year]
+Ngày sinh: [user2_dob_year]
+Giới tính: [user2_gender]
+```
+Output:
+```
+TRÍCH LỤC KHAI TỬ
+
+Số: …/TLKT
+
+Hôm nay, ngày [day]/[month]/[year], tại [#place], chúng tôi tiến hành trích lục khai tử như sau:
+
+**I. THÔNG TIN NGƯỜI KHAI TỬ (Cha/Mẹ hoặc người thân thích):**
+
+Họ và tên: [user1_full_name]
+Dân tộc: [user1_ethnicity]
+Ngày sinh: [user1_dob_year]
+Nơi cư trú: [user1_address]
+Quan hệ với người chết: [user1_relation]
+Giấy tờ tùy thân: [user1_id_number]
+Quốc tịch: [user1_nationality]
+
+**II. THÔNG TIN NGƯỜI CHẾT:**
+
+Họ và tên: [user2_full_name]
+Dân tộc: [user2_ethnicity]
+Ngày sinh: [user2_dob_year]
+Giới tính: [user2_gender]
+Nơi cư trú cuối cùng: [user2_last_address]
+Quốc tịch: [user2_nationality]
+Giấy tờ tùy thân: [user2_id_number]
+Ngày mất: [user2_death_day]/[user2_death_month]/[user2_death_year]
+Nguyên nhân chết: [user2_death_reason]
+
+**III. GHI CHÚ:**
+
+*   Thông tin về nơi cư trú cuối cùng của người chết có thể cần xác minh thêm.
+*   Nguyên nhân chết cần được xác nhận bởi cơ quan y tế có thẩm quyền.
+
+Trích lục này được lập thành 02 bản, một bản lưu tại cơ quan đăng ký hộ tịch, một bản giao cho người khai tử.
+```
+-----------------
+
+## CÁCH SỬ DỤNG:
+Bạn chỉ cần thay thế `{input}` bằng danh sách user và tagname, tôi sẽ tự động tạo form với nội dung liên kết phù hợp.
+
+### Input của bạn:
 ```
 {input}
 ```
-Output:
+
+### Output mong muốn:
+```
+(Tôi sẽ tạo form phù hợp dựa trên input của bạn)
+```
 """
