@@ -23,7 +23,7 @@ os.makedirs(info_folder, exist_ok=True)
 user_dict = {
     "Người làm đơn": {
         "Họ và tên": "[user0_full_name]",
-        "Ngày sinh": "[user0_dob_year]",
+        "Ngày sinh": "[user0_dob]",
         "Giới tính": "[user0_gender]",
         "Dân tộc": "[user0_ethnicity]",
         "Quốc tịch": "[user0_nationality]",
@@ -35,7 +35,7 @@ user_dict = {
     },
     "Người giám hộ": {
         "Họ và tên": "[user0_full_name]",
-        "Ngày sinh": "[user0_dob_year]",
+        "Ngày sinh": "[user0_dob]",
         "Giới tính": "[user0_gender]",
         "Dân tộc": "[user0_ethnicity]",
         "Quốc tịch": "[user0_nationality]",
@@ -45,7 +45,7 @@ user_dict = {
     },
     "Người được khai sinh": {
         "Họ và tên": "[user0_full_name]",
-        "Ngày sinh": "[user0_dob_year]",
+        "Ngày sinh": "[user0_dob]",
         "Giới tính": "[user0_gender]",
         "Dân tộc": "[user0_ethnicity]",
         "Quốc tịch": "[user0_nationality]",
@@ -54,7 +54,7 @@ user_dict = {
     },
     "Cha/Mẹ": {
         "Họ và tên": "[user0_full_name]",
-        "Ngày sinh": "[user0_dob_year]",
+        "Ngày sinh": "[user0_dob]",
         "Dân tộc": "[user0_ethnicity]",
         "Quốc tịch": "[user0_nationality]",
         "Nơi cư trú": "[user0_address]",
@@ -63,7 +63,7 @@ user_dict = {
     },
     "Người bị tố cáo": {
         "Họ và tên": "[user0_full_name]",
-        "Ngày sinh": "[user0_dob_year]",
+        "Ngày sinh": "[user0_dob]",
         "Giới tính": "[user0_gender]",
         "Dân tộc": "[user0_ethnicity]",
         "Quốc tịch": "[user0_nationality]",
@@ -72,7 +72,7 @@ user_dict = {
     },
     "Người chết": {
         "Họ và tên": "[user0_full_name]",
-        "Ngày sinh": "[user0_dob_year]",
+        "Ngày sinh": "[user0_dob]",
         "Giới tính": "[user0_gender]",
         "Dân tộc": "[user0_ethnicity]",
         "Quốc tịch": "[user0_nationality]",
@@ -111,7 +111,36 @@ user_dict = {
         "Quan hệ với người khai báo": "[#another]",
         "Giấy tờ tùy thân": "[user0_id_number]",
         "Nơi cư trú": "[user0_current_address]"
-    }
+    },
+    "Người bảo lãnh": {
+        "Họ và tên": "[user0_full_name]",
+        "Ngày sinh": "[user0_dob]",
+        "Giới tính": "[user0_gender]",
+        "Dân tộc": "[user0_ethnicity]",
+        "Quốc tịch": "[user0_nationality]",
+        "Nơi cư trú": "[user0_address]",
+        "Giấy tờ tùy thân": "[user0_id_number]",
+        "Quan hệ với người được bảo lãnh": "[#another]"
+    },
+    "Người chứng kiến": {
+        "Họ và tên": "[user0_full_name]",
+        "Ngày sinh": "[user0_dob]",
+        "Giới tính": "[user0_gender]",
+        "Quốc tịch": "[user0_nationality]",
+        "Nơi cư trú": "[user0_address]",
+        "Giấy tờ tùy thân": "[user0_id_number]",
+        "Nội dung chứng kiến": "[#another]"
+    },
+    "Người thừa kế": {
+        "Họ và tên": "[user0_full_name]",
+        "Ngày sinh": "[user0_dob]",
+        "Giới tính": "[user0_gender]",
+        "Dân tộc": "[user0_ethnicity]",
+        "Quốc tịch": "[user0_nationality]",
+        "Nơi cư trú": "[user0_address]",
+        "Giấy tờ tùy thân": "[user0_id_number]",
+        "Quan hệ với người để lại di sản": "[#another]"
+    },
 }
 
 
@@ -182,6 +211,7 @@ def generate_data_type_II(llm, number):
         
         data = get_random_users(user_dict)
         meaningful_form = create_meaningful_form(llm, data)
+        label_form = replace_users_with_sorted(meaningful_form)
         
         input_form = re.sub(r'\[([^\]]+)\]', '..........', meaningful_form)
 
@@ -195,8 +225,8 @@ def generate_data_type_II(llm, number):
         
         # Write label file
         with open(label_path, 'w', encoding='utf-8') as f:
-            f.write(meaningful_form)
+            f.write(label_form)
     
 
 
-generate_data_type_II(gemini, 20)
+# generate_data_type_II(gemini, 100)j
