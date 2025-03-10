@@ -56,9 +56,14 @@ def process_df_detail(df_detail):
     summary_row["D_B_A1"] = analyze_errors_type_2(sum(df["error B-A1 detail"], []))
     # concat
     df_detail = pd.concat([df_detail, pd.DataFrame([summary_row])], ignore_index=True)
+    
     return df_detail
 df_detail = process_df_detail(df_detail)
-
+# Add user_X_X, user_X_Y column
+df_detail["user_X_X"] = df["user_X_X"]
+df_detail["user_X_Y"] = df["user_X_Y"]
+df_detail["debug_user_X_Y_label"] = df["debug_user_X_Y_label"]
+df_detail["debug_user_X_Y_predict"] = df["debug_user_X_Y_predict"]
 # Save detail to csv
 df_detail.to_csv(f"{root_folder}/Result_{Index}.csv", index=False,encoding='utf-8-sig')
 
@@ -258,6 +263,49 @@ add_error_to_summary_file(df_detail, error_A1_A2, name_xlsx, name_sheet=error_A1
 add_error_to_summary_file(df_detail, error_A1_B, name_xlsx, name_sheet=error_A1_B)
 add_error_to_summary_file(df_detail, error_B_A1, name_xlsx, name_sheet=error_B_A1)
 
+# Return another csv include
+# Data_Num, num_forms, sum_tagname, total_a1, a1_a1, total_b, b_b, a1_a1, b_b, a1_a1, a1_b, b_a1
+# Data_Num, num_forms, %sum_tagname, %total_a1, %a1_a1, %total_b, %b_b, %a1_a1, %b_b, %a1_a1, %a1_b, %b_a1
+# Number of  forms
+num_forms = df_detail.shape[0]-1
+# Value
+total_A1 = df_detail["total_A1"].iloc[:-1].astype(int).sum()
+total_B = df_detail["total_B"].iloc[:-1].astype(int).sum()
+real_tagnames = total_A1 + total_B
+# Seen
+real_seen_tagnames = total_A1
+real_seen_tagnames_percent = frac(real_seen_tagnames,real_tagnames)
+# Unseen
+real_unseen_tagnames = real_tagnames - real_seen_tagnames
+real_unseen_tagnames_percent = frac(real_unseen_tagnames,real_tagnames)
+# Predicted value
+true_tagname = df_detail["P_A1_A1"].iloc[:-1].astype(int).sum()
+false_tagname_tagname = df_detail["P_A1_A2"].iloc[:-1].astype(int).sum()
+false_unseen_tagname = df_detail["P_A1_B"].iloc[:-1].astype(int).sum()
+false_tagname_unseen_tagname = df_detail["P_B_A1"].iloc[:-1].astype(int).sum()
+true_unseen_tagname = df_detail["P_B_B"].iloc[:-1].astype(int).sum()
+
+# Predicted percentage value - real seen tagnames
+true_tagname_percent = frac(true_tagname,real_seen_tagnames)
+false_tagname_tagname_percent = frac(false_tagname_tagname,real_seen_tagnames)
+false_unseen_tagname_percent = frac(false_unseen_tagname,real_seen_tagnames)
+
+# Predicted percentage value - real unseen tagnames
+false_tagname_unseen_tagname_percent = frac(false_tagname_unseen_tagname,real_unseen_tagnames)
+true_unseen_tagname_percent = frac(true_unseen_tagname,real_unseen_tagnames)
+
+# Info about error X_Y
+num_form_error_X_Y = int(sum(df_detail["user_X_Y"]!=0)-1)
+detail_form_error_X_Y = df_detail.loc[df_detail["user_X_Y"] != 0, "user_X_Y"][:-1].astype("int").tolist()
+
+fist_row = [f"Data_{Index}", num_forms, real_tagnames, total_A1, true_tagname, total_B, true_unseen_tagname, false_tagname_tagname, false_unseen_tagname, false_tagname_unseen_tagname]
+second_row = [f"Data_{Index}", num_forms, frac(real_tagnames,real_tagnames), frac(total_A1,real_tagnames), frac(true_tagname,real_seen_tagnames), frac(total_B,real_tagnames), frac(true_unseen_tagname,real_unseen_tagnames), frac(false_tagname_tagname,real_seen_tagnames), frac(false_unseen_tagname,real_seen_tagnames), frac(false_tagname_unseen_tagname,real_unseen_tagnames)]
+third_row = [f"Data_{Index}",num_forms, num_form_error_X_Y, detail_form_error_X_Y]
+# Save to statis_{Index}.csv
+statis_csv = f"{root_folder}/Result_statis_{Index}.csv"
+column_names = ["Data_Num", "num_forms", "sum_tagname", "total_a1", "a1_a1", "total_b", "b_b", "a1_a1", "a1_b", "b_a1"]
+df_statis = pd.DataFrame([fist_row, second_row, third_row], columns=column_names)
+df_statis.to_csv(statis_csv, index=False,encoding='utf-8-sig')
 # Print
 print("Save result successfully!!")
 

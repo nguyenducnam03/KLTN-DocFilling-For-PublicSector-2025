@@ -1200,4 +1200,3 @@ for i in range(476, Num_forms):
             response = generate_form(prompt, data_form)
             # is_valid, input_form = check_generated_form(response, data)
             is_valid, input_form = check_generated_form(response, merged_data)
-
