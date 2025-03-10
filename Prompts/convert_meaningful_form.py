@@ -16,6 +16,9 @@ Tôi cần bạn tạo form có nhiều user, trong đó các user có mối qua
 ### Xử lý các trường hợp đặc biệt:
 - Nếu có 3 user trở lên, hãy đảm bảo mỗi user có vai trò rõ ràng với tiêu đề phù hợp.
 - Nếu thiếu thông tin, thay vì bỏ qua, hãy sử dụng placeholder `[#another]`.
+- Nếu cần tạo thêm thông tin ngoài danh mục tagname được cung cấp, tất cả các tagname mới sẽ là [#another], ngoại trừ phần mở đầu của biểu mẫu, được phép tạo câu:
+"Hôm nay, ngày [day]/[month]/[year], tại [place]"
+→ Đây là trường hợp duy nhất được tạo thêm.
 - Nếu có thông tin bổ sung hoặc không xác định, hãy đưa vào phần ghi chú cuối biểu mẫu.
 
 ---------------------
@@ -27,7 +30,7 @@ Họ và tên: [use1_full_name]
 năm sinh: [user1_dob_year]
 địa chỉ: [user1_current_address]
 số CCCD: [user1_id_number]
-ngày cấp của CCCD: [user1_id_issue_day]/[user1_id_issue_month]/[user1_id_issue_year]
+ngày cấp của CCCD: [user1_id_issue_date]
 
 2. Người làm thủ tục
 Họ và tên: [user2_full_name]
@@ -38,12 +41,12 @@ Nơi cấp: [user2_id_issue_place]
 Output:
 ```
 GIẤY KHAI ĐĂNG KÝ XE (Vehicle registation declaration)
-A. PHẦN CHỦ XE TỰ KÊ KHAI (self declaration vehicle owner’s)
+A. PHẦN CHỦ XE TỰ KÊ KHAI (self declaration vehicle owner's license)
 Tên chủ xe : [use1_full_name]
 Năm sinh: [user1_dob_year]
 Địa chỉ :  [user1_current_address]
 Số CCCD của chủ xe: [user1_id_number]
-cấp ngày [user1_id_issue_day]/[user1_id_issue_month]/[user1_id_issue_year]
+cấp ngày [user1_id_issue_date]
 Tên người làm thủ tục: [user2_full_name]
 Số CCCD/CMND/Hộ chiếu của người làm thủ tục [user2_id_number]
 Nơi cấp: [user2_id_issue_place]
@@ -55,33 +58,33 @@ Input:
 ```
 1. Chủ hộ  
 Họ và tên: [user1_full_name]  
-Năm sinh: [user1_dob_year]  
-Địa chỉ thường trú: [user1_address]  
+Ngày sinh: [user1_dob]  
+Địa chỉ thường trú: [user1_current_address]  
 Số CCCD: [user1_id_number]  
 
 2. Người ủy quyền  
 Họ và tên: [user2_full_name]  
 Số CCCD: [user2_id_number]  
-Quan hệ với chủ hộ: [#another]
+Quan hệ với bên ủy quyền: [#another]
 Nội dung ủy quyền: [#another]
 ```
 Output:
 ```
 GIẤY ỦY QUYỀN  
-Hôm nay, ngày [day]/[month]/[year], tại [#location], chúng tôi gồm:  
+Hôm nay, ngày [day]/[month]/[year], tại [place], chúng tôi gồm:  
 
 1. Bên ủy quyền (Chủ hộ):  
 Họ và tên: [user1_full_name]  
-Năm sinh: [user1_dob_year]  
-Địa chỉ thường trú: [user1_address]  
+Ngày sinh: [user1_dob]  
+Địa chỉ thường trú: [user1_current_address]  
 Số CCCD: [user1_id_number]  
 
 2. Bên được ủy quyền:  
 Họ và tên: [user2_full_name]  
 Số CCCD: [user2_id_number]  
-Quan hệ với bên ủy quyền: [user2_relation]  
+Quan hệ với bên ủy quyền: [#another]  
 
-Nội dung ủy quyền: [user2_authorize_content]  
+Nội dung ủy quyền: [#another]  
 
 Giấy ủy quyền này được lập thành 02 bản có giá trị như nhau, mỗi bên giữ một bản để thực hiện.  
 ```
@@ -91,18 +94,18 @@ Input:
 ```
 1. Người bán
 Họ và tên: [user1_full_name]  
-Năm sinh: [user1_dob_year]  
-Địa chỉ thường trú: [user1_address]  
+Ngày sinh: [user1_dob]  
+Địa chỉ thường trú: [user1_current_address]  
 Số CCCD: [user1_id_number]  
-Ngày cấp: [user1_id_issue_day]/[user1_id_issue_month]/[user1_id_issue_year]  
+Ngày cấp: [user1_id_issue_date]
 Nơi cấp: [user1_id_issue_place]  
 
 2. Người mua  
 Họ và tên: [user2_full_name]  
-Năm sinh: [user2_dob_year]  
-Địa chỉ thường trú: [user2_address]  
+Ngày sinh: [user2_dob]  
+Địa chỉ thường trú: [user2_current_address]  
 Số CCCD: [user2_id_number]  
-Ngày cấp: [user2_id_issue_day]/[user2_id_issue_month]/[user2_id_issue_year]  
+Ngày cấp: [user2_id_issue_date]
 Nơi cấp: [user2_id_issue_place]  
 
 3. Người làm chứng  
@@ -114,22 +117,22 @@ Output:
 ```
 HỢP ĐỒNG MUA BÁN TÀI SẢN  
 
-Hôm nay, ngày [day]/[month]/[year], tại [#location], chúng tôi gồm:  
+Hôm nay, ngày [day]/[month]/[year], tại [place], chúng tôi gồm:  
 
 **BÊN BÁN (Bên A):**  
 Họ và tên: [user1_full_name]  
-Năm sinh: [user1_dob_year]  
-Địa chỉ thường trú: [user1_address]  
+Ngày sinh: [user1_dob]  
+Địa chỉ thường trú: [user1_current_address]  
 Số CCCD: [user1_id_number]  
-Cấp ngày: [user1_id_issue_day]/[user1_id_issue_month]/[user1_id_issue_year]  
+Cấp ngày: [user1_id_issue_date]
 Nơi cấp: [user1_id_issue_place]  
 
 **BÊN MUA (Bên B):**  
 Họ và tên: [user2_full_name]  
-Năm sinh: [user2_dob_year]  
-Địa chỉ thường trú: [user2_address]  
+Ngày sinh: [user2_dob]  
+Địa chỉ thường trú: [user2_current_address]  
 Số CCCD: [user2_id_number]  
-Cấp ngày: [user2_id_issue_day]/[user2_id_issue_month]/[user2_id_issue_year]  
+Cấp ngày: [user2_id_issue_date]
 Nơi cấp: [user2_id_issue_place]  
 
 **NGƯỜI LÀM CHỨNG:**  
@@ -138,9 +141,9 @@ Số CCCD: [user3_id_number]
 Quan hệ với các bên: [#another]  
 
 Hai bên đồng ý thực hiện việc mua bán tài sản theo các điều khoản sau:  
-1. Loại tài sản: [#property_type]  
-2. Giá trị tài sản: [#property_value]  
-3. Hình thức thanh toán: [#payment_method]  
+1. Loại tài sản: [#another]  
+2. Giá trị tài sản: [#another]  
+3. Hình thức thanh toán: [#another]  
 
 Hợp đồng này được lập thành 03 bản, mỗi bên giữ một bản, có giá trị pháp lý như nhau.  
 ```
@@ -152,7 +155,7 @@ Input:
 Họ và tên: [user1_full_name]
 Dân tộc: [user1_ethnicity]
 Ngày sinh: [user1_dob]
-Nơi cư trú: [user1_address]
+Nơi cư trú: [user1_current_address]
 Quan hệ với người được khai sinh: [#another]
 Giấy tờ tùy thân: [user1_id_number]
 Quốc tịch: [user1_nationality]
@@ -164,7 +167,7 @@ Nguyên nhân chết: [#another]
 Quốc tịch: [user2_nationality]
 Họ và tên: [user2_full_name]
 Dân tộc: [user2_ethnicity]
-Ngày mất: [user2_death_day]/[user2_death_month]/[user2_death_year]
+Ngày mất: [#another]
 Ngày sinh: [user2_dob]
 Giới tính: [user2_gender]
 ```
@@ -174,14 +177,14 @@ TRÍCH LỤC KHAI TỬ
 
 Số: …/TLKT
 
-Hôm nay, ngày [day]/[month]/[year], tại [#place], chúng tôi tiến hành trích lục khai tử như sau:
+Hôm nay, ngày [day]/[month]/[year], tại [place], chúng tôi tiến hành trích lục khai tử như sau:
 
 **I. THÔNG TIN NGƯỜI KHAI TỬ (Cha/Mẹ hoặc người thân thích):**
 
 Họ và tên: [user1_full_name]
 Dân tộc: [user1_ethnicity]
 Ngày sinh: [user1_dob]
-Nơi cư trú: [user1_address]
+Nơi cư trú: [user1_current_address]
 Quan hệ với người chết: [user1_relation]
 Giấy tờ tùy thân: [user1_id_number]
 Quốc tịch: [user1_nationality]
@@ -192,11 +195,11 @@ Họ và tên: [user2_full_name]
 Dân tộc: [user2_ethnicity]
 Ngày sinh: [user2_dob]
 Giới tính: [user2_gender]
-Nơi cư trú cuối cùng: [user2_last_address]
+Nơi cư trú cuối cùng: [#another]
 Quốc tịch: [user2_nationality]
 Giấy tờ tùy thân: [user2_id_number]
-Ngày mất: [user2_death_day]/[user2_death_month]/[user2_death_year]
-Nguyên nhân chết: [user2_death_reason]
+Ngày mất: [user2_death_date]
+Nguyên nhân chết: [#another]
 
 **III. GHI CHÚ:**
 
@@ -216,7 +219,7 @@ Ngày sinh: [user1_dob]
 
 2. Người làm đơn
 Dân tộc: [user2_ethnicity]
-Nơi cư trú: [user2_address]
+Nơi cư trú: [user2_current_address]
 Họ và tên: [user2_full_name]
 Ngày sinh: [user2_dob]
 Quốc tịch: [user2_nationality]
@@ -226,14 +229,14 @@ Quan hệ với người liên quan: [#another]
 3. Người được khai sinh
 Họ và tên: [user3_full_name]
 Giấy khai sinh: [user3_birth_certificate]
-Nơi cư trú: [user3_address]
+Nơi cư trú: [user3_current_address]
 Giới tính: [user3_gender]
 ```
 Output:
 ```
 ĐƠN TỐ CÁO
 
-Kính gửi:  [#receiving_authority]
+Kính gửi:  [#another]
 
 Hôm nay, ngày [day]/[month]/[year], tôi/chúng tôi là:
 
@@ -243,9 +246,9 @@ Họ và tên: [user1_full_name]
 Ngày sinh: [user1_dob]
 Dân tộc: [user1_ethnicity]
 Quốc tịch: [user1_nationality]
-Nơi cư trú: [user1_address]
+Nơi cư trú: [user1_current_address]
 Email: [#another]
-Quan hệ với người liên quan: [user1_relation]
+Quan hệ với người liên quan: [#another]
 
 Tôi/Chúng tôi làm đơn này để tố cáo hành vi vi phạm pháp luật của:
 
@@ -262,12 +265,12 @@ Liên quan đến:
 
 Họ và tên: [user3_full_name]
 Giới tính: [user3_gender]
-Nơi cư trú: [user3_address]
+Nơi cư trú: [user3_current_address]
 Giấy khai sinh (nếu có): [user3_birth_certificate]
 
 **IV. NỘI DUNG TỐ CÁO:**
 
-[#complaint_content] (Mô tả chi tiết hành vi vi phạm pháp luật bị tố cáo, thời gian, địa điểm xảy ra sự việc, hậu quả gây ra, các bằng chứng kèm theo (nếu có)).
+[#another] (Mô tả chi tiết hành vi vi phạm pháp luật bị tố cáo, thời gian, địa điểm xảy ra sự việc, hậu quả gây ra, các bằng chứng kèm theo (nếu có)).
 
 **V. ĐỀ NGHỊ:**
 
