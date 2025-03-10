@@ -7,7 +7,7 @@ from Config.config import Index
 
 # Folder addresses Data_x
 label_folder = f"DataX/Test/Label{Index}"
-input_folder = f"DataX/Test/Info{Index}"
+input_folder = f"DataX/Test/Input{Index}"
 output_folder = f"DataX/Test/Output{Index}"
 input_folders = [input_folder]
 

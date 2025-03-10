@@ -78,7 +78,7 @@ user_dict = {
         "Quốc tịch": "[user0_nationality]",
         "Nơi cư trú cuối cùng": "[#another]",
         "Giấy tờ tùy thân": "[user0_id_number]",
-        "Ngày mất": "[user0_death_day]/[user0_death_month]/[user0_death_year]",
+        "Ngày mất": "[user0_death_date]",
         "Nguyên nhân chết": "[#another]"
     },
     "Người ủy quyền": {
@@ -197,7 +197,6 @@ def replace_users_with_sorted(text):
     updated_text = re.sub(r'\[(user\d+)_(.*?)\]', replacer, text)
 
     return updated_text
-
 
 
 def generate_data_type_II(llm, number):
