@@ -27,7 +27,7 @@ user_dict = {
         "Giới tính": "[user0_gender]",
         "Dân tộc": "[user0_ethnicity]",
         "Quốc tịch": "[user0_nationality]",
-        "Nơi cư trú": "[user0_address]",
+        "Nơi cư trú": "[user0_current_address]",
         "Giấy tờ tùy thân": "[user0_id_number]",
         "Quan hệ với người liên quan": "[#another]",
         "Số điện thoại": "[#another]",
@@ -39,7 +39,7 @@ user_dict = {
         "Giới tính": "[user0_gender]",
         "Dân tộc": "[user0_ethnicity]",
         "Quốc tịch": "[user0_nationality]",
-        "Nơi cư trú": "[user0_address]",
+        "Nơi cư trú": "[user0_current_address]",
         "Giấy tờ tùy thân": "[user0_id_number]",
         "Quan hệ với người được giám hộ": "[#another]"
     },
@@ -49,7 +49,7 @@ user_dict = {
         "Giới tính": "[user0_gender]",
         "Dân tộc": "[user0_ethnicity]",
         "Quốc tịch": "[user0_nationality]",
-        "Nơi cư trú": "[user0_address]",
+        "Nơi cư trú": "[user0_current_address]",
         "Giấy khai sinh": "[user0_birth_certificate]"
     },
     "Cha/Mẹ": {
@@ -57,7 +57,7 @@ user_dict = {
         "Ngày sinh": "[user0_dob]",
         "Dân tộc": "[user0_ethnicity]",
         "Quốc tịch": "[user0_nationality]",
-        "Nơi cư trú": "[user0_address]",
+        "Nơi cư trú": "[user0_current_address]",
         "Giấy tờ tùy thân": "[user0_id_number]",
         "Quan hệ với người được khai sinh": "[#another]"
     },
@@ -67,7 +67,7 @@ user_dict = {
         "Giới tính": "[user0_gender]",
         "Dân tộc": "[user0_ethnicity]",
         "Quốc tịch": "[user0_nationality]",
-        "Nơi cư trú": "[user0_address]",
+        "Nơi cư trú": "[user0_current_address]",
         "Giấy tờ tùy thân": "[user0_id_number]"
     },
     "Người chết": {
@@ -78,7 +78,7 @@ user_dict = {
         "Quốc tịch": "[user0_nationality]",
         "Nơi cư trú cuối cùng": "[#another]",
         "Giấy tờ tùy thân": "[user0_id_number]",
-        "Ngày mất": "[user0_death_date]",
+        "Ngày mất": "[#another]",
         "Nguyên nhân chết": "[#another]"
     },
     "Người ủy quyền": {
@@ -87,7 +87,7 @@ user_dict = {
         "Giới tính": "[user0_gender]",
         "Dân tộc": "[user0_ethnicity]",
         "Quốc tịch": "[user0_nationality]",
-        "Nơi cư trú": "[user0_address]",
+        "Nơi cư trú": "[user0_current_address]",
         "Giấy tờ tùy thân": "[user0_id_number]",
         "Nội dung ủy quyền": "[#another]"
     },
@@ -101,7 +101,7 @@ user_dict = {
     "Chủ hộ": {
         "Họ và tên": "[user0_full_name]",
         "Số định danh cá nhân": "[user0_id_number]",
-        "Nơi cư trú": "[user0_address]",
+        "Nơi cư trú": "[user0_current_address]",
         "Giấy tờ tùy thân": "[user0_id_number]",
         "Quan hệ với người khai báo": "[#another]"
     },
@@ -118,7 +118,7 @@ user_dict = {
         "Giới tính": "[user0_gender]",
         "Dân tộc": "[user0_ethnicity]",
         "Quốc tịch": "[user0_nationality]",
-        "Nơi cư trú": "[user0_address]",
+        "Nơi cư trú": "[user0_current_address]",
         "Giấy tờ tùy thân": "[user0_id_number]",
         "Quan hệ với người được bảo lãnh": "[#another]"
     },
@@ -127,7 +127,7 @@ user_dict = {
         "Ngày sinh": "[user0_dob]",
         "Giới tính": "[user0_gender]",
         "Quốc tịch": "[user0_nationality]",
-        "Nơi cư trú": "[user0_address]",
+        "Nơi cư trú": "[user0_current_address]",
         "Giấy tờ tùy thân": "[user0_id_number]",
         "Nội dung chứng kiến": "[#another]"
     },
@@ -137,7 +137,7 @@ user_dict = {
         "Giới tính": "[user0_gender]",
         "Dân tộc": "[user0_ethnicity]",
         "Quốc tịch": "[user0_nationality]",
-        "Nơi cư trú": "[user0_address]",
+        "Nơi cư trú": "[user0_current_address]",
         "Giấy tờ tùy thân": "[user0_id_number]",
         "Quan hệ với người để lại di sản": "[#another]"
     },
