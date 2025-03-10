@@ -228,4 +228,4 @@ def generate_data_type_II(llm, number):
     
 
 
-# generate_data_type_II(gemini, 100)j
+generate_data_type_II(gemini, 50)

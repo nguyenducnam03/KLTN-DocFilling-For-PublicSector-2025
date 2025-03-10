@@ -11,6 +11,7 @@ Tôi cần bạn tạo form có nhiều user, trong đó các user có mối qua
 4. Giữ nguyên tagname mà tôi cung cấp trong nội dung (tagname không được thay đổi).
 5. Nội dung phải mang tính nghiệp vụ, hành chính, phù hợp với các loại giấy tờ khai báo, đăng ký.
 6. Diễn giải mối quan hệ giữa các user thành câu đầy đủ, không chỉ liệt kê đơn thuần.
+7. Không có quá nhiều khoảng cách giữa các dòng trong form.  
 
 ### Xử lý các trường hợp đặc biệt:
 - Nếu có 3 user trở lên, hãy đảm bảo mỗi user có vai trò rõ ràng với tiêu đề phù hợp.

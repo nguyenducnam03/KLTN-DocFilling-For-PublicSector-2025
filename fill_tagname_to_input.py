@@ -27,14 +27,9 @@ list_input_debug = ["input_125.txt", "data_167.txt", "data_198.txt", "data_22.tx
 # For filling just some form (Chỉ định chỉ điền một số form để test --> debugging)
 def filled_input_from_filled_form(input_folder, output_folder, process_folder):
     for index, filename in enumerate(os.listdir(output_folder)):
-        if index%1==0:
-            print(f"Process until {index}")
+        print(f"Process until {index}")
         if filename.endswith(".txt") :
             print(filename)
-            if filename == "data_125.txt":
-                continue
-            # else:
-            #     print("found")
             # Input - filled
             file_input_dir = input_folder + "/" + filename
             file_filled_dir = output_folder + "/" + filename
