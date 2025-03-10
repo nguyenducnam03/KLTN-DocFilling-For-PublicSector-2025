@@ -150,7 +150,7 @@ Input:
 1. Cha/Mẹ
 Họ và tên: [user1_full_name]
 Dân tộc: [user1_ethnicity]
-Ngày sinh: [user1_dob_year]
+Ngày sinh: [user1_dob]
 Nơi cư trú: [user1_address]
 Quan hệ với người được khai sinh: [#another]
 Giấy tờ tùy thân: [user1_id_number]
@@ -164,7 +164,7 @@ Quốc tịch: [user2_nationality]
 Họ và tên: [user2_full_name]
 Dân tộc: [user2_ethnicity]
 Ngày mất: [user2_death_day]/[user2_death_month]/[user2_death_year]
-Ngày sinh: [user2_dob_year]
+Ngày sinh: [user2_dob]
 Giới tính: [user2_gender]
 ```
 Output:
@@ -179,7 +179,7 @@ Hôm nay, ngày [day]/[month]/[year], tại [#place], chúng tôi tiến hành t
 
 Họ và tên: [user1_full_name]
 Dân tộc: [user1_ethnicity]
-Ngày sinh: [user1_dob_year]
+Ngày sinh: [user1_dob]
 Nơi cư trú: [user1_address]
 Quan hệ với người chết: [user1_relation]
 Giấy tờ tùy thân: [user1_id_number]
@@ -189,7 +189,7 @@ Quốc tịch: [user1_nationality]
 
 Họ và tên: [user2_full_name]
 Dân tộc: [user2_ethnicity]
-Ngày sinh: [user2_dob_year]
+Ngày sinh: [user2_dob]
 Giới tính: [user2_gender]
 Nơi cư trú cuối cùng: [user2_last_address]
 Quốc tịch: [user2_nationality]
@@ -204,6 +204,82 @@ Nguyên nhân chết: [user2_death_reason]
 
 Trích lục này được lập thành 02 bản, một bản lưu tại cơ quan đăng ký hộ tịch, một bản giao cho người khai tử.
 ```
+## Ví dụ:
+Input:
+```
+1. Người bị tố cáo
+Họ và tên: [user1_full_name]
+Giấy tờ tùy thân: [user1_id_number]
+Quốc tịch: [user1_nationality]
+Ngày sinh: [user1_dob]
+
+2. Người làm đơn
+Dân tộc: [user2_ethnicity]
+Nơi cư trú: [user2_address]
+Họ và tên: [user2_full_name]
+Ngày sinh: [user2_dob]
+Quốc tịch: [user2_nationality]
+Email: [#another]
+Quan hệ với người liên quan: [#another]
+
+3. Người được khai sinh
+Họ và tên: [user3_full_name]
+Giấy khai sinh: [user3_birth_certificate]
+Nơi cư trú: [user3_address]
+Giới tính: [user3_gender]
+```
+Output:
+```
+ĐƠN TỐ CÁO
+
+Kính gửi:  [#receiving_authority]
+
+Hôm nay, ngày [day]/[month]/[year], tôi/chúng tôi là:
+
+**I. NGƯỜI LÀM ĐƠN TỐ CÁO:**
+
+Họ và tên: [user1_full_name]
+Ngày sinh: [user1_dob]
+Dân tộc: [user1_ethnicity]
+Quốc tịch: [user1_nationality]
+Nơi cư trú: [user1_address]
+Email: [#another]
+Quan hệ với người liên quan: [user1_relation]
+
+Tôi/Chúng tôi làm đơn này để tố cáo hành vi vi phạm pháp luật của:
+
+**II. NGƯỜI BỊ TỐ CÁO:**
+
+Họ và tên: [user2_full_name]
+Ngày sinh: [user2_dob]
+Quốc tịch: [user2_nationality]
+Giấy tờ tùy thân: [user2_id_number]
+
+Liên quan đến:
+
+**III. NGƯỜI ĐƯỢC KHAI SINH (Nếu có liên quan):**
+
+Họ và tên: [user3_full_name]
+Giới tính: [user3_gender]
+Nơi cư trú: [user3_address]
+Giấy khai sinh (nếu có): [user3_birth_certificate]
+
+**IV. NỘI DUNG TỐ CÁO:**
+
+[#complaint_content] (Mô tả chi tiết hành vi vi phạm pháp luật bị tố cáo, thời gian, địa điểm xảy ra sự việc, hậu quả gây ra, các bằng chứng kèm theo (nếu có)).
+
+**V. ĐỀ NGHỊ:**
+
+[#complaint_request] (Đề nghị cơ quan có thẩm quyền xem xét, giải quyết theo quy định của pháp luật).
+
+Tôi/Chúng tôi xin cam đoan những nội dung tố cáo trên là đúng sự thật và chịu trách nhiệm trước pháp luật về những gì đã trình bày.
+
+Kính mong nhận được sự quan tâm và giải quyết của Quý cơ quan.
+
+                                                                        Người làm đơn
+                                                                        (Ký và ghi rõ họ tên)
+```
+
 -----------------
 
 ## CÁCH SỬ DỤNG:
