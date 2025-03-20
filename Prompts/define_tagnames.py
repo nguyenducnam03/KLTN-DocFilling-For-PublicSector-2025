@@ -363,11 +363,7 @@ Tôi xin cam đoan những thông tin trên là đúng sự thật./.
            Làm tại [place], ngày [day] tháng [month] năm [year]
 ```
 
-<<<<<<< HEAD
-## Biểu mẫu: 
-=======
 ## Biểu mẫu:
->>>>>>> NDN
 Đầu vào:
 ```
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -447,11 +443,7 @@ Cơ quan cấp:..........	 Có giá trị đến ngày:........../........../...
 16. Nội dung đề nghị (2):..........
 17. Họ và tên chủ hộ:..........18. Quan hệ với chủ hộ:..........
 19. Số định danh cá nhân/ CMND của chủ hộ:..........
-<<<<<<< HEAD
-```									
-=======
 ```
->>>>>>> NDN
 Đầu ra:
 ```
 TỜ KHAI THAY ĐỔI THÔNG TIN CƯ TRÚ

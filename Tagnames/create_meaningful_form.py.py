@@ -6,7 +6,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from Prompts.convert_meaningful_form import create_multi_user_prompt
+from Prompts.create_meaningful_form import create_multi_user_prompt
 from Config.LLM import gemini
 from Config.config import Index
 
@@ -57,7 +57,7 @@ user_dict = {
         "Ngày sinh": "[user0_dob]",
         "Dân tộc": "[user0_ethnicity]",
         "Quốc tịch": "[user0_nationality]",
-        "Nơi cư trú": "[user0_current_address]",
+        "Địa chỉ thường trú": "[user0_permanent_address]",
         "Giấy tờ tùy thân": "[user0_id_number]",
         "Quan hệ với người được khai sinh": "[#another]"
     },
@@ -83,7 +83,7 @@ user_dict = {
     },
     "Người ủy quyền": {
         "Họ và tên": "[user0_full_name]",
-        "Ngày sinh": "[user0_dob_year]",
+        "Ngày sinh": "[user0_dob]",
         "Giới tính": "[user0_gender]",
         "Dân tộc": "[user0_ethnicity]",
         "Quốc tịch": "[user0_nationality]",
@@ -96,7 +96,7 @@ user_dict = {
         "Chức vụ": "[#another]",
         "Cơ quan/tổ chức": "[#another]",
         "Giấy tờ tùy thân": "[user0_id_number]",
-        "Địa chỉ": "[user0_current_address]"
+        "Địa chỉ thường trú": "[user0_permanent_address]"
     },
     "Chủ hộ": {
         "Họ và tên": "[user0_full_name]",
@@ -107,7 +107,7 @@ user_dict = {
     },
     "Người thân": {
         "Họ và tên": "[user0_full_name]",
-        "Ngày sinh": "[user0_dob_year]",
+        "Ngày sinh": "[user0_dob]",
         "Quan hệ với người khai báo": "[#another]",
         "Giấy tờ tùy thân": "[user0_id_number]",
         "Nơi cư trú": "[user0_current_address]"
@@ -141,10 +141,17 @@ user_dict = {
         "Giấy tờ tùy thân": "[user0_id_number]",
         "Quan hệ với người để lại di sản": "[#another]"
     },
+    "Chủ xe": {
+        "Họ và tên": "[user0_full_name]",
+        "năm sinh": "[user0_dob_year]",
+        "địa chỉ": "[user0_current_address]",
+        "số CCCD": "[user0_id_number]",
+        "ngày cấp của CCCD": "[user0_id_issue_date]",
+    },
 }
 
 
-def get_random_users(user_dict, min_users=2, max_users=3):
+def get_random_users(user_dict, min_users=1, max_users=3):
     selected_users = random.sample(list(user_dict.keys()), random.randint(min_users, max_users))
     result = []
     
@@ -155,7 +162,7 @@ def get_random_users(user_dict, min_users=2, max_users=3):
         if 'Họ và tên' not in selected_tagnames:
             selected_tagnames.insert(0, 'Họ và tên')
         
-        user_str = f"{idx}. {user}"  # User type with increasing index
+        user_str = f"{idx}. {user}"
         for tag in selected_tagnames:
             tagname = re.sub('user0', f'user{idx}', user_data[tag])
             user_str += f"\n{tag}: {tagname}"
@@ -201,7 +208,7 @@ def replace_users_with_sorted(text):
 
 def generate_data_type_II(llm, number):
     
-    for i in range(number):
+    for i in range(0, number):
         file_name = f"data_{i}.txt"
         input_path = f"{input_folder}/{file_name}"
         label_path = f"{label_folder}/{file_name}"
@@ -228,4 +235,4 @@ def generate_data_type_II(llm, number):
     
 
 
-generate_data_type_II(gemini, 50)
+generate_data_type_II(gemini, 200)

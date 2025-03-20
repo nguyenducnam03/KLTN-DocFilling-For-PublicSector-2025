@@ -286,10 +286,10 @@ def similarity_result_two_folders(folder1, folder2):
             similarity_result_forms_detail[index_result].append(similarity_result_detail)
             # Process to get output folder, label folder
             # Now, folder 1 is label, folder 2 is llm_filled
-            label_folder = f"{root_folder}/Label{Output_num}"
+            label_folder = f"{root_folder}/Label{Index}"
             output_folder = re.sub(r"\\Processed_Output\\Differents$", "", folder2)
             # input_folder = re.sub(r"Label", r"Input", label_folder)
-            input_folder = f"{root_folder}/Input{Output_num}"
+            input_folder = f"{root_folder}/Input{Index}"
             # Print testing
             # print(label_folder)
             # print(output_folder)
