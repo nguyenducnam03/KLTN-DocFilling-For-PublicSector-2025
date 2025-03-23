@@ -15,7 +15,7 @@ Hãy tạo một biểu mẫu hành chính công (như tờ khai, giấy đăng 
 
 ### II.1. Loại biểu mẫu
 
-- Loại biểu mẫu (form_type): Loại biểu mẫu cần tạo (ví dụ: "Tờ khai Căn cước công dân", "Đơn xin tạm trú", "Giấy đăng ký xe", ...).
+- Loại biểu mẫu (form_name): Loại biểu mẫu cần tạo (ví dụ: "Tờ khai Căn cước công dân", "Đơn xin tạm trú", "Giấy đăng ký xe", ...).
 
 - Mục đích biểu mẫu (form_purpose): Mục đích của biểu mẫu (ví dụ: "Cấp mới", "Cấp lại", "Gia hạn", "Thay đổi thông tin", ...).
 
@@ -31,7 +31,7 @@ Hãy tạo một biểu mẫu hành chính công (như tờ khai, giấy đăng 
 
 - Họ và tên (userX_full_name): Họ và tên đầy đủ như trên giấy tờ tùy thân. Ví dụ: Nguyễn Văn A.
 
-- Ngày tháng năm sinh (userX_dob_day, userX_dob_month, userX_dob_year): Ví dụ: 15/08/1995.
+- Ngày tháng năm sinh (userX_dob_day, userX_dob_month, userX_dob_year hoặc userX_dob): Ví dụ: 15/08/1995.
 
 - Giới tính (userX_gender): Chọn Nam, Nữ hoặc Khác.
 
@@ -85,7 +85,7 @@ Liên kết thông tin giữa các người dùng : Các thông tin giữa các 
 Input:
 ```
 Hãy tạo một biểu mẫu hành chính công với các yêu cầu sau:
-- **Loại biểu mẫu**: Đơn xin tạm trú
+- **Tên biểu mẫu**: Đơn xin tạm trú
 - **Mục đích**: Đăng ký tạm trú cho hộ gia đình
 - **Số lượng người**: 4 người
 - **Quan hệ giữa các người trong biểu mẫu**: Thành viên gia đình
@@ -129,7 +129,7 @@ Người làm đơn(Ký và ghi rõ họ tên)
 Input:
 ```
 Hãy tạo một biểu mẫu hành chính công với các yêu cầu sau:
-- **Loại biểu mẫu**: Cấp đổi thẻ căn cước
+- **Tên biểu mẫu**: Cấp đổi thẻ căn cước
 - **Mục đích**: Cấp đổi CCCD do hư hỏng
 - **Số lượng người**: 1 người
 - **Quan hệ giữa các người trong biểu mẫu**: Không áp dụng
@@ -165,7 +165,7 @@ Người làm đơn(Ký và ghi rõ họ tên)
 ## Input của tôi:
 ```
 Hãy tạo một biểu mẫu hành chính công với các yêu cầu sau:
-- **Loại biểu mẫu**: {form_type}
+- **Tên biểu mẫu**: {form_name}
 - **Mục đích**: {form_purpose}
 - **Số lượng người**: {num_users} người
 - **Quan hệ giữa các người trong biểu mẫu**: {relationship_between_users}
@@ -175,80 +175,81 @@ Hãy tạo một biểu mẫu hành chính công với các yêu cầu sau:
 
 ### Output mong muốn:
 ```
-(Tôi sẽ tạo form phù hợp dựa trên input của bạn)
+Tôi sẽ tạo biểu mẫu phù hợp dựa trên input của bạn. Chỉ tạo biểu mẫu, không kèm theo giải thích, hướng dẫn hoặc ghi chú.
 ```
 """
 
 residence_indentification_data_generator_prompt = """
 # **Prompt tạo dữ liệu đầu vào tự động**
 
-Hãy tạo một cấu trúc dữ liệu dạng dictionary chứa các thông tin sau để tạo biểu mẫu hành chính công. Dữ liệu phải đa dạng và hợp lý theo từng loại biểu mẫu.  
+Hãy tạo ra kết quả chứa các thông tin sau để tạo biểu mẫu hành chính công. Dữ liệu phải đa dạng và hợp lý theo từng loại biểu mẫu, dựa trên giá trị của biến **`form_name`** mà người dùng cung cấp.  
 
 ## **Thông tin cần có**  
 
-### 1. **Loại biểu mẫu** (`form_type`)  
-- Nhận giá trị từ input do người dùng cung cấp.  
+### 1. **Loại biểu mẫu** (`form_name`)  
+- Nhận giá trị từ input `{form_name}` do người dùng cung cấp.  
 
 ### 2. **Mục đích biểu mẫu** (`form_purpose`)  
-- Các mục đích phù hợp với loại biểu mẫu, ví dụ:  
+- Các mục đích hợp lý theo loại biểu mẫu:  
   - **Hộ chiếu**: "Cấp mới", "Cấp lại", "Gia hạn", "Thay đổi thông tin".  
   - **Căn cước công dân**: "Cấp mới", "Cấp đổi", "Cấp lại do mất".  
   - **Tạm trú**: "Đăng ký mới", "Gia hạn tạm trú".  
+- Nếu không có yêu cầu cụ thể, chọn mục đích phổ biến nhất cho loại biểu mẫu.  
 
 ### 3. **Số lượng người trong biểu mẫu** (`num_users`)  
-- Tùy vào loại biểu mẫu, có thể là 1 người hoặc nhiều người.  
-- Ví dụ:  
-  - "Đơn xin cấp hộ chiếu" thường là 1 người.  
-  - "Đăng ký tạm trú hộ gia đình" có thể nhiều người.  
+Xác định số lượng user dựa vào {form_name}.
+- **1 người** nếu biểu mẫu chỉ áp dụng cho cá nhân (ví dụ: Cấp hộ chiếu, căn cước công dân, tạm trú cá nhân).  
+- **2 người** nếu biểu mẫu liên quan đến cả người nộp đơn và người giám hộ (ví dụ: Cấp hộ chiếu cho trẻ em dưới 14 tuổi).  
+- **Nhiều người** nếu biểu mẫu áp dụng cho nhóm hoặc hộ gia đình (ví dụ: Đăng ký tạm trú cho cả hộ). 
 
 ### 4. **Quan hệ giữa các người trong biểu mẫu** (`relationship_between_users`)  
-- Chỉ có giá trị nếu `num_users > 1`.  
-- Ví dụ: "Thành viên gia đình", "Cùng công ty", "Bạn bè", ...  
+- Nếu `num_users = 1`, ghi là `"Không áp dụng"`.  
+- Nếu `num_users > 1`, xác định quan hệ hợp lý:  
+  - "Thành viên gia đình" (hộ gia đình).  
+  - "Cùng công ty" (nhóm lao động).  
+  - "Bạn bè", "Đồng nghiệp",... nếu phù hợp.  
 
 ### 5. **Thông tin cần có trong biểu mẫu** (`form_info`)  
-Xác định các mục thông tin có trong biểu mẫu, đảm bảo đa dạng theo từng loại:  
+Xác định các trường thông tin hợp lý theo từng loại biểu mẫu:  
 - **Thông tin cá nhân** (họ tên, ngày sinh, giới tính, quốc tịch).  
-- **Giấy tờ tùy thân** (CMND/CCCD, hộ chiếu cũ nếu có).  
+- **Giấy tờ tùy thân** (CMND/CCCD, hộ chiếu, thị thực nếu có).  
 - **Địa chỉ cư trú** (thường trú, tạm trú).  
 - **Thông tin liên hệ** (số điện thoại, email nếu cần).  
-- **Thông tin bổ sung** (lý do xin cấp đổi, thời gian hiệu lực, ...).  
+- **Thông tin bổ sung** (lý do xin cấp đổi, thời gian hiệu lực,...).  
+- Nếu người dùng có yêu cầu riêng (`request`), phải phản ánh điều đó vào `form_info`.  
 
-#### **Quy tắc ghi dữ liệu**  
-- **Ngày sinh**:  
-  - Dạng `userX_dob_day/userX_dob_month/userX_dob_year` hoặc `userX_dob`.  
-- **Địa chỉ**:  
-  - Chỉ lấy thường trú hoặc cả thường trú + tạm trú tùy loại biểu mẫu.  
-- **Giấy tờ tùy thân**:  
-  - Nếu có hộ chiếu cũ thì bổ sung mục thông tin hộ chiếu cũ.  
+#### **Cách ghi dữ liệu**
+- Nếu muốn sinh tất cả tagname trong một nhóm, chỉ cần ghi tên nhóm:  
+  - `"Thông tin cá nhân"` (bao gồm họ tên, ngày sinh, giới tính,...).  
+  - `"Giấy tờ tùy thân (chỉ CMND/CCCD)"` nếu chỉ muốn một phần.  
+- Nếu `request` yêu cầu cụ thể (ví dụ: ngày sinh theo `userX_dob`), phải phản ánh vào output.  
 
 ### 6. **Định dạng biểu mẫu** (`form_format`)  
-- Quy định cách trình bày, giọng văn, và cấu trúc:  
+- Cách trình bày, giọng văn, cấu trúc:  
   - "Ngắn gọn", "Chi tiết".  
   - "Trang trọng", "Dễ hiểu".  
-  - "Đánh số thứ tự", "Có checkbox", ...  
+  - "Đánh số thứ tự", "Không đánh số thứ tự".  
 
 ---
-
 ## **Ví dụ đầu ra mong muốn**  
-
-```python
-{
-    'form_type': 'Cấp hộ chiếu phổ thông',
-    'form_purpose': 'Cấp mới hộ chiếu',
-    'num_users': 1,
-    'relationship_between_users': 'Không áp dụng',
-    'form_info': 'Thông tin cá nhân(ngày sinh viết theo định dạng `user1_dob`), giấy tờ tùy thân (CMND/CCCD), địa chỉ cư trú(chỉ lấy địa chỉ thường trú), thông tin hộ chiếu cũ (nếu có)',
-    'form_format': 'Chi tiết, Trang trọng, Đánh số thứ tự'
-}
+```
+- 'form_name': 'Cấp hộ chiếu phổ thông cho trẻ dưới 14 tuôie',
+- 'form_purpose': 'Cấp mới hộ chiếu',
+- 'num_users': 1,
+- 'relationship_between_users': 'Không áp dụng',
+- 'form_info': 'Thông tin cá nhân(ngày sinh viết theo định dạng `userX_dob`), giấy tờ tùy thân (CMND/CCCD), địa chỉ cư trú(chỉ lấy địa chỉ thường trú), thông tin hộ chiếu cũ (nếu có)',
+- 'form_format': 'Chi tiết, Trang trọng, Đánh số thứ tự'
+```
 
 ---
 ## Input của tôi:
 ```
-{form_type}
+Tên form: {form_name}
+Yêu cầu thêm về thông tin có trong form: {request}
 ```
 ## Output mong muốn:
 ```
-(Tôi sẽ tạo form phù hợp dựa trên input của bạn)
+Tôi sẽ tạo form phù hợp dựa trên input của bạn. Chỉ tạo biểu mẫu, không kèm theo giải thích, hướng dẫn hoặc ghi chú.
 ```
 """
 
@@ -258,116 +259,128 @@ create_study_form_prompt = """
 Hãy tạo một **biểu mẫu liên quan đến học tập**, trong đó mỗi trường dữ liệu phải **rõ ràng, chính xác** và đảm bảo **dễ hiểu** cho người dùng.  
 Mỗi trường phải được mô tả cụ thể với hướng dẫn điền thông tin để đảm bảo dữ liệu nhập vào **phù hợp với thực tế**.
 
-## **1. Thông tin cá nhân**
-- **Họ và tên** (`[full_name]`):  
-  - Họ và tên đầy đủ như trên giấy tờ tùy thân.  
-  - Còn gọi là: **Tên đầy đủ**, **Họ tên chính thức**.  
-  - **Ví dụ**: Trần Thanh Bình.  
-- **Tên gọi khác (nếu có)** (`[alias_name]`):  
-  - Tên thường gọi, biệt danh hoặc tên khác ngoài tên chính thức.  
-  - **Ví dụ**: Bin, Tý.  
-- **Ngày tháng năm sinh** (`[dob]`):  
-  - Gồm `[dob_day]`, `[dob_month]`, `[dob_year]`.  
-  - Còn gọi là: **Ngày sinh nhật**, **Ngày chào đời**.  
-  - **Ví dụ**: 10/05/2002.  
-- **Giới tính** (`[gender]`):  
-  - Chọn Nam, Nữ hoặc Khác nếu có quy định pháp lý.  
-  - Còn gọi là: **Phái**, **Giới tính sinh học**.  
-- **Số CMND/CCCD** (`[id_number]`):  
-  - Còn gọi là: **Mã định danh cá nhân**, **Số thẻ căn cước**.  
-  - **Ví dụ**: 0123456789.  
-- **Ngày cấp CMND/CCCD** (`[id_issue_date]`):  
-  - Gồm `[id_issue_day]`, `[id_issue_month]`, `[id_issue_year]`.  
-  - Còn gọi là: **Thời điểm cấp**, **Ngày phát hành thẻ**.  
-- **Nơi cấp CMND/CCCD** (`[id_issue_place]`):  
-  - **Ví dụ**: Công an TP Hà Nội.  
-- **Số điện thoại** (`[phone]`):  
-  - Ghi số di động chính xác để liên hệ.  
-  - **Ví dụ**: 0987654321.  
-- **Số điện thoại nhà (nếu có)** (`[phone_home]`):  
-  - **Ví dụ**: 024-3824-xxxx.  
-- **Email** (`[email]`):  
-  - Ghi email cá nhân hoặc trường cung cấp.  
-  - **Ví dụ**: sinhvienA@gmail.com.  
+# **Hướng dẫn tạo biểu mẫu học tập**
 
-## **2. Thông tin học tập**
-- **Tên lớp** (`[class]`):  
-  - Còn gọi là: **Lớp học**, **Lớp hiện tại**.  
-  - **Ví dụ**: 12A1, CNTT-K65.  
-- **Tên trường** (`[school]`):  
-  - Trường đang theo học.  
-  - **Ví dụ**: Đại học Bách Khoa Hà Nội.  
-- **Hiệu trưởng** (`[school_principal]`):  
-  - Người đứng đầu nhà trường.  
-  - **Ví dụ**: PGS.TS Nguyễn Văn B.  
-- **Khóa học** (`[course]`):  
-  - Ghi tên khóa học chính thức.  
-  - **Ví dụ**: Công nghệ thông tin K65.  
-- **Khoa** (`[faculty]`):  
-  - Khoa trực thuộc trường.  
-  - **Ví dụ**: Khoa Khoa học Máy tính.  
-- **Mã số sinh viên** (`[student_id_number]`):  
-  - Còn gọi là: **MSSV**, **ID Sinh viên**.  
-  - **Ví dụ**: 20201234.  
-- **Trình độ học vấn** (`[education_level]`):  
-  - Ghi rõ bậc học hiện tại.  
-  - **Ví dụ**: Đại học, Cao đẳng, Thạc sĩ.  
-- **Thời gian khóa học** (`[duration_of_course]`):  
-  - Số năm theo học theo chương trình đào tạo.  
-  - **Ví dụ**: 4 năm.  
-- **Ngày tốt nghiệp** (`[graduation_date]`):  
-  - Dự kiến hoặc ngày tốt nghiệp chính thức.  
-  - **Ví dụ**: 30/06/2026.  
-- **Bằng cấp đạt được** (`[degree]`):  
-  - Còn gọi là: **Văn bằng**, **Chứng chỉ tốt nghiệp**.  
-  - **Ví dụ**: Cử nhân Công nghệ thông tin.  
-- **Điểm trung bình (GPA)** (`[grade]`):  
-  - Điểm trung bình tích lũy theo thang điểm của trường.  
-  - **Ví dụ**: 3.8/4.0 hoặc 8.5/10.  
-- **Xếp loại học tập** (`[study_result_rating]`):  
-  - Còn gọi là: **Xếp hạng thành tích**, **Loại tốt nghiệp**.  
-  - **Ví dụ**: Giỏi, Xuất sắc.  
-- **Học kỳ** (`[semester]`):  
-  - Ghi rõ học kỳ đang theo học.  
-  - **Ví dụ**: Học kỳ 1, Năm 2.  
-- **Năm học** (`[school_year]`):  
-  - Ghi rõ niên khóa.  
-  - **Ví dụ**: 2023-2024.  
-- **Tên người hướng dẫn** (`[supervisor_name]`):  
-  - Dành cho sinh viên làm đồ án, nghiên cứu khoa học.  
-  - **Ví dụ**: TS. Lê Quang H.  
-- **Địa chỉ trường** (`[school_address]`):  
-  - Địa chỉ trụ sở chính của trường.  
-  - **Ví dụ**: Số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội.  
-- **Số điện thoại trường** (`[school_phone]`):  
-  - **Ví dụ**: 024-3623-xxxx.  
+Hãy tạo một biểu mẫu hành chính công liên quan đến lĩnh vực học tập (như đơn xin học bổng, giấy xác nhận sinh viên, tờ khai tốt nghiệp,...) trong đó mỗi trường dữ liệu phải rõ ràng, chính xác và dễ hiểu cho người dùng.
 
-## **3. Thông tin quyết định học tập**
-- **Cơ quan quản lý trực tiếp** (`[organization]`):  
-  - Đơn vị quản lý sinh viên/học sinh.  
-  - **Ví dụ**: Bộ Giáo dục và Đào tạo.  
-- **Số quyết định liên quan** (`[decision_number]`):  
-  - Còn gọi là: **Số văn bản quyết định**.  
-  - **Ví dụ**: QĐ-1234/2024.  
-- **Ngày quyết định** (`[decision_day]`, `[decision_month]`, `[decision_year]`):  
-  - Ngày văn bản có hiệu lực.  
-  - **Ví dụ**: 15/07/2023.  
-- **Số quyết định cử đi học** (`[study_decision_number]`):  
-  - **Ví dụ**: QĐ-5678/2023.  
-- **Người ban hành quyết định** (`[decision_issuer]`):  
-  - Cá nhân/tổ chức đưa ra quyết định.  
-  - **Ví dụ**: Hiệu trưởng Đại học Quốc gia.  
+---
 
-## **4. Thông tin bổ sung**
-- **Nội dung yêu cầu** (`[request_content]`):  
-  - Lý do nộp đơn, đề xuất hoặc yêu cầu.  
-  - **Ví dụ**: Xin cấp lại thẻ sinh viên.  
-- **Lý do** (`[reason]`):  
-  - Giải thích nguyên nhân cụ thể.  
-  - **Ví dụ**: Thẻ sinh viên bị mất.  
-- **Kiến nghị, đề xuất** (`[suggestion]`):  
-  - Gửi đến cơ quan quản lý để xem xét.  
-  - **Ví dụ**: Đề xuất hỗ trợ cấp lại trong vòng 3 ngày.  
+## **I. Yêu cầu chung**
+
+1. Mỗi trường trong biểu mẫu phải gán với tagnames dưới dạng `[tag_name]`, trong đó `[tag_name]` là định danh của trường dữ liệu liên quan đến học tập.  
+2. Nội dung của form phải logic, phù hợp với thực tế và yêu cầu hành chính.  
+3. Nếu biểu mẫu áp dụng cho nhiều người, thông tin của các người trong form phải liên quan chặt chẽ (vd: sinh viên cùng lớp, giáo viên – học sinh, ...).  
+
+---
+
+## **II. Cách tạo form**
+
+### **II.1. Loại biểu mẫu**
+- **Loại biểu mẫu** (`[form_name]`): Tên biểu mẫu cần tạo.  
+  - **Ví dụ**: "Giấy xác nhận sinh viên", "Đơn xin cấp học bổng", "Phiếu điểm cá nhân".  
+- **Mục đích biểu mẫu** (`[form_purpose]`): Lý do sử dụng biểu mẫu.  
+  - **Ví dụ**: "Xác nhận đang theo học", "Xin miễn giảm học phí", "Cấp lại thẻ sinh viên".  
+
+### **II.2. Đối tượng sử dụng form**
+- **Số lượng người** (`[num_users]`): Số lượng người liên quan trong biểu mẫu.  
+  - **Ví dụ**: 1 người (đơn cá nhân), 2 người (sinh viên – giảng viên), nhiều người (đơn tập thể).  
+- **Quan hệ giữa các người trong biểu mẫu** (`[relationship_between_users]`):  
+  - **Ví dụ**: "Sinh viên – Cố vấn học tập", "Nhóm sinh viên cùng lớp", "Giảng viên hướng dẫn – Sinh viên".  
+
+### **II.3. Thông tin trong biểu mẫu**
+#### **1. Thông tin cá nhân**
+- **Họ và tên** (`[full_name]`)  
+- **Tên gọi khác (nếu có)** (`[alias_name]`)  
+- **Ngày sinh** (`[dob]`, hoặc `[dob_day]`, `[dob_month]`, `[dob_year]`)  
+- **Giới tính** (`[gender]`)  
+- **Số CMND/CCCD** (`[id_number]`)  
+- **Ngày cấp CMND/CCCD** (`[id_issue_date]`)  
+- **Nơi cấp CMND/CCCD** (`[id_issue_place]`)  
+- **Số điện thoại** (`[phone]`)  
+- **Email** (`[email]`)  
+
+#### **2. Thông tin học tập**
+- **Tên lớp** (`[class]`)  
+- **Tên trường** (`[school]`)  
+- **Hiệu trưởng** (`[school_principal]`)  
+- **Khóa học** (`[course]`)  
+- **Khoa** (`[faculty]`)  
+- **Mã số sinh viên** (`[student_id_number]`)  
+- **Trình độ học vấn** (`[education_level]`)  
+- **Thời gian khóa học** (`[duration_of_course]`)  
+- **Ngày tốt nghiệp** (`[graduation_date]`)  
+- **Bằng cấp đạt được** (`[degree]`)  
+- **Điểm trung bình (GPA)** (`[grade]`)  
+- **Xếp loại học tập** (`[study_result_rating]`)  
+- **Học kỳ** (`[semester]`)  
+- **Năm học** (`[school_year]`)  
+- **Tên người hướng dẫn** (`[supervisor_name]`)  
+- **Địa chỉ trường** (`[school_address]`)  
+- **Số điện thoại trường** (`[school_phone]`)  
+
+#### **3. Thông tin quyết định học tập**
+- **Cơ quan quản lý trực tiếp** (`[organization]`)  
+- **Số quyết định liên quan** (`[decision_number]`)  
+- **Ngày quyết định** (`[decision_day]`, `[decision_month]`, `[decision_year]`)  
+- **Số quyết định cử đi học** (`[study_decision_number]`)  
+- **Người ban hành quyết định** (`[decision_issuer]`)  
+
+#### **4. Thông tin bổ sung**
+- **Nội dung yêu cầu** (`[request_content]`)  
+- **Lý do** (`[reason]`)  
+- **Kiến nghị, đề xuất** (`[suggestion]`)  
+
+---
+
+## **III. Định dạng và phong cách biểu mẫu**
+- **Kiểu trình bày** (`[form_format]`): "Ngắn gọn", "Chi tiết", "Đơn giản", "Chuẩn theo quy định nhà nước".  
+- **Giọng văn** (`[form_tone]`): "Trang trọng", "Hành chính", "Dễ hiểu cho mọi đối tượng".  
+- **Đánh số thứ tự** (`[include_numbering]`): Yes/No.  
+
+---
+
+## **IV. Quy tắc logic giữa các trường**
+- Các thông tin cá nhân phải đồng nhất với giấy tờ tùy thân.  
+- Nếu `num_users > 1`, phải xác định quan hệ giữa các người trong form.  
+- Các thông tin học tập phải phù hợp với chương trình đào tạo của trường.
+
+## Ví dụ:
+
+### Ví dụ 1:
+Input:
+```
+
+```
+Output:
+```
+```
+
+### Ví dụ 2:
+Input:
+```
+Hãy tạo một biểu mẫu liên quan tới học tập với các yêu cầu sau:
+
+```
+Output:
+```
+
+```
+
+## Input của tôi:
+```
+Hãy tạo một biểu mẫu liên quan tới học tập với các yêu cầu sau:
+- **Loại biểu mẫu**: {form_name}
+- **Mục đích**: {form_purpose}
+- **Số lượng người**: {num_users} người
+- **Quan hệ giữa các người trong biểu mẫu**: {relationship_between_users}
+- **Bao gồm các mục**: {form_info}
+- **Định dạng và phong cách biểu mẫu**: {form_format}
+```
+
+### Output mong muốn:
+```
+Tôi sẽ tạo biểu mẫu phù hợp dựa trên input của bạn. Chỉ tạo biểu mẫu, không kèm theo giải thích, hướng dẫn hoặc ghi chú.
+```
 """
 
 create_health_and_medical_form_prompt = """" 
