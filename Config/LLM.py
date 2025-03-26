@@ -15,6 +15,16 @@ gemini = GoogleGenerativeAI(
     google_api_key=gemini_key,
 )
 
+gemini2 = GoogleGenerativeAI(
+    model="gemini-2.0-flash",
+    timeout=None,
+    max_tokens=8192,
+    temperature=0.9,
+    top_k=30, 
+    top_p=0.7,
+    google_api_key=gemini_key,
+)
+
 embeddings = GoogleGenerativeAIEmbeddings(
     model="models/embedding-001", google_api_key=gemini_key
 )

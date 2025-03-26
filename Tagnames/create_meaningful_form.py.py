@@ -29,9 +29,6 @@ user_dict = {
         "Quốc tịch": "[user0_nationality]",
         "Nơi cư trú": "[user0_current_address]",
         "Giấy tờ tùy thân": "[user0_id_number]",
-        "Quan hệ với người liên quan": "[#another]",
-        "Số điện thoại": "[#another]",
-        "Email": "[#another]"
     },
     "Người giám hộ": {
         "Họ và tên": "[user0_full_name]",
@@ -41,7 +38,6 @@ user_dict = {
         "Quốc tịch": "[user0_nationality]",
         "Nơi cư trú": "[user0_current_address]",
         "Giấy tờ tùy thân": "[user0_id_number]",
-        "Quan hệ với người được giám hộ": "[#another]"
     },
     "Người được khai sinh": {
         "Họ và tên": "[user0_full_name]",
@@ -59,7 +55,6 @@ user_dict = {
         "Quốc tịch": "[user0_nationality]",
         "Địa chỉ thường trú": "[user0_permanent_address]",
         "Giấy tờ tùy thân": "[user0_id_number]",
-        "Quan hệ với người được khai sinh": "[#another]"
     },
     "Người bị tố cáo": {
         "Họ và tên": "[user0_full_name]",
@@ -103,12 +98,10 @@ user_dict = {
         "Số định danh cá nhân": "[user0_id_number]",
         "Nơi cư trú": "[user0_current_address]",
         "Giấy tờ tùy thân": "[user0_id_number]",
-        "Quan hệ với người khai báo": "[#another]"
     },
     "Người thân": {
         "Họ và tên": "[user0_full_name]",
         "Ngày sinh": "[user0_dob]",
-        "Quan hệ với người khai báo": "[#another]",
         "Giấy tờ tùy thân": "[user0_id_number]",
         "Nơi cư trú": "[user0_current_address]"
     },
@@ -120,7 +113,6 @@ user_dict = {
         "Quốc tịch": "[user0_nationality]",
         "Nơi cư trú": "[user0_current_address]",
         "Giấy tờ tùy thân": "[user0_id_number]",
-        "Quan hệ với người được bảo lãnh": "[#another]"
     },
     "Người chứng kiến": {
         "Họ và tên": "[user0_full_name]",
@@ -174,7 +166,7 @@ def get_random_users(user_dict, min_users=1, max_users=3):
 def create_meaningful_form(llm, data):
     prompt = PromptTemplate.from_template(create_multi_user_prompt)
     chain = prompt | llm | StrOutputParser()
-    response = chain.invoke({"input": data})
+    response = chain.invoke({"input": data, "seen_tagnames": "###"})
     return response
 
 def replace_users_with_sorted(text):

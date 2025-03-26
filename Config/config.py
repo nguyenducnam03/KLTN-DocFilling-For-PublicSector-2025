@@ -10,4 +10,4 @@
 # Label_Input_num = output_label_input_num
 Type = "Train"
 # Type = "Test"
-Index = 3
+Index = 1

@@ -25,7 +25,7 @@ Hãy tạo một biểu mẫu hành chính công (như tờ khai, giấy đăng 
 
 - Quan hệ giữa các người trong biểu mẫu (relationship_between_users): Quan hệ giữa các người trong biểu mẫu (ví dụ: "Thành viên gia đình", "Cùng công ty", "Bạn bè", ...).
 
-### II.3. Thông tin cần có trong form (form_info)
+### II.3. Thông tin thường có trong form (form_info)
 
 **Thông tin cá nhân:** Mô tả thông tin cá nhân mà bạn cần có trong biểu mẫu, dưới đây sẽ la một số thông tin thường xuất hiện trong biểu mẫu:
 
@@ -216,7 +216,7 @@ Xác định các trường thông tin hợp lý theo từng loại biểu mẫu
 - **Địa chỉ cư trú** (thường trú, tạm trú).  
 - **Thông tin liên hệ** (số điện thoại, email nếu cần).  
 - **Thông tin bổ sung** (lý do xin cấp đổi, thời gian hiệu lực,...).  
-- Nếu người dùng có yêu cầu riêng (`request`), phải phản ánh điều đó vào `form_info`.  
+- Nếu người dùng có yêu cầu riêng ({request}), phải phản ánh điều đó vào `form_info`.  
 
 #### **Cách ghi dữ liệu**
 - Nếu muốn sinh tất cả tagname trong một nhóm, chỉ cần ghi tên nhóm:  

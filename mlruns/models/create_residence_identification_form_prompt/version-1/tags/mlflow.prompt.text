@@ -1,0 +1,95 @@
+# **Hướng dẫn tạo biểu mẫu cư trú và giấy tờ tùy thân**
+
+Hãy tạo một biểu mẫu hành chính công (như tờ khai, giấy đăng ký, biên bản, đơn từ,...) trong đó mỗi trường dữ liệu phải rõ ràng, chính xác và dễ hiểu cho người dùng.
+
+## I. Yêu cầu chung
+
+1. Mỗi trường trong biểu mẫu phải gán với tagnames dưới dạng `userX_fieldname`, trong đó X là số thứ tự của người trong biểu mẫu (vd: `user1_full_name`, `user2_id_number`).
+
+2. Nội dung của form phải liên kết chặt chẽ, các trường dữ liệu phải logic và phù hợp với nhau.
+
+3. Form có thể áp dụng cho nhiều người, và nếu như vậy thì thông tin của các người trong form phải liên quan chặt chẽ (vd: thành viên gia đình, đồng nghiệp, ...).
+
+## II. Cách tạo form
+
+### II.1. Loại biểu mẫu
+
+- Loại biểu mẫu (form_name): Loại biểu mẫu cần tạo (ví dụ: "Tờ khai Căn cước công dân", "Đơn xin tạm trú", "Giấy đăng ký xe", ...).
+
+- Mục đích biểu mẫu (form_purpose): Mục đích của biểu mẫu (ví dụ: "Cấp mới", "Cấp lại", "Gia hạn", "Thay đổi thông tin", ...).
+
+### II.2. Đối tượng sử dụng form
+
+- Số lượng người (num_users): Số lượng người trong biểu mẫu (1, 2, hoặc nhiều người).
+
+- Quan hệ giữa các người trong biểu mẫu (relationship_between_users): Quan hệ giữa các người trong biểu mẫu (ví dụ: "Thành viên gia đình", "Cùng công ty", "Bạn bè", ...).
+
+### II.3. Thông tin cần có trong form (form_info)
+
+**Thông tin cá nhân:** Mô tả thông tin cá nhân mà bạn cần có trong biểu mẫu, dưới đây sẽ la một số thông tin thường xuất hiện trong biểu mẫu:
+
+- Họ và tên (userX_full_name): Họ và tên đầy đủ như trên giấy tờ tùy thân. Ví dụ: Nguyễn Văn A.
+
+- Ngày tháng năm sinh (userX_dob_day, userX_dob_month, userX_dob_year hoặc userX_dob): Ví dụ: 15/08/1995.
+
+- Giới tính (userX_gender): Chọn Nam, Nữ hoặc Khác.
+
+- Quốc tịch (userX_nationality): Ví dụ: Việt Nam, Hoa Kỳ.
+
+**Giấy tờ tùy thân:** Mô tả thông tin giấy tờ tùy thân mà bạn cần có trong biểu mẫu, dưới đây sẽ là một số thông tin thường xuất hiện trong biểu mẫu:
+
+- Số CMND/CCCD (userX_id_number): Ví dụ: 001203456789.
+
+- Ngày cấp CMND/CCCD (userX_id_issue_date): Có thể tách riêng userX_id_issue_day, userX_id_issue_month, userX_id_issue_year.
+
+- Nơi cấp CMND/CCCD (userX_id_issue_place): Ví dụ: Cục Cảnh sát Quản lý Hành chính về Trật tự Xã hội.
+
+- Số hộ chiếu (userX_passport_number): Ví dụ: C1234567.
+
+- Ngày hết hạn hộ chiếu (userX_passport_expiry_date).
+
+- Số thị thực (userX_visa_number): Ví dụ: V987654321.
+
+- Ngày hết hạn thị thực (userX_visa_expiry_date).
+
+**Địa chỉ cư trú (include_address):** Mô tả thông tin địa chỉ cư trú mà bạn cần có trong biểu mẫu, dưới đây sẽ là một số thông tin thường xuất hiện trong biểu mẫu:
+
+- Địa chỉ thường trú (userX_permanent_address): Ví dụ: 456 Lê Lợi, TP Hà Nội.
+
+- Địa chỉ hiện tại (userX_current_address): Ví dụ: 123 Nguyễn Trãi, Quận 1, TP Hồ Chí Minh.
+
+**Thông tin liên hệ (include_contact):** Mô tả thông tin liên hệ mà bạn cần có trong biểu mẫu, dưới đây sẽ là một số thông tin thường xuất hiện trong biểu mẫu:
+
+- Số điện thoại (userX_phone): Ví dụ: 0901234567.
+
+- Email (userX_email): Ví dụ: nguyenvana@example.com.
+
+**Thông tin bổ sung (include_additional_info):** Tùy theo nhu cầu, có thể thêm các thông tin khác nếu cần.
+
+### II.4. Định dạng và phong cách biểu mẫu(form_format)
+
+- Kiểu trình bày: Kiểu trình bày biểu mẫu (ví dụ: "Ngắn gọn", "Chi tiết", "Đơn giản", "Chuẩn theo quy định nhà nước").
+
+- Giọng văn: Giọng văn (ví dụ: "Trang trọng", "Hành chính", "Dễ hiểu cho mọi đối tượng").
+
+- Đánh số thứ tự: Có đánh số thứ tự các mục không? (Yes/No).
+
+### II.5. Quy tắc logic giữa các trường
+
+Liên kết thông tin giữa các người dùng : Các thông tin giữa các user có liên quan với nhau.
+
+## Input của tôi:
+```
+Hãy tạo một biểu mẫu hành chính công với các yêu cầu sau:
+- **Tên biểu mẫu**: {form_name}
+- **Mục đích**: {form_purpose}
+- **Số lượng người**: {num_users} người
+- **Quan hệ giữa các người trong biểu mẫu**: {relationship_between_users}
+- **Bao gồm các mục**: {form_info}
+- **Định dạng và phong cách biểu mẫu**: {form_format}
+```
+
+### Output mong muốn:
+```
+Tôi sẽ tạo biểu mẫu phù hợp dựa trên input của bạn. Chỉ tạo biểu mẫu, không kèm theo giải thích, hướng dẫn hoặc ghi chú.
+```

@@ -2,7 +2,7 @@ import sys
 import os
 import random
 import re
-import json
+import time
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from Prompts.create_meaningful_form2 import create_residence_identification_form_prompt, create_study_form_prompt, create_health_and_medical_form_prompt,\
                                             create_vehicle_driver_form_prompt, create_job_form_prompt, residence_indentification_data_generator_prompt
@@ -135,7 +135,7 @@ def generate_form(llm, number):
     expected_keys = {'form_name', 'form_purpose', 'num_users', 
                      'relationship_between_users', 'form_info', 'form_format'}
     
-    for i in range(number):
+    for i in range(86, number):
         file_name = f"data_{i}.txt"
         input_path = f"{input_folder}/{file_name}"
         label_path = f"{label_folder}/{file_name}"
@@ -144,25 +144,36 @@ def generate_form(llm, number):
         print(f"Processing file: {file_name}")
         form_name = random.choice(residence_identification_form_name)
 
-        # Kiểm tra data đến khi đúng định dạng mong muốn
         while True:
-            response, data = create_data(llm, form_name)
-            if set(data.keys()) == expected_keys:
-                break
+            try:
+                response, data = create_data(llm, form_name)
+                if set(data.keys()) == expected_keys:
+                    break
+            except Exception as e:
+                print(f"Error encountered: {e}. Retrying in 5 seconds...")
+                time.sleep(5)
+        
+        try:
+            label_form = create_meaningful_form(llm, data)
+            input_form = re.sub(r'\[([^\]]+)\]', '..........', label_form)
 
-        label_form = create_meaningful_form(llm, data)
-        input_form = re.sub(r'\[([^\]]+)\]', '..........', label_form)
+            # Write info file
+            with open(info_path, 'w', encoding="utf-8") as f:
+                f.write(response)
 
-        # Write info file
-        with open(info_path, 'w', encoding="utf-8") as f:
-            f.write(response)
+            # Write input file
+            with open(input_path, 'w', encoding='utf-8') as f:
+                f.write(input_form)
 
-        # Write input file
-        with open(input_path, 'w', encoding='utf-8') as f:
-            f.write(input_form)
+            # Write label file
+            with open(label_path, 'w', encoding='utf-8') as f:
+                f.write(label_form)
+        except Exception as e:
+            print(f"Error writing files for {file_name}: {e}. Retrying in 5 seconds...")
+            time.sleep(5)
 
-        # Write label file
-        with open(label_path, 'w', encoding='utf-8') as f:
-            f.write(label_form)
 
-generate_form(gemini2, 20)
+generate_form(gemini2, 200)
+
+
+
