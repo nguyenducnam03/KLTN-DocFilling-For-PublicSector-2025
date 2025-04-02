@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 residence_identification_template_prompt = """
 # Hướng dẫn: Biểu mẫu Cư trú và Giấy tờ tùy thân
 
@@ -2405,6 +2406,8 @@ tiền công khai thuế trực tiếp với cơ quan thuế)
 Đầu ra:
 """
 
+=======
+>>>>>>> NDN
 tagname_Nam_ver1_prompt = """
 Bạn có nhiệm vụ điền các tagnames vào các biểu mẫu theo định dạng userX_tagname.
 

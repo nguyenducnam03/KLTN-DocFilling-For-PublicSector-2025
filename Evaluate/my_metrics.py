@@ -1,14 +1,12 @@
 import re
 import os
-import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from Utils.text_processing import Text_Processing
 import pandas as pd
 from collections import Counter
 import json
-from Config.config import Index
+from Config.config import Data_num, Output_num, Type
 # Folde address
-root_folder = "DataX/Test/"
+root_folder = f"Temp\Data_{Data_num}\{Type}"
 
 def analyze_errors_type_1(error_list):
     """
@@ -32,7 +30,7 @@ def analyze_errors_type_2(error_list):
 def calculate_similarity(contextual1, contextual2, tagnames1, tagnames2, form1, form2, filename):
     # print("come here? 3")
     """
-    - Hàm kiểm tra độ tương đồng hai list tagname1 (label), tagname2(LLM-filled) - xét luôn userX.
+    - Hàm kiểm tra độ tương đồng hai list tagname1 (label), tagname2(LLM-filled)
     - Trả về các độ đo:
 
     + A1-A1: Count of correct matches in subset A.
@@ -78,7 +76,7 @@ def calculate_similarity(contextual1, contextual2, tagnames1, tagnames2, form1, 
     error_A1_A2, error_A1_B, error_B_A1 = [], [], []
     error_A1_A2_detail, error_A1_B_detail, error_B_A1_detail = [], [], []
     count_label = 0  # To track valid tagnames in subset_A
-    copy_contextual_input_dir = f"{root_folder}/Output{Index}/Copy_Contextual_Input/"+ filename + ".json"
+    copy_contextual_input_dir = f"{root_folder}/Output{Output_num}/Copy_Contextual_Input/"+ filename + ".json"
     # Read copy_contextual_input
     with open(copy_contextual_input_dir, "r", encoding="utf-8") as f:
         # print(copy_contextual_input_dir)
@@ -226,6 +224,7 @@ def calculate_similarity(contextual1, contextual2, tagnames1, tagnames2, form1, 
 
     return metrics, metrics_detail
 
+
 def print_tagnames(tagnames):
     print("======Tagnames======")
     for index, tagname in enumerate(tagnames):
@@ -256,22 +255,26 @@ def similarity_two_forms(form1, form2, filename):
     return similarity_percentage, similarity_percentage_detail
 
 
-def similarity_result_two_folders(folder1, folder2):
+def similarity_result_two_folders(label_folder1, output_folder2):
+    '''
+    label_folder1: label
+    output_folder2: output
+    '''
     print("come here? 1")
     similarity_result_forms = []
     similarity_result_forms_detail = []
     form_names = []
     index_result = 0
-    for index, filename in enumerate(os.listdir(folder1)):
+    for index, filename in enumerate(os.listdir(output_folder2)):
         if filename.endswith(".txt"):
             similarity_result_forms.append([])
             similarity_result_forms_detail.append([])
-            if (index)%5 == 0:
+            if (index+1)%5 == 0:
                 print("========= Index: ", index+1, "============", filename)
             # if filename == "49_00_TK1-TS.txt":
                 # print("debug")
-            file_dir_label_process = folder1 + "/" + filename
-            file_dir_output_process = folder2 + "/" + filename
+            file_dir_label_process = label_folder1 + "/" + filename
+            file_dir_output_process = output_folder2 + "/" + filename
             # Read
             text_label = Text_Processing().Read_txt_file(file_dir_label_process)
             text_predict = Text_Processing().Read_txt_file(file_dir_output_process)
@@ -286,10 +289,10 @@ def similarity_result_two_folders(folder1, folder2):
             similarity_result_forms_detail[index_result].append(similarity_result_detail)
             # Process to get output folder, label folder
             # Now, folder 1 is label, folder 2 is llm_filled
-            label_folder = f"{root_folder}/Label{Index}"
-            output_folder = re.sub(r"\\Processed_Output\\Differents$", "", folder2)
+            label_folder = f"{root_folder}/Label{Output_num}"
+            output_folder = re.sub(r"\\Processed_Output\\Differents$", "", output_folder2)
             # input_folder = re.sub(r"Label", r"Input", label_folder)
-            input_folder = f"{root_folder}/Input{Index}"
+            input_folder = f"{root_folder}/Input{Output_num}"
             # Print testing
             # print(label_folder)
             # print(output_folder)
@@ -299,17 +302,11 @@ def similarity_result_two_folders(folder1, folder2):
             file_dir_output = output_folder + "/" + filename
             file_dir_input = input_folder + "/" + filename
             # Create Make clickable hyperlinks for Excel 5 files
-            input_path = os.path.abspath(file_dir_input).replace("\\", "/")
-            output_path = os.path.abspath(file_dir_output).replace("\\", "/")
-            output_process_path = os.path.abspath(file_dir_output_process).replace("\\", "/")
-            label_path = os.path.abspath(file_dir_label).replace("\\", "/")
-            label_process_path = os.path.abspath(file_dir_label_process).replace("\\", "/")
-
-            file_dir_input_hyperlink = f'=HYPERLINK("{input_path}","{filename}")'
-            file_dir_output_hyperlink = f'=HYPERLINK("{output_path}","{filename}")'
-            file_dir_output_process_hyperlink = f'=HYPERLINK("{output_process_path}","{filename}")'
-            file_dir_label_hyperlink = f'=HYPERLINK("{label_path}","{filename}")'
-            file_dir_label_process_hyperlink = f'=HYPERLINK("{label_process_path}","{filename}")'
+            file_dir_input_hyperlink = f'=HYPERLINK("{os.path.abspath(file_dir_input).replace("\\", "/")}","{filename}")'
+            file_dir_output_hyperlink = f'=HYPERLINK("{os.path.abspath(file_dir_output).replace("\\", "/")}","{filename}")'
+            file_dir_output_process_hyperlink = f'=HYPERLINK("{os.path.abspath(file_dir_output_process).replace("\\", "/")}","{filename}")'
+            file_dir_label_hyperlink = f'=HYPERLINK("{os.path.abspath(file_dir_label).replace("\\", "/")}","{filename}")'
+            file_dir_label_process_hyperlink = f'=HYPERLINK("{os.path.abspath(file_dir_label_process).replace("\\", "/")}","{filename}")'
             # Add to form_names to store it
             form_names.append([file_dir_input_hyperlink, file_dir_output_hyperlink, file_dir_output_process_hyperlink, file_dir_label_hyperlink, file_dir_label_process_hyperlink])
             index_result += 1
