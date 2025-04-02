@@ -75,9 +75,12 @@ Hãy tạo một biểu mẫu hành chính công (như tờ khai, giấy đăng 
 
 - Đánh số thứ tự: Có đánh số thứ tự các mục không? (Yes/No).
 
+**Lưu ý:** Không trình bày biểu mẫu ở dạng bảng.
+
 ### II.5. Quy tắc logic giữa các trường
 
 Liên kết thông tin giữa các người dùng : Các thông tin giữa các user có liên quan với nhau.
+
 
 ## Ví dụ:
 

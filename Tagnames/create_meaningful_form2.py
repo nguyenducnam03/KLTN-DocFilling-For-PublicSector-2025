@@ -110,7 +110,53 @@ def convert_to_dict(text):
 
     return data_dict
 
+
+def remove_empty_brackets(text):
+    """
+    Loại bỏ tất cả các dấu [] xuất hiện trong văn bản nhưng giữ nguyên placeholders.
+    
+    :param text: Chuỗi văn bản đầu vào
+    :return: Văn bản đã được xử lý
+    """
+    pattern = re.compile(r'\[\s*\]')
+    return pattern.sub('', text)
+
+
+def has_table(text):
+    """
+    Kiểm tra xem văn bản có chứa bảng hay không (dựa trên ký hiệu markdown của bảng: '|---|').
+    
+    :param text: Chuỗi văn bản đầu vào
+    :return: True nếu có bảng, False nếu không
+    """
+    pattern = re.compile(r'\|\s*-+\s*\|')
+    return bool(pattern.search(text))
+
+def remove_optional_text(text):
+    """
+    Loại bỏ các đoạn văn bản trong placeholders chứa phần tùy chọn (*...*).
+    
+    :param text: Chuỗi văn bản đầu vào
+    :return: Văn bản đã được xử lý
+    """
+    pattern = re.compile(r'\[([^\]]+?) - \*[^\]]+?\*\]')
+    return pattern.sub(r'[\1]', text)
+
+
+def has_invalid_full_name_placeholder(text):
+    """
+    Kiểm tra xem có placeholder full_name nào không đúng dạng [userX_full_name].
+    
+    :param text: Chuỗi văn bản đầu vào
+    :return: True nếu có placeholder không hợp lệ, False nếu tất cả hợp lệ
+    """
+    pattern = re.compile(r'\[(?!user\d+_full_name)\w+_full_name\]')
+    return bool(pattern.search(text))
+
 def create_data(llm, form_name):
+    '''
+    Tạo dữ liệu đầu vào cho bước tạo form.
+    '''
     prompt = PromptTemplate.from_template(residence_indentification_data_generator_prompt)
     chain = prompt | llm | StrOutputParser()
     request = random_request(form_info_request_options, form_format_options)
@@ -120,6 +166,10 @@ def create_data(llm, form_name):
     
 
 def create_meaningful_form(llm, data):
+    '''
+    Tạo form với những thông tin sau: Tên biểu  mẫu, mục đích biểu mẫu, số lượng người dùng, mối quan hệ giữa người dùng, nội dung form,\
+    phong cách và định dạng form.
+    '''
     prompt = PromptTemplate.from_template(create_residence_identification_form_prompt)
     chain = prompt | llm | StrOutputParser()
     response = chain.invoke({'form_name': data['form_name'],
@@ -155,6 +205,13 @@ def generate_form(llm, number):
         
         try:
             label_form = create_meaningful_form(llm, data)
+            # Sinh lại dữ liệu nếu nó gặp những trường hợp đặc biệt. 
+            while has_table(label_form) or has_invalid_full_name_placeholder(label_form):
+                label_form = create_meaningful_form(llm, data)
+            # Post processing
+            label_form = remove_empty_brackets(label_form)
+            label_form = remove_optional_text(label_form)
+            ## Replace tagname to '........' to create input data
             input_form = re.sub(r'\[([^\]]+)\]', '..........', label_form)
 
             # Write info file

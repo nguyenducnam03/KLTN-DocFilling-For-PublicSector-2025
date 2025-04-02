@@ -225,8 +225,11 @@ class Text_Processing:
             value_bracket_tagname = "["+value_tagname+"]"
             #  Define group
             group_id_tagname = ["id_number", "id_issue_date", "id_issue_day", "id_issue_month", "id_issue_year", "id_issue_place"]
-            group_passport_tagname = ["passport_number", "passport_issue_date", "passport_issue_day", "passport_issue_month", "passport_issue_year", "passport_issue_place"]
+            group_passport_tagname = ["passport_number", "passport_issue_date", "passport_issue_day", "passport_issue_month", "passport_issue_year", "passport_issue_place"
+                                      "passport_expiry_date", "passport_expiry_day", "passport_expiry_month", "passport_expiry_year"]
             group_current_address_tagname = ["current_address","current_address_ward","current_address_district","current_address_province"]
+            group_phone_tagname = ["phone", "phone_home"]
+            group_social_insurance_tagname = ["social_insurance_insurance"]
             group_permanent_address_tagname = ["permanent_address","permanent_address_ward","permanent_address_district","permanent_address_province"]
             group_hometown = ["hometown"]
             group_birth_registration_tagname = ["birth_registration_place", "birth_registration_place_ward", "birth_registration_place_district", "birth_registration_place_province"]
@@ -329,7 +332,7 @@ class Text_Processing:
                             new_tagname = f"[{userX}_dob]"
                             return new_tagname
                     else:
-                        return tagname
+                        return value_tagname
             
                 # Check address group
                 list_permanent_address = ["thường trú"]
@@ -356,6 +359,25 @@ class Text_Processing:
                     if "hôn nhân" not in sentence_contextual:
                         new_tagname = "[#another]"
                         return new_tagname
+                    else:
+                        return value_tagname
+                    
+                # Check phone
+                if value_tagname in group_phone_tagname:
+                    if 'cố định' in sentence_contextual or 'bàn' in sentence_contextual:
+                        new_tagname = f"[{userX}_phone_home]"
+                        return new_tagname
+                    else:
+                        return tagname
+                    
+                # Check social insurance
+                if value_tagname in group_social_insurance_tagname:
+                    if 'y tế' in sentence_contextual:
+                        new_tagname = f"[{userX}_health_insurance_number]"
+                        return new_tagname
+                    else:
+                        return tagname
+                
 
                 return tagname
             else:
@@ -724,5 +746,5 @@ class Text_Processing:
 
 
 
-Temp = None
+
 

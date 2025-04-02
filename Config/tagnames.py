@@ -558,10 +558,28 @@ thì điền riêng lẻ từng mục ngày, tháng, năm (vào ..........), ví
 - Nếu input có dạng ngày hết hạn hộ chiếu: ........../........../.......... (có 3 mục rõ ràng cho ta điền),
 thì điền riêng lẻ từng mục ngày, tháng, năm (vào ..........), ví dụ [user1_passport_expiry_day]/[user1_passport_expiry_month]/[user1_passport_expiry_year]
 
+Với mục liên quan tới thông tin liên lạc:
+1. Địa chỉ email của người dùng. -> [user1_email]
+Các mục thường xuất hiện: ["Email", "Địa chỉ email", "Email của bạn"]
+2. Số điện thoại cá nhân -> [user1_phone]
+Các mục thường xuất hiện: ["Số điện thoại", "Số điện thoại di động", "SĐT"]
+3. Số điện thoại bàn -> ["Số điện thoại cố định", "Số điện thoại bàn"]
+
+Với các mục liên quan tới số bảo hiểm xã hội:
+1. Số bảo hiểm xã hội → [user1_social_insurance_number]  
+- **Các mục thường xuất hiện:** ["Số bảo hiểm xã hội", "Mã số BHXH", "Số sổ bảo hiểm"]  
+- **Lưu ý:**  
+    - Dùng `[user1_social_insurance_number]` cho mọi biểu mẫu yêu cầu nhập số bảo hiểm xã hội (BHXH).  
+    - Đây là mã số định danh cá nhân trong hệ thống bảo hiểm xã hội.
+    - Nếu biểu mẫu yêu cầu thông tin về bảo hiểm y tế, có thể cân nhắc sử dụng `[user1_health_insurance_card_number]`.  
+
+
 Một số tagname khác:
 - Tại vị trí kính gửi, người nhận, có thể sử dụng tagname [receiver] để điền tên người nhận.
 - Tại vị trí đầu, hay cuối form thường có thông tin về nơi gửi, ngày gửi, tháng gửi, năm gửi, có thể sử dụng tagname [place], [day], [month], [year] để điền thông tin này.
 Lưu ý tagname day,month,year này tránh nhầm lẫn với các tagname về ngày tháng năm sinh, ngày tháng năm cấp, hết hạn, hộ chiếu, số định danh, v.v..
+
+
 '''
 
 
