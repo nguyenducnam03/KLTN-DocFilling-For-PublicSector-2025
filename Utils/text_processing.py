@@ -19,7 +19,9 @@ from Config.tagnames import (
     group_birth_registration_tagname,
     group_birthplace_tagname,
     group_dob_tagname,
-    group_name_tagname
+    group_name_tagname,
+    group_phone_tagname,
+    group_social_insurance_tagname
 )
 
 
@@ -311,6 +313,22 @@ class Text_Processing:
             if any(temp in sentence_contextual for temp in list_occupation):
                 return tagname
             return "[#another]"
+        
+        # Check phone
+        if value_tagname in group_phone_tagname:
+            if 'cố định' in sentence_contextual or 'bàn' in sentence_contextual:
+                new_tagname = f"[{userX}_phone_home]"
+                return new_tagname
+            else:
+                return tagname
+            
+        # Check social insurance
+        if value_tagname in group_social_insurance_tagname: 
+            if 'y tế' in sentence_contextual:
+                new_tagname = f"[{userX}_health_insurance_number]"
+                return new_tagname
+            else:
+                return tagname
         
         return tagname
     

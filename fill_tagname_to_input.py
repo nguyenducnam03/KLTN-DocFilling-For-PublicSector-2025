@@ -8,10 +8,10 @@ import re
 # General
 
 # Folder addresses Data_x
-input_folder = f"Temp/Data_{Data_num}/{Type}/Input{Label_Input_num}"
+input_folder = "Data/Rule_Data/Test/Input"
 input_folders = [input_folder]
-label_folder = f"Temp/Data_{Data_num}/{Type}/Label{Label_Input_num}"
-output_folder = f"Temp/Data_{Data_num}/{Type}/Output{Output_num}"
+label_folder = "Data\Rule_Data\Test\Label"
+output_folder = "Data\Rule_Data\Test\Output"
 
 
 # Ensuse output folder exists

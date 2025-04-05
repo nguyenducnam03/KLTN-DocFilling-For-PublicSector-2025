@@ -252,20 +252,11 @@ list_cccd_passport_tagnames = [
     "[birthplace_ward]",
     "[birthplace_district]",
     "[birthplace_province]",
-    # "[birth_place]",
-    # "[birth_place_ward]",
-    # "[birth_place_district]",
-    # "[birth_place_province]",
     #Nơi đăng ký khai sinh
     "[birth_registration_place]",
     "[birth_registration_place_ward]",
     "[birth_registration_place_district]",
     "[birth_registration_place_province]",
-    # Tạm thời cho registration place là trùng với trên
-    # "[birth_registration]",
-    # "[birth_registration_ward]",
-    # "[birth_registration_district]",
-    # "[birth_registration_province]",
     "[hometown]",
     "[hometown_ward]",
     "[hometown_district]",
@@ -282,11 +273,21 @@ list_cccd_passport_tagnames = [
     "[passport_issue_month]",
     "[passport_issue_year]",
     "[passport_issue_place]",
+    "[passport_expiry_date]", 
+    "[passport_expiry_day]",
+    "[passport_expiry_month]", 
+    "[passport_expiry_year]",
+    "[phone]",
+    "[home_phone]",
+    "[social_insurance_insurance]"
 ]
 
 #  Define group
 group_id_tagname = ["id_number", "id_issue_date", "id_issue_day", "id_issue_month", "id_issue_year", "id_issue_place"]
-group_passport_tagname = ["passport_number", "passport_issue_date", "passport_issue_day", "passport_issue_month", "passport_issue_year", "passport_issue_place"]
+group_passport_tagname = ["passport_number", "passport_issue_date", "passport_issue_day", "passport_issue_month", "passport_issue_year", "passport_issue_place"
+                            "passport_expiry_date", "passport_expiry_day", "passport_expiry_month", "passport_expiry_year"]
+group_phone_tagname = ["phone", "home_phone"]
+group_social_insurance_tagname = ["social_insurance_insurance"]
 group_current_address_tagname = ["current_address","current_address_ward","current_address_district","current_address_province"]
 group_permanent_address_tagname = ["permanent_address","permanent_address_ward","permanent_address_district","permanent_address_province"]
 group_hometown_tagname = ["hometown"]
@@ -575,7 +576,10 @@ Với mục liên quan tới thông tin liên lạc:
 Các mục thường xuất hiện: ["Email", "Địa chỉ email", "Email của bạn"]
 2. Số điện thoại cá nhân -> [user1_phone]
 Các mục thường xuất hiện: ["Số điện thoại", "Số điện thoại di động", "SĐT"]
-3. Số điện thoại bàn -> ["Số điện thoại cố định", "Số điện thoại bàn"]
+3. Số điện thoại bàn -> [user1_home_phone]
+Các mục thường xuất hiện: ["Số điện thoại bàn", "Điện thoại cố định", "Điện thoại nhà riêng"]
+Vì dụ: 
+Số điện thoại bàn: [user1_home_phone]
 
 Với các mục liên quan tới số bảo hiểm xã hội:
 1. Số bảo hiểm xã hội → [user1_social_insurance_number]  

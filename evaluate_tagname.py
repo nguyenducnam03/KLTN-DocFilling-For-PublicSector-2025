@@ -1,5 +1,6 @@
 from Evaluate.my_metrics import similarity_result_two_folders
 import pandas as pd
+import os
 import time
 from Config import Data_num, Output_num, Type, Label_Input_num
 
@@ -10,12 +11,13 @@ from openpyxl.styles import Alignment, Font, Border, Side
 
 # === Folder Addresses (All path should be here) ===
 # label_folder = f"Temp\Data_{Data_num}\{Type}\Label{Label_Input_num}\Differents"
-label_folder = f"Temp\Data_{Data_num}\{Type}\Label{Label_Input_num}\Processed_Label\Differents"
-llm_filled_folder = f"Temp\Data_{Data_num}\{Type}\Output{Output_num}\Processed_Output\Differents"
-root_folder = f"Temp\Data_{Data_num}\{Type}"
+label_folder = "Data/Rule_Data/Test/Label/Processed_Label/Differents"
+llm_filled_folder = "Data/Rule_Data/Test/Output/Processed_Output/Differents"
+root_folder = "Data/Rule_Data/Test"
+
+
 
 #ensure root_folder/Resulst folder exist
-import os
 if not os.path.exists(f"{root_folder}/Results"):
     os.makedirs(f"{root_folder}/Results")
 
