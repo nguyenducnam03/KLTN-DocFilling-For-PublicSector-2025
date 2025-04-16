@@ -8,11 +8,14 @@ import re
 # General
 
 # Folder addresses Data_x
-input_folder = "Data/Rule_Data/Test/Input"
+input_folder = f"Data\LLM_Data\Gemini\Test\Input"
 input_folders = [input_folder]
-label_folder = "Data\Rule_Data\Test\Label"
-output_folder = "Data\Rule_Data\Test\Output"
+label_folder = f"Data\LLM_Data\Gemini\Test\Label"
+output_folder = "Data\LLM_Data\Gemini\Test\Output"
 
+
+info_folder = f"Data\LLM_Data\Gemini\Test\Info"
+input_folder = f"Data\LLM_Data\Gemini\Test\Input"
 
 # Ensuse output folder exists
 os.makedirs(output_folder, exist_ok=True)
