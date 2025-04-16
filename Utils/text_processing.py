@@ -21,7 +21,8 @@ from Config.tagnames import (
     group_dob_tagname,
     group_name_tagname,
     group_phone_tagname,
-    group_social_insurance_tagname
+    group_social_insurance_tagname,
+    group_event_info
 )
 
 
@@ -300,6 +301,8 @@ class Text_Processing:
                     new_tagname = re.sub("_current_address","_permanent_address",tagname)
                     label_llm = self.modified_label_llm(label_llm, index_llm, "current_address", "permanent_address")
             return new_tagname
+        
+        
                 
         # Check marial_status
         if "marital_status" in value_tagname:
@@ -317,7 +320,7 @@ class Text_Processing:
         # Check phone
         if value_tagname in group_phone_tagname:
             if 'cố định' in sentence_contextual or 'bàn' in sentence_contextual:
-                new_tagname = f"[{userX}_phone_home]"
+                new_tagname = f"[{userX}_home_phone]"
                 return new_tagname
             else:
                 return tagname
@@ -329,6 +332,22 @@ class Text_Processing:
                 return new_tagname
             else:
                 return tagname
+            
+        if any(kw in sentence_contextual for kw in ["Kính gửi", "kính gửi", "người nhận"]):
+            return "[receiver]"
+        
+        # Check place, day, month, year
+        if value_tagname in group_event_info:
+            if "" in sentence_contextual:
+                return "[place]"
+            elif "ngày" in sentence_contextual:
+                return "[day]"
+            elif "tháng" in sentence_contextual:
+                return "[month]"
+            elif "năm" in sentence_contextual:
+                return "[year]"
+            return new_tagname
+
         
         return tagname
     
