@@ -9,9 +9,9 @@ import re
 from Config.config import Data_num, Type, Label_Input_num
 
 # Folder
-label_folder = f"Data\LLM_Data\Gemini\Test\Label"
-info_folder = f"Data\LLM_Data\Gemini\Test\Info"
-input_folder = f"Data\LLM_Data\Gemini\Test\Input"
+label_folder = f"Data\LLM_Data\Gemini\Test2\Label"
+info_folder = f"Data\LLM_Data\Gemini\Test2\Info"
+input_folder = f"Data\LLM_Data\Gemini\Test2\Input"
 # Ensure the folder exists
 os.makedirs(info_folder, exist_ok=True)
 os.makedirs(label_folder, exist_ok=True)
@@ -251,113 +251,68 @@ data_tagname_noise = {
 merged_data_tagname = {**data_tagname, **data_tagname_noise}
 
 prompt = """
-# Hướng Dẫn Tạo Biểu Mẫu Hành Chính Từ Thông Tin Cá Nhân
+# AI Tạo Biểu Mẫu Từ Thông Tin Cá Nhân
 
-## 1. Mục đích và mô tả tác vụ
+## **1. Đầu vào:**  
+Dữ liệu đầu vào là danh sách chứa thông tin của **một hoặc nhiều cá nhân** dưới dạng **cặp khóa - giá trị** (*key-value*).  
+- **Key**: Tên thông tin (VD: `"họ và tên"`, `"năm sinh"`, `"giới tính"`, v.v.).  
+- **Value**: Giá trị tương ứng (VD: `"Nguyễn Đức Anh"`, `"2011"`, `"Nam"`, v.v.).  
 
-Hệ thống có nhiệm vụ tạo ra các biểu mẫu hành chính từ danh sách tagname của một hoặc nhiều cá nhân. Dữ liệu đầu vào bao gồm các tagname được cung cấp theo thứ tự ngẫu nhiên và 
-không đảm bảo tính logic. Nhiệm vụ của hệ thống là sắp xếp lại các tagname này thành từng nhóm thông tin có ý nghĩa để hoàn thiện biểu mẫu hành chính. 
+---
 
-## 2. QUY TẮC SẮP XẾP TAGNAME
+## **2. Quy tắc chung khi tạo biểu mẫu:**  
 
-### 2.1. PHÂN NHÓM THÔNG TIN
+### **2.1. Chỉ sử dụng dữ liệu được cung cấp**  
+- Nếu một thông tin không có trong dữ liệu đầu vào, điền **[Trống]** thay vì để trống hoặc sử dụng placeholder chung.  
+- **Mỗi cá nhân sẽ có một biểu mẫu riêng biệt**, không trộn lẫn dữ liệu giữa nhiều cá nhân.  
 
-Các tagname được chia thành các nhóm thông tin chính sau:
+### **2.2. Chọn loại biểu mẫu phù hợp**  
+Mỗi cá nhân sẽ được tạo một biểu mẫu phù hợp với các trường dữ liệu có sẵn, ví dụ:  
+- **Tờ khai căn cước công dân**  
+- **Đơn xin cấp hộ chiếu**  
+- **Đơn đăng ký tạm trú**  
+- **Đơn xin việc**  
+- **Đơn đăng ký kết hôn**  
+- **Giấy khai sinh**, v.v.  
 
-- **Thông tin cá nhân:**
-  - Họ và tên đầy đủ, họ, tên đệm, tên, tên đệm và tên, tên gọi khác.
-  - Ngày tháng năm sinh, ngày sinh, tháng sinh, năm sinh, ngày sinh bằng chữ.
-  - Giới tính, dân tộc, tôn giáo, quốc tịch, tình trạng hôn nhân, nhóm máu.
+---
 
-- **Giấy tờ tùy thân:**
-  - Số CMND/CCCD, ngày cấp CMND/CCCD, ngày cấp, tháng cấp, năm cấp, nơi cấp.
-  - Số hộ chiếu, ngày cấp hộ chiếu, ngày cấp, tháng cấp, năm cấp, nơi cấp, ngày hết hạn hộ chiếu, ngày hết hạn, tháng hết hạn, năm hết hạn.
-  - Số CMND/CCCD cũ, ngày cấp CMND/CCCD cũ, ngày cấp, tháng cấp, năm cấp, nơi cấp.
+## **3. Quy tắc xử lý dữ liệu khi điền vào form:**  
 
-- **Địa chỉ:**
-  - Nơi sinh, nơi đăng ký khai sinh, quê quán, địa chỉ thường trú, địa chỉ hiện tại cùng các cấp phường xã, quận huyện, tỉnh thành tương ứng.
+### **3.1. Ngày tháng năm**  
+- **Ngày sinh**: Ghi theo định dạng `dd/mm/yyyy` (VD: `Ngày sinh: [11/11/2011]`).  
+- **Ngày sinh bằng chữ**: Giữ nguyên giá trị chữ nếu có (VD: `Ngày sinh bằng chữ: [Mười một tháng Mười một năm 2011]`).  
+- **Năm sinh**: Nếu chỉ có "Năm sinh", điền năm đầy đủ (VD: `Năm sinh: [2011]`).  
 
-- **Học vấn và nghề nghiệp:**
-  - Trình độ học vấn, nghề nghiệp hiện tại.
+### **3.2. Danh tính cá nhân**  
+- **Tên gọi khác**: Nếu có "Tên gọi khác", ghi vào mục "Tên gọi khác" (VD: `Tên gọi khác: [Anh Nguyễn]`).  
+- **Số CCCD/Hộ chiếu**: Nếu có cả số CCCD và số hộ chiếu, ưu tiên điền số CCCD.  
+  - VD:  
+    - `Số CCCD/Hộ chiếu: [11111111]`  
+    - `Ngày cấp: [11/11/2021]`  
+    - `Nơi cấp: [Công an TP.HCM]`  
 
-- **Thông tin liên hệ:**
-  - Email, số điện thoại di động, số điện thoại nhà.
+### **3.3. Thông tin về tình trạng cá nhân**  
+- **Tình trạng hiện tại** / **Trạng thái hiện tại**: Nếu có dữ liệu, điền theo từng cá nhân.  
+  - VD:  
+    - `Tình trạng hiện tại: [Đang làm việc tại công ty FPT]`  
+    - `Trạng thái hiện tại: [Học tại trường HCMUS]`  
 
-- **Thông tin bảo hiểm:**
-  - Số thẻ bảo hiểm y tế, số thẻ bảo hiểm xã hội.
+### **3.4. Kinh nghiệm làm việc**  
+- Nếu không có dữ liệu, điền **[Trống]**.  
 
-- **Thông tin nhiễu:** Những dữ liệu không cần thiết hoặc không rõ ràng.
+### **3.5. Quy tắc xử lý số liệu cũ**  
+- Chỉ điền số hiện tại vào mục chính thống.  
 
-### 2.2. QUY TẮC SẮP XẾP CHI TIẾT
+---
+## **4. Cách trình bày biểu mẫu nhiều cá nhân**  
+- **Dạng danh sách liệt kê**: Khi cần mô tả chi tiết từng cá nhân.  
 
-- Thông tin ngày tháng cần được nhóm gần nhau và định dạng rõ ràng (ví dụ: Ngày sinh, Ngày cấp).
-- Thông tin giấy tờ như CCCD, hộ chiếu phải đi kèm ngày cấp và nơi cấp.
-- Thứ tự địa chỉ phải là: Xã → Huyện → Tỉnh.
-- Các nhóm thông tin cần được trình bày gọn gàng, dễ hiểu.
+---
 
-## 3. QUY TẮC CHUNG KHI TẠO BIỂU MẪU
-
-- Nếu thiếu thông tin, điền `[Trống]` thay vì bỏ trống.
-- Mỗi cá nhân được phân tách thành cụm user riêng (user1, user2,...).
-
-## 4. QUY TẮC ĐIỀN THÔNG TIN
-
-### 4.1. THÔNG TIN CÁ NHÂN VÀ GIẤY TỜ
-
-- Tên gọi khác: Nếu có, ghi `Tên gọi khác: [Tên]`.
-- Ưu tiên số CCCD nếu có cả CCCD và hộ chiếu.
-  - Ví dụ:
-    - `Số CCCD/Hộ chiếu: [123456789]`
-    - `Ngày cấp: [01/01/2020]`
-    - `Nơi cấp: [Công an TP.HCM]`
-
-### 4.2. NGÀY THÁNG
-
-- Ngày sinh: `dd/mm/yyyy`, ví dụ: `Ngày sinh: [01/01/2000]`.
-- Ngày sinh bằng chữ: Giữ nguyên định dạng chữ nếu có.
-- Nếu chỉ có năm sinh, ghi: `Năm sinh: [2000]`.
-
-### 4.3. TÌNH TRẠNG HIỆN TẠI
-
-- Ghi rõ nếu có, ví dụ:
-  - `Tình trạng hiện tại: [Làm việc tại ABC]`
-  - `Trạng thái hiện tại: [Sinh viên]`
-
-### 4.4. KINH NGHIỆM LÀM VIỆC
-
-- Nếu không có, điền `[Trống]`.
-
-## 5. XỬ LÝ CÁC DIỄN ĐẠT ĐỒNG NGHĨA
-
-### 5.1. CÁC CÁCH DIỄN ĐẠT PHỔ BIẾN
-
-- "Tôi tên là", "Tên đầy đủ", "Tên khai sinh" 
-- "Tên gọi khác", "Tên thường gọi" 
-- "Sinh ngày", "Ngày sinh", "Tôi sinh ngày" 
-- "Giới tính: Nam", "Tôi là nữ"
-- "Quê quán", "Quê tôi ở", "Sinh ra tại" 
-- "Chỗ ở hiện tại", "Địa chỉ hiện tại" 
-- "Số CCCD", "Căn cước", "CMND" 
-- "Ngày cấp CCCD", "Cấp ngày" 
-- "Nơi cấp CCCD", "Cơ quan cấp" 
-- "Hôn nhân", "Tình trạng hôn nhân"
-- "Trình độ văn hóa", "Bằng cấp" 
-- "Nghề nghiệp", "Công việc" 
-- "Số điện thoại", "Điện thoại" 
-- "Email", "Mail cá nhân" 
-- "Số điện thoại cố định", "Điện thoại bàn"
-- "Địa chỉ tạm trú", "Địa chỉ hiện tại"
-
-### 5.2. NGUYÊN TẮC ÁP DỤNG
-
-- Bạn có thể ngẫu nhiên sử dụng cách diễn đạt khác nhau cho cùng một thông tin.
-
-## 6. CÁC BỔ SUNG KHÁC
-
-- **Tiêu đề biểu mẫu:** Ghi rõ trên đầu. Ví dụ: `TỜ KHAI CĂN CƯỚC CÔNG DÂN`
-- **Phần ký xác nhận:** Cuối biểu mẫu ghi `[Trống], ngày [Trống] tháng [Trống] năm [Trống]`
-- **Ghi chú:** Nếu có yêu cầu thêm giấy tờ, ghi rõ. Ví dụ: `Lưu ý: Nộp kèm bản sao CCCD.`
-- **Định dạng:** Dễ đọc, bố cục rõ ràng, in đậm các mục quan trọng như Tiêu đề, Kính gửi,...
+**Lưu ý:**  
+- **Không chỉnh sửa hoặc diễn giải lại dữ liệu**.  
+- **Đảm bảo văn phong hành chính rõ ràng, trang trọng**.  
 
 
 ## Ví dụ:
@@ -1069,9 +1024,7 @@ def merge_all(*datasets):
     return dict(merged_data)
 
 
-
-
-Num_forms = 100
+Num_forms = 500
 for i in range(0, Num_forms):
     print(f"Process until {i}") 
     file_name = f"input_{i}.txt"

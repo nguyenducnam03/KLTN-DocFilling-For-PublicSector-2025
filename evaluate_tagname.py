@@ -2,7 +2,7 @@ from Evaluate.my_metrics import similarity_result_two_folders
 import pandas as pd
 import os
 import time
-from Config import Data_num, Output_num, Type, Label_Input_num
+from Config import Output_num, Label_Input_num
 
 from collections import Counter
 
@@ -10,10 +10,14 @@ from openpyxl import load_workbook
 from openpyxl.styles import Alignment, Font, Border, Side
 
 # === Folder Addresses (All path should be here) ===
-# label_folder = f"Temp\Data_{Data_num}\{Type}\Label{Label_Input_num}\Differents"
-label_folder = "Data/Rule_Data/Test/Label/Processed_Label/Differents"
-llm_filled_folder = "Data/Rule_Data/Test/Output/Processed_Output/Differents"
-root_folder = "Data/Rule_Data/Test"
+label_folder = "Data\LLM_Data\Gemini\Test\Label\Processed_Label\Differents"
+llm_filled_folder = "Data\LLM_Data\Gemini\Test\Output\Processed_Output\Differents"
+root_folder = "Data\LLM_Data\Gemini\Test"
+
+# label_folder = "Data\Rule_Data\Test\Label\Processed_Label\Differents"
+# llm_filled_folder = "Data\Rule_Data\Test\Output\Processed_Output\Differents"
+# root_folder = "Data\Rule_Data\Test"
+
 
 
 

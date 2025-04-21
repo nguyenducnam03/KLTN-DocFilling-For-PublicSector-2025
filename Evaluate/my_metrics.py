@@ -4,10 +4,10 @@ from Utils.text_processing import Text_Processing
 import pandas as pd
 from collections import Counter
 import json
-from Config.config import Output_num
 
 # Folde address
-root_folder = "Data\Rule_Data\Test"
+root_folder = "Data\LLM_Data\Gemini\Test"
+# root_folder = "Data\Rule_Data\Test"
 
 def analyze_errors_type_1(error_list):
     """
