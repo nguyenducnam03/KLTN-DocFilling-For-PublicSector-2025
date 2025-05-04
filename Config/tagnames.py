@@ -84,7 +84,7 @@ list_contextual_id_number = ["cmnd", "chứng minh", "cccd", "căn cước", "đ
 list_contextual_passport = ["hộ chiếu","passport"]
 list_general_tagnames = ["[receiver]", "[place]", "[day]", "[month]", "[year]"]
 group_phone_tagname = ["phone", "home_phone"]
-group_social_insurance_tagname = ["social_insurance_insurance", "health_insurance_number"]
+group_social_insurance_tagname = ["social_insurance_number", "health_insurance_number"]
 
 tagname_Nam_ver1 = '''
 # Hướng dẫn sử dụng tagnames trong biểu mẫu
